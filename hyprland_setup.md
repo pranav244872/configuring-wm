@@ -24,15 +24,16 @@ waybar
 gtk3  
 less  
 file  
-###Installing yay:
+### Installing yay:
 install yay
-###installing ranger:
+### installing ranger:
 sudo pacman -S ranger
-###installing neovim:
-sudo pacman -S neovim  
-
-
-###change .bashrc and .bash_profile:  
+### change .bashrc and .bash_profile:  
 add:  
 export VISUAL=nvim  (no spaces between = )  
 export EDITOR=nvim  
+### install cmake:  
+sudo pacman -S cmake
+### installing neovim:
+sudo pacman -S neovim
+sudo pacman -S xclip
