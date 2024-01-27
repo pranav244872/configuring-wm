@@ -28,5 +28,5 @@ file
 install yay
 ###installing ranger:
 sudo pacman -S ranger
-###installing vim:
-sudo pacman -S vim
+###installing neovim:
+sudo pacman -S neovim
