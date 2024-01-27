@@ -59,3 +59,16 @@ mkdir ~/.config/rofi
 there copied this: https://github.com/sonnybox/yt-files/blob/main/SIMPLE%20LAUNCHER/config.rasi
 
 ### Changed the hyprland config files according to ver 1.0.0
+
+### automatic mounting of usbs in hyprland
+sudo pacman -S udiskie
+Head over to your ~/.config/hypr/hyprland.conf and add the following lines:  
+exec-once = udiskie &
+
+### installing network manager applet and blueman
+sudo pacman -S network-manager-applet
+sudo pacman -S blueman
+
+### created timeshift at this point 2024/01/27 23:49:23
+
+### updating all to ver 1.1.1
