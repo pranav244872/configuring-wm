@@ -29,4 +29,10 @@ install yay
 ###installing ranger:
 sudo pacman -S ranger
 ###installing neovim:
-sudo pacman -S neovim
+sudo pacman -S neovim  
+
+
+###change .bashrc and .bash_profile:  
+add:  
+export VISUAL=nvim  (no spaces between = )  
+export EDITOR=nvim  
