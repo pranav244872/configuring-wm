@@ -1,0 +1,30 @@
+## Setting Up Arch
+boot iso:
+### run:
+rfkill unblock wlan  
+iwctl  
+station wlan0 connect pranav17  
+pacman -Sy archlinux-keyring  
+archinstall  
+### Note: Do a minimum install  with system-md boot  
+### Additional packages:  
+git  
+chromium  
+vlc  
+qbittorrent  
+bluez  
+networkmanager  
+nano  
+hyprland  
+kitty  
+mako  
+wireplumber  
+polkit-kde-agent  
+waybar  
+gtk3  
+less  
+file  
+###Installing yay:
+install yay
+###installing ranger:
+sudo pacman -S ranger
