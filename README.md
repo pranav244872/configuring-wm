@@ -113,3 +113,6 @@ Name=org.freedesktop.Notifications
 Exec=/usr/lib/notification-daemon-1.0/notification-daemon  
 ### check:
 notify-send a a
+
+### configuring image viewing
+sudo pacman -S gpicview
