@@ -13,6 +13,7 @@ chromium
 vlc  
 qbittorrent  
 bluez  
+bluez-utils  
 networkmanager  
 nano  
 hyprland  
@@ -72,3 +73,14 @@ sudo pacman -S blueman
 ### created timeshift at this point 2024/01/27 23:49:23
 
 ### updating all to ver 1.1.1
+
+## Ricing time:
+### Setting up pywal and swaybg for wallpaper and 
+sudo pacman -S python-pywal  
+sudo pacman -S swaybg  
+
+Made a folder with wallpapers in ~/Pictures/Wallpapers
+
+### Updating files to ver 1.2.0
+
+
