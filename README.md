@@ -98,3 +98,7 @@ sudo pacman -S w3m
 sudo pacman -S mpv
 sudo pacman -S python-pillow
 ranger --copy-config=all
+sudo pacman -S file-roller
+
+## Updating files to ver 1.4.0 with ranger customization
+
