@@ -86,4 +86,4 @@ Made a folder with wallpapers in ~/Pictures/Wallpapers
 
 ### Updating files to ver 1.2.0
 ### Updating files to ver 1.3.0
-
+## IMPROVED FILE STRUCTURE
