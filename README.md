@@ -78,7 +78,10 @@ sudo pacman -S blueman
 ### Setting up pywal and swaybg for wallpaper and 
 sudo pacman -S python-pywal  
 sudo pacman -S swaybg  
-
+sudo pacman -S papirus-icon-theme
+sudo pacman -S noto-fonts
+sudo pacman -S noto-fonts-emoji
+sudo pacman -S noto-fonts-cjk
 Made a folder with wallpapers in ~/Pictures/Wallpapers
 
 ### Updating files to ver 1.2.0
