@@ -9,4 +9,4 @@ WALLPAPER=$(ls $WALLPAPER_DIR/* | shuf -n 1)
 # Use pywal to set the wallpaper and generate color scheme
 swaybg -i "$WALLPAPER" &
 wal -i "$WALLPAPER"
-#Do chmod +x
+sed -i 's/#//g' ~/.cache/wal/colors-hyprland.conf
