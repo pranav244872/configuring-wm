@@ -46,29 +46,29 @@ uncomment the workspaces thing(after running as root)
 
 ### configuring pipewire and wireplumber for screensharing
 run:  
-systemctl --user --now enable pipewire wireplumber
-sudo pacman -S xdg-desktop-portal-hyprland
-sudo pacman -S grim slurp
+systemctl --user --now enable pipewire wireplumber  
+sudo pacman -S xdg-desktop-portal-hyprland  
+sudo pacman -S grim slurp  
 sudo pacman -S xdg-desktop-portal-hyprland-git  
 pacman -Q | grep xdg-desktop-portal-(if any there remove)  
 add the following in hyprland config:  
 exec-once=dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP  
 
 ### Configuring an app launcher:  
-sudo pacman -S rofi
-mkdir ~/.config/rofi
-there copied this: https://github.com/sonnybox/yt-files/blob/main/SIMPLE%20LAUNCHER/config.rasi
+sudo pacman -S rofi  
+mkdir ~/.config/rofi  
+there copied this: https://github.com/sonnybox/yt-files/blob/main/SIMPLE%20LAUNCHER/config.rasi  
 
-### Changed the hyprland config files according to ver 1.0.0
+### Changed the hyprland config files according to ver 1.0.0  
 
-### automatic mounting of usbs in hyprland
-sudo pacman -S udiskie
+### automatic mounting of usbs in hyprland  
+sudo pacman -S udiskie  
 Head over to your ~/.config/hypr/hyprland.conf and add the following lines:  
 exec-once = udiskie &
 
 ### installing network manager applet and blueman
-sudo pacman -S network-manager-applet
-sudo pacman -S blueman
+sudo pacman -S network-manager-applet  
+sudo pacman -S blueman  
 
 ### created timeshift at this point 2024/01/27 23:49:23
 
@@ -78,12 +78,12 @@ sudo pacman -S blueman
 ### Setting up pywal and swaybg for wallpaper and 
 sudo pacman -S python-pywal  
 sudo pacman -S swaybg  
-sudo pacman -S papirus-icon-theme
-sudo pacman -S noto-fonts
-sudo pacman -S noto-fonts-emoji
-sudo pacman -S noto-fonts-cjk
-Made a folder with wallpapers in ~/Pictures/Wallpapers
+sudo pacman -S papirus-icon-theme  
+sudo pacman -S noto-fonts  
+sudo pacman -S noto-fonts-emoji  
+sudo pacman -S noto-fonts-cjk  
+Made a folder with wallpapers in ~/Pictures/Wallpapers  
 
 ### Updating files to ver 1.2.0
-
+### Updating files to ver 1.3.0
 
