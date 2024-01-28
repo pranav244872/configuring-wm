@@ -1,101 +1,81 @@
-* {
-    font: "Figtree 13";
-    g-spacing: 10px;
-    g-margin: 0;
-    b-color: #000000FF;
-    fg-color: #FFFFFFFF;
-    fgp-color: #888888FF;
-    b-radius: 8px;
-    g-padding: 8px;
-    hl-color: #FFFFFFFF;
-    hlt-color: #000000FF;
-    alt-color: #111111FF;
-    wbg-color: #000000CC;
-    w-border: 2px solid;
-    w-border-color: #FFFFFFFF;
-    w-padding: 12px;
-}
-
 configuration {
     modi: "drun";
     show-icons: true;
-    display-drun: "";
+    display-drun: "Applications";
+    drun-display-format: "{name}";
+    font : "JetBrainsMono Nerd Font Medium 13";
+    icon-theme: "Papirus";
+}
+
+@theme "~/.cache/wal/colors-rofi-dark.rasi"
+
+* {
+    font: "JetBrainsMono Nerd Font Medium 13";
+    text-color: @foreground;
 }
 
 listview {
-    columns: 1;
-    lines: 7;
-    fixed-height: true;
-    fixed-columns: true;
-    cycle: false;
-    scrollbar: false;
-    border: 0px solid;
+	background-color: @bg;
+  	columns: 1;
+  	lines: 10;
+	padding: 0;
 }
 
 window {
-    transparency: "real";
-    width: 450px;
-    border-radius: @b-radius;
-    background-color: @wbg-color;
-    border: @w-border;
-    border-color: @w-border-color;
-    padding: @w-padding;
+    width: 30%;
+    border: 2px;
+    border-color: @foreground;
 }
 
 prompt {
-    text-color: @fg-color;
+  enabled: true;
+  padding: 12 0 0 12;
+  background-color: @background;
+  text-color: @fg;
 }
 
 inputbar {
     children: ["prompt", "entry"];
-    spacing: @g-spacing;
+    background-color: @background;
+    text-color: @foreground;
 }
 
 entry {
-    placeholder: "Search Apps";
-    text-color: @fg-color;
-    placeholder-color: @fgp-color;
+	padding:12;
+	background-color: @background;
+	text-color: @foreground;
 }
 
 mainbox {
-    spacing: @g-spacing;
-    margin: @g-margin;
-    padding: @g-padding;
-    children: ["inputbar", "listview", "message"];
+    children: ["inputbar", "listview"];
+    background-color : @background-color;
 }
 
 element {
-    spacing: @g-spacing;
-    margin: @g-margin;
-    padding: @g-padding;
-    border: 0px solid;
-    border-radius: @b-radius;
-    border-color: @b-color;
-    background-color: transparent;
-    text-color: @fg-color;
+	padding: 8 12;
+  	background-color: transparent;
+  	text-color: @foreground;
+	
+}
+element selected {
+  text-color: @foreground;
+  background-color: @selected-normal-background;
 }
 
-element normal.normal {
-	background-color: transparent;
-	text-color: @fg-color;
+element-text {
+  background-color: transparent;
+  text-color: inherit;
+  vertical-align: 0.5;
 }
 
-element alternate.normal {
-	background-color: @alt-color;
-	text-color: @fg-color;
-}
-
-element selected.active {
-	background-color: @hl-color;
-	text-color: @hlt-color;
-}
-
-element selected.normal {
-	background-color: @hl-color;
-	text-color: @hlt-color;
+element-icon {
+  size: 14;
+  padding: 0 10 0 0;
+  background-color: transparent;
 }
 
 message {
     background-color: red;
     border: 0px solid;
+    padding: 0;
 }
