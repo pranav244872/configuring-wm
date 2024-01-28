@@ -87,3 +87,14 @@ Made a folder with wallpapers in ~/Pictures/Wallpapers
 ### Updating files to ver 1.2.0
 ### Updating files to ver 1.3.0
 ## IMPROVED FILE STRUCTURE
+### installing flatpak
+sudo pacman -S flatpak
+
+### Ranger customization:
+installed the following plugins:  
+devicons2  
+ranger-archives
+sudo pacman -S w3m
+sudo pacman -S mpv
+sudo pacman -S python-pillow
+ranger --copy-config=all
