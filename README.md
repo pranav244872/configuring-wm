@@ -123,6 +123,9 @@ sudo pacman -S gpicview
 ### configuring pdf viewing
 sudo pacman -S llpp
 
+### configuring screenshot
+yay -S hyprshot
+
 ### Neovim config
 sudo pacman -S ripgrep
 
