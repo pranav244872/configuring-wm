@@ -96,7 +96,6 @@ sudo pacman -S flatpak
 installed the following plugins:  
 devicons2  
 ranger-archives  
-sudo pacman -S w3m  
 sudo pacman -S mpv  
 sudo pacman -S python-pillow  
 ranger --copy-config=all  
