@@ -95,38 +95,37 @@ sudo pacman -S flatpak
 ### Ranger customization:
 installed the following plugins:  
 devicons2  
-ranger-archives
-sudo pacman -S w3m
-sudo pacman -S mpv
-sudo pacman -S python-pillow
-ranger --copy-config=all
-sudo pacman -S file-roller
-sudo pacman -S atool
+ranger-archives  
+sudo pacman -S w3m  
+sudo pacman -S mpv  
+sudo pacman -S python-pillow  
+ranger --copy-config=all  
+sudo pacman -S file-roller  
+sudo pacman -S atool  
 
-## Updating files to ver 1.4.0 with ranger customization
+## Updating files to ver 1.4.0 with ranger customization  
 
 ### Configuring mako for notifications:
 sudo pacman -S notifications-daemon  
 then follow  
 Alternatively, making the notification server as a D-Bus service, the notification server can be launched automatically on the first call to it. For example, after installing the notification-daemon package, add the following configuration to D-Bus services directory (/usr/share/dbus-1/services or $XDG_DATA_HOME/dbus-1/services):  
-
 org.freedesktop.Notifications.service  
 [D-BUS Service]  
 Name=org.freedesktop.Notifications  
 Exec=/usr/lib/notification-daemon-1.0/notification-daemon  
 ### check:
-notify-send a a
+notify-send a a  
 
 ### configuring image viewing
-sudo pacman -S gpicview
+sudo pacman -S gpicview  
 
 ### configuring pdf viewing
-sudo pacman -S llpp
+sudo pacman -S llpp  
 
 ### configuring screenshot
-yay -S hyprshot
+yay -S hyprshot  
 
 ### Neovim config
-sudo pacman -S ripgrep
+sudo pacman -S ripgrep  
 
 ### Updating files to ver 1.4.1 with additional customization and neovim configs
