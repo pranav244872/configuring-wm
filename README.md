@@ -26,6 +26,8 @@ gtk3
 less  
 file  
 qt5-wayland
+bleachbit
+rmlint
 ### Installing yay:
 install yay
 ### installing ranger:
@@ -99,6 +101,7 @@ sudo pacman -S mpv
 sudo pacman -S python-pillow
 ranger --copy-config=all
 sudo pacman -S file-roller
+sudo pacman -S atool
 
 ## Updating files to ver 1.4.0 with ranger customization
 
@@ -116,3 +119,11 @@ notify-send a a
 
 ### configuring image viewing
 sudo pacman -S gpicview
+
+### configuring pdf viewing
+sudo pacman -S llpp
+
+### Neovim config
+sudo pacman -S ripgrep
+
+### Updating files to ver 1.4.1 with additional customization and neovim configs
