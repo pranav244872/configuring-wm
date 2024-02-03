@@ -13,3 +13,7 @@ PS1='[\u@\h \W]\$ '
 
 export EDITOR=nvim
 export VISUAL=nvim
+
+#Making Screenshot directory
+export HYPRSHOT_DIR=/home/pranav/Pictures/Screenshots
+export XDG_PICTURES_DIR=~/Pictures
