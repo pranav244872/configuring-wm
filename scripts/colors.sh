@@ -10,3 +10,5 @@ WALLPAPER=$(ls $WALLPAPER_DIR/* | shuf -n 1)
 swaybg -i "$WALLPAPER" &
 wal -i "$WALLPAPER"
 sed -i 's/#//g' ~/.cache/wal/colors-hyprland.conf
+rm -rf ~/scripts/Pywal/
+/home/pranav/scripts/generate-theme.sh
