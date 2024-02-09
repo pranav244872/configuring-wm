@@ -36,11 +36,10 @@ sudo pacman -S ranger
 add:  
 export VISUAL=nvim  (no spaces between = )  
 export EDITOR=nvim  
-### install cmake:  
-sudo pacman -S cmake
+
 ### installing neovim:
-sudo pacman -S neovim
-sudo pacman -S xclip
+sudo pacman -S neovim  
+sudo pacman -S xclip  
 
 ### configuring waybar to do some magic (didnt work)
 If you want to use the workspaces module, first, copy the configuration files from /etc/xdg/waybar/ into ~/.config/waybar/. Then, in ~/.config/waybar/config replace all the references to sway/workspaces with hyprland/workspaces.  
@@ -123,8 +122,17 @@ sudo pacman -S llpp
 
 ### configuring screenshot
 yay -S hyprshot  
+sudo pacman -S wl-clipboard  
+  
+### Installing virtual-box  
+sudo pacman -S virtualbox  
+sudo pacman -S linux-headers
 
 ### Neovim config
 sudo pacman -S ripgrep  
 
 ### Updating files to ver 1.4.1 with additional customization and neovim configs
+
+### Maintenence:
+sudo pacman -S pacutils  
+sudo pacman -S lostfiles
