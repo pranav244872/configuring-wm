@@ -84,6 +84,7 @@ sudo pacman -S noto-fonts
 sudo pacman -S noto-fonts-emoji  
 sudo pacman -S noto-fonts-cjk  
 Made a folder with wallpapers in ~/Pictures/Wallpapers  
+sudo pacman -S nwg-look
 
 ### Updating files to ver 1.2.0
 ### Updating files to ver 1.3.0
