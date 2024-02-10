@@ -12,12 +12,6 @@ return{
 			ensure_installed = {
 				"lua_ls",
 				"clangd",
-				"cssmodules_ls",
-				"cssls",
-				"unocss",
-				"html",
-				"jsonls",
-				"biome",
 				"quick_lint_js",
 				"jedi_language_server"}
 		})
@@ -30,6 +24,8 @@ return{
 			lspconfig.lua_ls.setup({})
 			vim.keymap.set('n', 'K', vim.lsp.buf.hover,{})
 			vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+      vim.keymap.set({'n'},'<leader>ca', vim.lsp.buf.code_action,{})
+
 		end
 	}
 }
