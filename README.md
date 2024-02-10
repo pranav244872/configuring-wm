@@ -136,4 +136,7 @@ sudo pacman -S ripgrep
 
 ### Maintenence:
 sudo pacman -S pacutils  
-sudo pacman -S lostfiles
+sudo pacman -S lostfiles  
+
+### Flutter:
+sudo apt-get install clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
