@@ -1,9 +1,9 @@
 #!/bin/bash
 # Define the list of packages to install
-sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager hyprland kitty mako polkit-kde-agent waybar gtk3
-sudo pacman -S --noconfirm less file qt5-wayland lf neovim wl-clipboard rofi udiskie python-pywal swaybg papirus-icon-theme noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd
-sudo pacman -S --noconfirm xdg-desktop-portal-hyprland blueman
-sudo pacman -S --noconfirm qt6-wayland otf-font-awesome unzip file-roller gimp kdenlive
+sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager polkit-kde-agent waybar gtk3 less file 
+sudo pacman -S --noconfirm hyprland wl-clipboard rofi udiskie python-pywal swaybg xdg-desktop-portal-hyprland qt6-wayland qt5-wayland
+sudo pacman -S --noconfirm firefox blueman kitty mako file-roller gimp kdenlive thunar unzip neovim
+sudo pacman -S --noconfirm otf-font-awesome papirus-icon-theme noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd
 # Create a directory called 'del' in the home directory
 mkdir ~/del
 echo "Created a directory called del in home"
@@ -79,3 +79,6 @@ echo "succesfully copied dotfiles"
 
 sudo systemctl enable bluetooth.service
 echo "enabled bluetooth service"
+
+echo "Check the last line of this file"
+## Remember to https://www.reddit.com/r/linuxquestions/comments/t7ze3c/thunar_open_file_in_neovim/
