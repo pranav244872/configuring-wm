@@ -70,6 +70,9 @@ mkdir -p ~/scripts
 echo "Successfully created a scripts folder"
 # Copying the scripts folder from configuring-wm to ~/scripts
 cp ~/del/configuring-wm/colors.sh ~/scripts/
+cd ~/scripts
+chmod +x colors.sh
+echo "gave executable permissions to colors.sh script"
 
 # Making config files
 # Source directory
