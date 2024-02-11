@@ -3,7 +3,8 @@ sudo nmcli dev wifi connect "pranav17" password "Aekbote25"
 # Define the list of packages to install
 sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager hyprland kitty mako wireplumber polkit-kde-agent waybar gtk3
 sudo pacman -S --noconfirm less file qt5-wayland lf neovim wl-clipboard rofi udiskie python-pywal swaybg papirus-icon-theme noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd
-
+sudo pacman -S --noconfirm xdg-desktop-portal-hyprland
+sudo pacman -S --noconfirm qt6-wayland
 # Create a directory called 'del' in the home directory
 mkdir ~/del
 echo "Created a directory called del in home"
