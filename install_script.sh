@@ -72,26 +72,7 @@ cd ~/scripts
 chmod +x colors.sh
 echo "gave executable permissions to colors.sh script"
 
-# Making config files
-# Source directory
-dir_a="~/del/configuring-wm/.config"
-# Destination directory
-dir_b="~/.config"
-# Copy folders from directory A to directory B
-echo "Copying config files from $dir_a to $dir_b..."
-# Loop through each folder in directory A
-for folder in "$dir_a"/*; do
-    # Extract folder name
-    folder_name=$(basename "$folder")
-    # Check if folder exists in directory B
-    if [ -d "$dir_b/$folder_name" ]; then
-        # Remove existing folder in directory B
-        rm -rf "$dir_b/$folder_name"
-    fi
-    # Copy folder from directory A to directory B
-    cp -r "$folder" "$dir_b"
-    echo "Copied $folder_name"
-done
+cp -r ~/del/configuring-wm/.config/* ~/.config/
 
 echo "Folders copied successfully."
 echo "succesfully copied dotfiles"
