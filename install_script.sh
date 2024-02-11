@@ -1,6 +1,6 @@
 #!/bin/bash
 # Define the list of packages to install
-sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager hyprland kitty mako wireplumber polkit-kde-agent waybar gtk3
+sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager hyprland kitty mako polkit-kde-agent waybar gtk3
 sudo pacman -S --noconfirm less file qt5-wayland lf neovim wl-clipboard rofi udiskie python-pywal swaybg papirus-icon-theme noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd
 sudo pacman -S --noconfirm xdg-desktop-portal-hyprland
 sudo pacman -S --noconfirm qt6-wayland
@@ -34,9 +34,7 @@ echo "pwd --> ~/del/yay"
 # Build and install Yay using makepkg
 echo "building yay"
 makepkg -si
-# Enable and start Pipewire and WirePlumber services using systemctl
-echo "Enable and start Pipewire and WirePlumber services using systemctl"
-sudo systemctl --user --now enable pipewire wireplumber
+
 # Check if yay is installed
 if ! command -v yay &> /dev/null; then
     echo "yay is not installed. Please install yay first."
@@ -69,7 +67,7 @@ echo "Successfully copied .bashrc from configuring-wm to ~/.bashrc"
 mkdir -p ~/scripts
 echo "Successfully created a scripts folder"
 # Copying the scripts folder from configuring-wm to ~/scripts
-cp ~/del/configuring-wm/colors.sh ~/scripts/
+cp ~/del/configuring-wm/scripts/colors.sh ~/scripts/
 cd ~/scripts
 chmod +x colors.sh
 echo "gave executable permissions to colors.sh script"
