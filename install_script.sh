@@ -74,5 +74,6 @@ echo "gave executable permissions to colors.sh script"
 
 cp -r ~/del/configuring-wm/.config/* ~/.config/
 
+sudo systemctl enable bluetooth.service
 echo "Folders copied successfully."
 echo "succesfully copied dotfiles"
