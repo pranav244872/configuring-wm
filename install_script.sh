@@ -34,6 +34,7 @@ echo "pwd --> ~/del/yay"
 # Build and install Yay using makepkg
 echo "building yay"
 makepkg -si
+sudo pacman -Rns go
 
 # Check if yay is installed
 if ! command -v yay &> /dev/null; then
