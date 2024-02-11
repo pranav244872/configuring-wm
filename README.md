@@ -53,9 +53,8 @@ add the following in hyprland config:
 exec-once=dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP  
 
 ### Configuring an app launcher:  
-sudo pacman -S wofi
-mkdir ~/.config/wofi  
-there copied this: https://github.com/sonnybox/yt-files/blob/main/SIMPLE%20LAUNCHER/config.rasi  
+sudo pacman -S rofi    
+mkdir ~/.config/rofi    
 
 ### Changed the hyprland config files according to ver 1.0.0  
 
@@ -117,4 +116,4 @@ sudo pacman -S pacutils
 sudo pacman -S lostfiles  
 
 ### Flutter:
-sudo apt-get install clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+yay -S flutter
