@@ -15,7 +15,7 @@ configuration {
 }
 
 listview {
-	background-color: @bg;
+	background-color: @background;
   	columns: 1;
   	lines: 10;
 	padding: 0;
@@ -24,14 +24,14 @@ listview {
 window {
     width: 30%;
     border: 2px;
-    border-color: @foreground;
+    border-color: @selected-normal-background;
 }
 
 prompt {
   enabled: true;
   padding: 12 0 0 12;
   background-color: @background;
-  text-color: @fg;
+  text-color: @foreground;
 }
 
 inputbar {
@@ -57,8 +57,8 @@ element {
   	text-color: @foreground;
 	
 }
-element selected {
-  text-color: @foreground;
+element selected.normal {
+  text-color: @background;
   background-color: @selected-normal-background;
 }
 
