@@ -1,9 +1,16 @@
 #!/bin/bash
+
+#Install the basic hyprland install from the arch install script
+
 # Define the list of packages to install
-sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager polkit-kde-agent waybar gtk3 less file 
-sudo pacman -S --noconfirm hyprland wl-clipboard rofi udiskie python-pywal swaybg xdg-desktop-portal-hyprland qt6-wayland qt5-wayland
-sudo pacman -S --noconfirm firefox blueman kitty mako file-roller gimp kdenlive thunar unzip neovim
-sudo pacman -S --noconfirm otf-font-awesome papirus-icon-theme noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd
+sudo pacman -S --noconfirm git firefox bluez bluez-utils networkmanager polkit-kde-agent waybar gtk3 
+
+sudo pacman -S --noconfirm wl-clipboard rofi udiskie python-pywal swaybg xdg-desktop-portal-hyprland qt6-wayland qt5-wayland
+
+sudo pacman -S --noconfirm firefox blueman mako file-roller thunar thunar-archive-manager neovim
+
+sudo pacman -S --noconfirm papirus-icon-theme noto-fonts noto-fonts-emoji noto-fonts-cjk ttf-jetbrains-mono-nerd
+
 # Create a directory called 'del' in the home directory
 mkdir ~/del
 echo "Created a directory called del in home"
@@ -46,6 +53,13 @@ fi
 echo "installing hyprshot for screenshots"
 yay -S hyprshot
 
+#Install hypridle using yay
+echo "installing hypridle for idle-management"
+yay -S hypridle
+
+echo "installing hyprlock for lock-screen"
+yay -S hyprlock
+
 # Go to ~/del directory
 echo "pwd ~/del"
 cd ~/del || exit
@@ -58,24 +72,32 @@ git clone https://github.com/pranav244872/configuring-wm.git || exit
 cd configuring-wm || exit
 echo "pwd ~/del/configuring-wm"
 
-# Copy .bashrc from the repository to the home directory
-cp ~/del/configuring-wm/.bashrc ~/.bashrc
-echo "copied .bashrc from pranavs repo to system repo"
-# Display a message indicating success
-echo "Successfully copied .bashrc from configuring-wm to ~/.bashrc"
-
-# Making a scripts folder in home
-mkdir -p ~/scripts
-echo "Successfully created a scripts folder"
-# Copying the scripts folder from configuring-wm to ~/scripts
-cp ~/del/configuring-wm/scripts/colors.sh ~/scripts/
-cd ~/scripts
-chmod +x colors.sh
-echo "gave executable permissions to colors.sh script"
-
 cp -r ~/del/configuring-wm/.config/* ~/.config/
 echo "Folders copied successfully."
 echo "succesfully copied dotfiles"
+
+#Giving permissions for scripts to execute
+cd /home/pranav/.config/hypr || exit
+echo "pwd ~/.config/hypr"
+chmod +x startup.sh
+#In waybar
+cd /home/pranav/.config/waybar || exit
+echo "pwd ~/.config/waybar"
+cd scripts/bluetooth || exit
+chmod +x bluetooth.sh
+cd /home/pranav/.config/waybar || exit
+echo "pwd ~/.config/waybar"
+cd scripts/launcher || exit
+chmod +x launcher.sh
+cd /home/pranav/.config/waybar || exit
+echo "pwd ~/.config/waybar"
+cd scripts/network || exit
+chmod +x rofi-wifi.sh
+cd /home/pranav/.config/waybar || exit
+echo "pwd ~/.config/waybar"
+cd scripts/powermenu || exit
+chmod +x powermenu.sh
+
 
 sudo systemctl enable bluetooth.service
 echo "enabled bluetooth service"
