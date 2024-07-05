@@ -2,19 +2,19 @@
 
 Welcome to my Hyprland Rice configuration repository! This project showcases my desktop customization setup using various configuration files and an installation script.
 
- OS: Arch Linux (btw)
- WM: Hyprland
- Colorscheme: pywal
- Font: JetBrains Mono Nerd
- Text editor: Neovim
- Top Bar: waybar
- App Launcher: Rofi
- Powermenu: Rofi
- Terminal: kitty
- Firefox theme: pywalfox
- Idle daemon: hypridle
- Screen lock: hyprlock
- Display Manager: SDDM
+ OS: Arch Linux (btw)  
+ WM: Hyprland  
+ Colorscheme: pywal  
+ Font: JetBrains Mono Nerd  
+ Text editor: Neovim  
+ Top Bar: waybar  
+ App Launcher: Rofi  
+ Powermenu: Rofi  
+ Terminal: kitty  
+ Firefox theme: pywalfox  
+ Idle daemon: hypridle  
+ Screen lock: hyprlock  
+ Display Manager: SDDM  
 
 ## Examples
 ![image](https://github.com/pranav244872/configuring-wm/assets/137860111/bab3ae7d-281c-4643-9ca2-43249bd89c58)
