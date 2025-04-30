@@ -1,2 +1,4 @@
-require("pranav.core")
-require("pranav.lazy")
+require('config.lazy')
+require('core.options')
+require('core.keymaps')
+require('core.autocmd')
