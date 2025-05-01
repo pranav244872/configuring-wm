@@ -33,7 +33,29 @@ vim.keymap.set('n', '<leader><space>', require('telescope.builtin').buffers, { d
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind [F]iles' })
 vim.keymap.set('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
 vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
-vim.keymap.set('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 vim.keymap.set('n', '<leader>en', function()
     require('telescope.builtin').find_files { cwd = vim.fn.stdpath('config') }
 end, { desc = '[E]dit [N]eovim config' })
+
+-- oil
+-- [[Oil Keymaps]]
+-- Open Oil in the root directory (where Neovim was launched)
+vim.keymap.set('n', '<leader>rd', function()
+  require("oil").open_float(vim.fn.getcwd())
+end, { desc = "Open Root Directory in Oil Float" })
+
+-- Open Oil in the current file's directory
+vim.keymap.set('n', '<leader>cw', function()
+  local filepath = vim.api.nvim_buf_get_name(0)
+  if filepath == '' then
+    vim.notify("No file loaded in current buffer", vim.log.levels.WARN)
+    return
+  end
+  local dir = vim.fn.fnamemodify(filepath, ":p:h")
+  require("oil").open_float(dir)
+end, { desc = "Open Current File's Directory in Oil Float" })
+
+
+vim.keymap.set("n", "gl", function() vim.diagnostic.open_float() end,
+    {desc="Open Diagnostics in Float"}
+)
