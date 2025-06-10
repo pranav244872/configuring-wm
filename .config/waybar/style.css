@@ -1,87 +1,148 @@
-@import "/home/pranav/.cache/wal/colors-waybar.css";
 * {
-    font-family: "Jetbrains Mono Nerd Font";
+    font-family: "JetBrainsMono Nerd Font";
     font-size: 14px;
-    color: @foreground;
-    font-weight: bold;
+    padding: 0px;
+    margin: 0px;
 }
+
 window#waybar {
-    background-color: @background;
-}
-window#waybar.hidden {
-    opacity: 0.2;
+    background: #1d2021;
+    border: 2px solid #3c3836;
+    padding: 0px;
 }
 
 .modules-left {
-  margin: 10px;
+    padding: 7px;
 }
-#custom-arch {
-  margin: 0px 10px 0px 0px;
-  background-color: @color8;
-  padding: 0px 5px 0px 2px;
+
+#tray {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
 }
-#clock {
-  margin: 0px 10px 0px 0px;
-  background-color: @color8;
-  padding: 0px 5px;
+
+#idle_inhibitor {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    color: #c7ab7a;
+    font-weight: bold;
+    padding-right: 13px;
+    padding-left: 5px;
+    margin-right: 5px;
 }
-#window {
-  margin: 0px 10px 0px 0px;
-  background-color: @color8;
-  padding: 0px 5px;
+
+#power-profiles-daemon {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    margin-right: 5px;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #c7ab7a;
+}
+
+#workspaces button.empty {
+    color: #434a4c;
+    font-weight: bold;
 }
 
 #workspaces {
-  margin: 10px;
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    margin-right: 5px;
+    font-weight: bold;
 }
-#workspaces button.empty {
-  background-color: @color8;
-}
+
 #workspaces button {
-  background-color: @color1;
-  margin: 0px;
-  padding: 0px 5px;
-  border-radius: 0px;
+    all: initial;
+    min-width: 0;
+    box-shadow: inset 0 -3px transparent;
+    padding: 2px 4px;
+    color: #c7ab7a;
+    font-weight: bold;
 }
+
 #workspaces button.active {
-  background-color: @color3
+    background-color: #c7ab7a;
+    color: #1d2021;
+    font-weight: bold;
+}
+
+#window {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    padding-right: 5px;
+    padding-left: 5px;
+    color: #c7ab7a;
+}
+
+.modules-center {
+    padding: 7px;
+}
+
+#clock {
+    background-color: #303536;
+    border: 2px solid #434a4c;
+    padding-right: 10px;
+    padding-left: 10px;
+    color: #c7ab7a;
 }
 
 .modules-right {
-  margin: 10px;
+    padding: 7px;
 }
+
+
 #network {
-  margin: 0px 10px 0px 0px;
-  background-color : @color8;
-  padding: 0px 5px;
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
 }
-#bluetooth {
-  margin: 0px 10px 0px 0px;
-  background-color : @color8;
-  padding: 0px 5px;
-}
+
 #wireplumber {
-  margin: 0px 10px 0px 0px;
-  background-color : @color8;
-  padding: 0px 15px 0px 5px;
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+    padding-right: 15px;
+    padding-left: 5px;
+    margin-right: 5px;
 }
+
+#bluetooth {
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
+}
+
 #backlight {
-  margin: 0px 10px 0px 0px;
-  background-color : @color8;
-  padding: 0px 10px 0px 5px;
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
 }
+
+#keyboard-state {
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
+}
+
 #battery {
-  margin: 0px 10px 0px 0px;
-  background-color : @color8;
-  padding: 0px 15px 0px 5px;
-}
-#battery {
-  margin: 0px 10px 0px 0px;
-  background-color : @color8;
-  padding: 0px 15px 0px 5px;
-}
-#custom-powermenu {
-  margin: 0px 5px 0px 0px;
-  background-color : @color8;
-  padding: 0px 5px 0px 3px;
+    background-color: #d4be98;
+    border: 2px solid #c7ab7a;
+    color: #1d2021;
+    padding-right: 15px;
+    padding-left: 5px;
 }

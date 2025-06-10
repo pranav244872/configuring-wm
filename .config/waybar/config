@@ -1,71 +1,125 @@
-{
+[
+  {
+    // Top bar configuration
+    "layer": "top",
+    "spacing": 0,
+    "height": 0,
+
+    "margin-top": 10,
+    "margin-right": 10,
+    "margin-bottom": 0,
+    "margin-left": 10,
+
     "modules-left": [
-      "custom/arch",
-      "clock",
-      "hyprland/window"
-    ],
-    "modules-center": [
-        "hyprland/workspaces"
-    ],
-    "modules-right": [
+        "idle_inhibitor",
         "tray",
+        "power-profiles-daemon",
+        "hyprland/workspaces",
+        "hyprland/window",
+    ],
+
+    "modules-center" : [
+        "clock"
+    ],
+
+    "modules-right": [
+        "mpd",
         "network",
         "bluetooth",
         "wireplumber",
         "backlight",
+        "keyboard-state",
         "battery",
-        "custom/powermenu",
     ],
 
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "persistent-workspaces": {
+            "1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[],"9":[]
+        },
+        "warp-on-scroll": false,
+        "format": "{icon}",
+        "format-icons": {
+            "1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9"
+        },
+    },
+
+    "hyprland/window": {
+        "format": "{class}",
+        "max-length": 20,
+        "rewrite": {
+            "^(?!.*\\S).*": ""
+        },
+        "tooltip": false
+    },
+
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": "{name} {icon} ",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
+    },
+
+    "mpd": {
+        "format": "  {title} - {artist} {stateIcon} [{elapsedTime:%M:%S}/{totalTime:%M:%S}] {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}[{songPosition}/{queueLength}] [{volume}%]",
+        "format-disconnected": " Disconnected",
+        "format-stopped": " {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped",
+        "unknown-tag": "N/A",
+        "interval": 2,
+        "consume-icons": {
+            "on": " "
+        },
+        "random-icons": {
+            "on": " "
+        },
+        "repeat-icons": {
+            "on": " "
+        },
+        "single-icons": {
+            "on": "1 "
+        },
+        "state-icons": {
+            "paused": "",
+            "playing": ""
+        },
+        "tooltip-format": "MPD (connected)",
+        "tooltip-format-disconnected": "MPD (disconnected)",
+        "on-click": "mpc toggle",
+        "on-click-right": "foot -a ncmpcpp ncmpcpp",
+        "on-scroll-up": "mpc volume +2",
+        "on-scroll-down": "mpc volume -2"
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+
     "tray": {
-      "icon-size": 21,
-      "spacing": 10
+        "spacing": 10
     },
-    
-    "custom/arch": {
-      "format": " 󰣇 ",
-      "on-click": "/home/pranav/.config/waybar/scripts/launcher/launcher.sh",
-    },
-
-  "hyprland/window": {
-      "format": "{title}",
-      "rewrite": {
-        "(.*) — Mozilla Firefox": "Firefox",
-      },
-      "separate-outputs": true
-  },
-
-   "hyprland/workspaces": {
-         "disable-scroll": true,
-         "all-outputs": true,
-         "persistent-workspaces": {
-         "1":[],"2":[],"3":[],"4":[],"5":[],"6":[],"7":[],"8":[],"9":[]
-         },
-         "warp-on-scroll": false,
-         "format": "{icon}",
-         "format-icons": {
-             "1":"1","2":"2","3":"3","4":"4","5":"5","6":"6","7":"7","8":"8","9":"9"
-         },
-     },
 
     "clock": {
-        "format": "  {:%H:%M    %e %b}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        "today-format": "<b>{}</b>",
+        "format": "{:%A %B %d %H:%M %p}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     },
 
     "backlight": {
-        "min":10,
-        "max":100,
-        "format": "{percent}% {icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", ""],
-        "on-scroll-up": "brightnessctl set 5%+",
-        "on-scroll-down": "brightnessctl set 5%-",
+        "format": "{icon} {percent}%",
+        "format-icons": [
+            "", "", "", "", "", "", "", "", ""
+        ]
     },
 
     "battery": {
         "states": {
-            // "good": 95,
             "warning": 30,
             "critical": 15
         },
@@ -78,38 +132,54 @@
     },
 
     "network": {
-        "format-wifi": "{essid}  ",
-        "on-click": "/home/pranav/.config/waybar/scripts/network/rofi-wifi.sh",
-        "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{ifname} via {gwaddr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": " 󰖪 ",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
+        "format": "⚠ Off", // Interface down or missing
+        "format-disconnected": "󰖪 Disconnected", // Interface up but not connected
+        "format-linked": "󰖪 Connecting…", // Optional: interface up but no IP
+        "format-wifi": "󰖩 {essid}", // Connected Wi-Fi
+        "format-ethernet": "󰈀 {ifname}", // Connected Ethernet
+        "tooltip-format": "󰖩 {essid} via {gwaddr}",
+        "tooltip-format-wifi": "󰖩 {essid}\nIP: {ipaddr}",
+        "tooltip-format-ethernet": "󰈀 {ifname}\nIP: {ipaddr}",
+        "tooltip-format-disconnected": "󰖪 No Wi-Fi Connection",
+        "on-click": "iwmenu -l fuzzel -s 5",
+        "max-length": 50
     },
 
     "bluetooth": {
-      "format": " {status}",
-      "format-disabled": " 󰂲 ",
-      "format-connected": " {device_alias}",
-      "format-connected-battery": " {device_alias} {device_battery_percentage}%",
-      "tooltip-format": "{controller_alias}\t{controller_address}\n\n{num_connections} connected",
-      "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{num_connections} connected\n\n{device_enumerate}",
-      "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",
-      "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",
-      "on-click": "blueman-manager"
+        "format": " {status}",  // Use Bluetooth icon and the status text
+        "format-disabled": "󰂲 Disabled",  // Show when Bluetooth is off
+        "format-off": "󰂲 Off",  // Show when Bluetooth is turned off
+        "format-on": " On",  // Show when Bluetooth is turned on with no devices connected
+        "format-connected": "󰂱 {device_alias}",  // Show device name when connected
+        "on-click": "bzmenu -l fuzzel",  // Run this command when clicked
+        "tooltip-format": "{controller_alias}\t{controller_address}",  // Tooltip info for the controller
+        "tooltip-format-connected": "{controller_alias}\t{controller_address}\n\n{device_enumerate}",  // Tooltip info when connected to a device
+        "tooltip-format-enumerate-connected": "{device_alias}\t{device_address}",  // Device details when enumerating devices
+        "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_address}\t{device_battery_percentage}%",  // Battery percentage in tooltip
+        "max-length": 20,  // Limit the text length to avoid overflow
+        "min-length": 5,   // Ensure it takes at least this much space
+        "rotate": 0,       // No rotation of the text
+        "smooth-scrolling-threshold": 0.5,  // Smooth scrolling threshold
+        "tooltip": true     // Enable the tooltip when hovering
+    },
+
+    "power-profiles-daemon": {
+        "format": "{icon}  {profile}",
+        "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+        "tooltip": true,
+        "format-icons": {
+            "default": "",
+            "performance": "",
+            "balanced": "",
+            "power-saver": ""
+        }
     },
 
     "wireplumber": {
-      "format": "{volume}% {icon}",
-      "format-muted": " 󰝟 ",
-      "on-scroll-up": "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+",
-      "on-scroll-down": "wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%-",
-      "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
-      "format-icons": ["", "", ""]
-    },
-
-    "custom/powermenu": {
-      "format" : " 󰐥 ",
-      "on-click" : "/home/pranav/.config/waybar/scripts/powermenu/powermenu.sh"
-    },
-}
+        "format": "{volume}% {icon}",
+        "format-muted": "",
+        "on-click": "helvum",
+        "format-icons": ["", "", ""]
+    }
+  },
+  ]
