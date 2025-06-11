@@ -1,0 +1,1 @@
+/home/pranav/.cache/wal/colors.fish
