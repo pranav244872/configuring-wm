@@ -53,7 +53,7 @@ return {
             -- See :h blink-cmp-config-keymap for defining your own keymap
             signature = { enabled = true },
 
-            keymap = { preset = 'super-tab' },
+            keymap = { preset = 'default' },
 
             appearance = {
                 -- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'

@@ -74,11 +74,17 @@ return {
         -- Language server configurations
         local servers = {
             lua_ls = {},
+            basedpyright = {},
+            clangd = {},
+            biome = {},
+            ts_ls = {},
         }
+        -- Mason-manageable servers (used in ensure_installed)
+        local mason_servers = vim.tbl_keys(servers)
 
-        -- Mason tool installer setup
+        -- Setup Mason Tool Installer only with Mason-supported servers
         require('mason-tool-installer').setup {
-            ensure_installed = vim.tbl_keys(servers or {}),
+            ensure_installed = mason_servers,
         }
 
         -- Setup LSP servers

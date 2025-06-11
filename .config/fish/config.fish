@@ -112,8 +112,8 @@ alias big="expac -H M '%m\t%n' | sort -h | nl"              # Sort installed pac
 alias gitpkg='pacman -Q | grep -i "\-git" | wc -l'          # List amount of -git packages
 alias update='sudo pacman -Syu'
 
-# Get fastest mirrors
-alias mirror="sudo cachyos-rate-mirrors"
+# Use reflector to get the fastest and most up-to-date Arch mirrors
+alias mirror="sudo reflector --country 'India' --age 12 --protocol https --sort rate --save /etc/pacman.d/mirrorlist"
 
 # Help people new to Arch
 alias apt='man pacman'
@@ -129,3 +129,8 @@ alias jctl="journalctl -p 3 -xb"
 
 # Recent installed packages
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+
+# Source pywal colors if the file exists
+if test -f ~/.config/fish/colors.fish
+    source ~/.config/fish/colors.fish
+end
