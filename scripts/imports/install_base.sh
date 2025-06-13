@@ -71,7 +71,7 @@ install_base_packages() {
         echo "One or more packages failed to install. Exiting."
         exit 1
     fi
-    sudo pacman -Sy --noconfirm power-profiles-daemon
+    sudo pacman -Sy --noconfirm power-profiles-daemon expac
     if [ $? -ne 0 ]; then
         echo "One or more packages failed to install. Exiting."
         exit 1
