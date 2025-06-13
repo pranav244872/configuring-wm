@@ -45,30 +45,32 @@ window#waybar {
 }
 
 #workspaces button.empty {
-    color: @color3;
+    background-color: @color8;
+    color: @foreground;
     font-weight: bold;
 }
 
 #workspaces {
-    background-color: @color8;
+    background-color: @color3;
     border: 2px solid @color2;
-    color: @foreground;
+    color: @background;
     margin-right: 5px;
     font-weight: bold;
 }
 
 #workspaces button {
+    background-color: @color3;
     all: initial;
     min-width: 0;
     box-shadow: inset 0 -3px transparent;
     padding: 2px 4px;
-    color: @foreground;
+    color: @background;
     font-weight: bold;
 }
 
 #workspaces button.active {
     background-color: @foreground;
-    color: #1d2021;
+    color: @background;
     font-weight: bold;
 }
 

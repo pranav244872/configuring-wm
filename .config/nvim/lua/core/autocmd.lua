@@ -28,3 +28,19 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.iskeyword:remove("_")
     end,
 })
+
+local autocmd = vim.api.nvim_create_autocmd
+
+-- Remove padding when entering Neovim
+autocmd("VimEnter", {
+  callback = function()
+    vim.fn.jobstart({ "kitty", "@", "set-spacing", "padding=0", "margin=0" })
+  end,
+})
+
+-- Restore padding when leaving Neovim
+autocmd("VimLeavePre", {
+  callback = function()
+    vim.fn.jobstart({ "kitty", "@", "set-spacing", "padding=20", "margin=10" })
+  end,
+})
