@@ -1,0 +1,14 @@
+[config]
+
+[templates.hyprland]
+input_path = '/home/pranav/.config/matugen/templates/hyprland-colors.conf'
+output_path = '~/.config/hypr/conf/colors.conf'
+post_hook = 'hyprctl reload'
+
+[templates.kitty]
+input_path = '~/.config/matugen/templates/kitty-colors.conf'
+output_path = '~/.config/kitty/colors.conf'
+
+[templates.quickshell]
+input_path = '~/.config/matugen/templates/quickshell.json'
+output_path = '~/.config/quickshell/colors.json'
