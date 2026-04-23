@@ -1,0 +1,9 @@
+module qs.services
+singleton Colors 1.0 Colors.qml
+singleton NotifService 1.0 NotifService.qml
+singleton Network 1.0 Network.qml
+singleton Brightness 1.0 Brightness.qml
+singleton IdleService 1.0 IdleService.qml
+singleton ScreenshotService 1.0 ScreenshotService.qml
+singleton NetworkMenuService 1.0 NetworkMenuService.qml
+singleton NightLightService 1.0 NightLightService.qml
