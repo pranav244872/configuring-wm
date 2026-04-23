@@ -1,0 +1,90 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "file",
+    "source": "~/.config/fastfetch/logo.txt",
+    "padding": {
+      "left": 2,
+      "right": 6
+    }
+  },
+  "display": {
+    "separator": "  ",
+    "color": {
+      "keys": "3",
+      "title": "3"
+    },
+    "bar": {
+      "glyphWidth": 10,
+      "borderWidth": 1,
+      "char": {
+        "elapsed": "━",
+        "todo": "─"
+      }
+    }
+  },
+  "modules": [
+    {
+      "type": "custom",
+      "format": "┌─────────────────────────────┐"
+    },
+    {
+      "type": "os",
+      "key": "os "
+    },
+    {
+      "type": "host",
+      "key": "pc "
+    },
+    {
+      "type": "battery",
+      "key": "bat"
+    },
+    {
+      "type": "kernel",
+      "key": "krn"
+    },
+    {
+      "type": "uptime",
+      "key": "up "
+    },
+    {
+      "type": "packages",
+      "key": "pkg"
+    },
+    {
+      "type": "shell",
+      "key": "sh "
+    },
+    {
+      "type": "wm",
+      "key": "wm "
+    },
+    {
+      "type": "cpu",
+      "key": "cpu"
+    },
+    {
+      "type": "gpu",
+      "key": "gpu"
+    },
+    {
+      "type": "memory",
+      "key": "mem",
+      "percent": {
+        "auto": false
+      },
+      "unit": "gib"
+    },
+    {
+      "type": "custom",
+      "format": "└─────────────────────────────┘"
+    },
+    {
+      "type": "colors",
+      "padding": 1,
+      "symbol": "■ ",
+      "symbolMargin": "  "
+    }
+  ]
+}
