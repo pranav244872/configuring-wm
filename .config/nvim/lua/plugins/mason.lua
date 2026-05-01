@@ -1,0 +1,2 @@
+-- Mason is set up in mason-lspconfig.lua
+-- This file is kept to prevent auto-require errors
