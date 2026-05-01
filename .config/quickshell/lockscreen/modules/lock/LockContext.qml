@@ -2,7 +2,6 @@
 //
 // This Scope holds all state shared between lock surfaces on each monitor.
 // Contains PamContext, current password text, unlock progress, and failure state.
-// Auto-unlocks after 10 seconds for development safety.
 
 import QtQuick
 import Quickshell
@@ -58,21 +57,6 @@ Scope {
         }
     }
 
-    // Development safety: auto-unlock after 10 seconds
-    // Timer is NOT started automatically — it's reset when the lock is activated
-    Timer {
-        id: autoUnlockTimer
-        interval: 10000
-        running: false
-        repeat: false
-        onTriggered: {
-            console.log("LockContext: AUTO-UNLOCK after 10s (development safety)")
-            root.unlocked()
-        }
-    }
-
-    // Reset auto-unlock timer when locked
-    function resetAutoUnlock() {
-        autoUnlockTimer.restart()
-    }
+    // No-op: kept for API compatibility with Lock.qml
+    function resetAutoUnlock() {}
 }
