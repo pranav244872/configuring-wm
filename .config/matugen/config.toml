@@ -12,3 +12,7 @@ output_path = '~/.config/kitty/colors.conf'
 [templates.quickshell]
 input_path = '~/.config/matugen/templates/quickshell.json'
 output_path = '~/.config/quickshell/colors.json'
+
+[templates.nvim]
+input_path = "/home/pranav/.config/matugen/templates/nvim-colors.json"
+output_path = "/home/pranav/.config/nvim/matugen-colors.json"

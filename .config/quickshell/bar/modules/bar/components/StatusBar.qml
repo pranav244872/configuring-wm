@@ -30,10 +30,11 @@ Item {
     property bool   wifiConnected: false
 
     property string powerProfile: "balanced"     // power-saver | balanced | performance
-    property int  sinkVolume: 0
-    property bool sinkMuted: false
-    property int  sourceVolume: 0
-    property bool sourceMuted: false
+    // Volume/mute: driven by the Audio singleton (PipeWire events, instant)
+    readonly property int  sinkVolume: Audio.sinkVolume
+    readonly property bool sinkMuted: Audio.sinkMuted
+    readonly property int  sourceVolume: Audio.sourceVolume
+    readonly property bool sourceMuted: Audio.sourceMuted
 
     implicitHeight: 36
     implicitWidth: contentRow.implicitWidth
@@ -114,35 +115,7 @@ Item {
 
     Timer { id: ppdTimer; interval: 10000; repeat: false; onTriggered: ppdGet.running = true }
 
-    // ── Volume polling ───────────────────────────────────────────────────────
-    Process {
-        id: volSinkProc
-        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const m = text.match(/Volume:\s+([\d.]+)/)
-                root.sinkVolume = m ? Math.round(parseFloat(m[1]) * 100) : 0
-                root.sinkMuted  = text.includes("[MUTED]")
-                if (root.sinkVolume > 100) root.sinkVolume = 100 // clamp
-                volSourceProc.running = true
-            }
-        }
-    }
-    Process {
-        id: volSourceProc
-        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SOURCE@"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const m = text.match(/Volume:\s+([\d.]+)/)
-                root.sourceVolume = m ? Math.round(parseFloat(m[1]) * 100) : 0
-                root.sourceMuted  = text.includes("[MUTED]")
-                if (root.sourceVolume > 100) root.sourceVolume = 100 // clamp
-                volTimer.restart()
-            }
-        }
-    }
-    Timer { id: volTimer; interval: 2000; repeat: false; onTriggered: volSinkProc.running = true }
+    // ── Volume: driven by Audio singleton (PipeWire events, no polling) ──────
 
     // ── Layout ───────────────────────────────────────────────────────────────
     Row {

@@ -57,64 +57,22 @@ PanelWindow {
     readonly property color cOnError:              Colors.m3.on_error
     readonly property color cOutline:              Colors.m3.outline
 
-    // ── Live system state ─────────────────────────────────────────────────────
-    property int  sinkVolume:   50
-    property bool sinkMuted:    false
-    property int  sourceVolume: 50
-    property bool sourceMuted:  false
+    // ── Live system state (driven by Audio singleton, instant PipeWire events) ─
+    readonly property int  sinkVolume:   Audio.sinkVolume
+    readonly property bool sinkMuted:    Audio.sinkMuted
+    readonly property int  sourceVolume: Audio.sourceVolume
+    readonly property bool sourceMuted:  Audio.sourceMuted
 
-    // Volume polling via wpctl (same approach as the reference)
-    Process {
-        id: volSinkProc
-        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const m = text.match(/Volume:\s+([\d.]+)/)
-                root.sinkVolume = m ? Math.round(parseFloat(m[1]) * 100) : 0
-                root.sinkMuted  = text.includes("[MUTED]")
-                if (!volSourceProc.running) {
-                    volSourceProc.running = true
-                }
-            }
-        }
-        onExited: (exitCode, exitStatus) => {
-            if (exitCode !== 0) {
-                console.log("[ControlCenter] volSinkProc exited with code:", exitCode)
-            }
-        }
-    }
-    Process {
-        id: volSourceProc
-        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SOURCE@"]
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const m = text.match(/Volume:\s+([\d.]+)/)
-                root.sourceVolume = m ? Math.round(parseFloat(m[1]) * 100) : 0
-                root.sourceMuted  = text.includes("[MUTED]")
-                volTimer.restart()
-            }
-        }
-        onExited: (exitCode, exitStatus) => {
-            if (exitCode !== 0) {
-                console.log("[ControlCenter] volSourceProc exited with code:", exitCode)
-            }
-        }
-    }
-    Timer { id: volTimer; interval: 2000; onTriggered: volSinkProc.running = true }
-
-    // Volume setters
+    // Volume setters — go through Audio singleton (direct PipeWire control)
     function setVolume(v) {
-        root.sinkVolume = Math.round(v * 100)
-        Quickshell.execDetached(["wpctl", "set-volume", "@DEFAULT_AUDIO_SINK@", Math.round(v * 100) + "%"])
+        Audio.setVolume(v)
     }
     function setMicVolume(v) {
-        root.sourceVolume = Math.round(v * 100)
-        Quickshell.execDetached(["wpctl", "set-volume", "@DEFAULT_AUDIO_SOURCE@", Math.round(v * 100) + "%"])
+        Audio.setMicVolume(v)
     }
     function setBrightness(v) {
-        const pct = Math.round(v * 100)
-        brightness.setBrightness(v)
+        if (Brightness.getActiveMonitor())
+            Brightness.getActiveMonitor().setBrightness(v)
     }
 
     // ── Process launchers ────────────────────────────────────────────────────
