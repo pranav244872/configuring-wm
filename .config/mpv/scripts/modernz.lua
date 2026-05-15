@@ -2973,16 +2973,6 @@ local function osc_init()
     ne.visible = (osc_param.playresx >= visible_min_width)
     ne.tooltipF = user_opts.tooltip_hints and locale.speed_control or ""
 
-    local function adjust_speed(delta)
-        local new_speed = mp.get_property_number("speed", 1) + delta
-        mp.commandv("set", "speed", math.max(0.25, math.min(100, new_speed)))
-    end
-
-    ne.eventresponder["mbtn_left_up"] = function() adjust_speed(user_opts.speed_button_click) end
-    ne.eventresponder["mbtn_right_up"] = function() mp.commandv("set", "speed", 1) end
-    ne.eventresponder["wheel_up_press"] = function() adjust_speed(user_opts.speed_button_scroll) end
-    ne.eventresponder["wheel_down_press"] = function() adjust_speed(-user_opts.speed_button_scroll) end
-
     visible_min_width = visible_min_width + (user_opts.speed_button and 100 or 0)
 
     --download
