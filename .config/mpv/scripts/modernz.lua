@@ -2157,7 +2157,7 @@ layouts["modern"] = function ()
     lo.geometry = {x = (narrow_win and refX or time_codes_x), y = refY - (narrow_win and user_opts.time_codes_centered_height or user_opts.time_codes_height), an = (narrow_win and 5 or 4), w = time_codes_width, h = user_opts.time_font_size}
     lo.style = osc_styles.time
 
-    -- Fullscreen/Info/Pin/Screenshot/Loop/Speed
+    -- Fullscreen/Info/Pin/Screenshot/Speed/Loop
     local end_x = osc_geo.w - 37
     local function right_side_button(name, min_w, style, w)
         lo = add_layout(name)
@@ -2171,9 +2171,9 @@ layouts["modern"] = function ()
     if info_button then right_side_button("info", 300) end
     if ontop_button then right_side_button("ontop", 500) end
     if screenshot_button then right_side_button("screenshot", 600) end
+    if speed_button then right_side_button("speed", 600, osc_styles.speed, 42) end
     if loop_button then right_side_button("file_loop", 600) end
     if shuffle_button then right_side_button("shuffle", 600) end
-    if speed_button then right_side_button("speed", 600, osc_styles.speed, 42) end
     if download_button then right_side_button("download", 400) end
 
     -- cache info
