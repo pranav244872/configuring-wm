@@ -23,6 +23,8 @@
     "custom/separator",
     "bluetooth",
     "custom/separator3",
+    "custom/hyprsunset",
+    "custom/separator",
     "backlight",
     "custom/separator4",
     "battery",
@@ -96,6 +98,12 @@
     "return-type": "json",
     "interval": 2,
     "format": "{}"
+  },
+  "custom/hyprsunset": {
+    "exec": "~/.config/hypr/scripts/hyprsunsetctl watch",
+    "exec-on-event": false,
+    "on-click": "exec ~/.config/hypr/scripts/hyprsunsetctl toggle",
+    "return-type": "json"
   },
   "custom/separator7": {
     "exec": "sh -c 'count=$(busctl --user get-property org.kde.StatusNotifierWatcher /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems | sed -n \"s/^as \\\\([0-9]\\\\+\\\\).*/\\\\1/p\"); if [ \"${count:-0}\" -gt 0 ]; then echo \"{\\\"text\\\":\\\"󰿟\\\",\\\"class\\\":\\\"show\\\"}\"; else echo \" {\\\"text\\\":\\\"\\\",\\\"class\\\":\\\"hide\\\"}\"; fi'",

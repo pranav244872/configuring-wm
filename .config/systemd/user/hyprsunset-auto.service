@@ -1,0 +1,6 @@
+[Unit]
+Description=Auto-toggle hyprsunset at 7 PM
+
+[Service]
+Type=oneshot
+ExecStart=%h/.config/hypr/scripts/hyprsunsetctl auto

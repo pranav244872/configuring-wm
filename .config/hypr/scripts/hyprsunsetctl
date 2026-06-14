@@ -1,0 +1,119 @@
+#!/usr/bin/env python3
+import json, os, socket, sys, pathlib
+from datetime import datetime
+
+SOCKET_DIR = os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")
+INSTANCE_SIG = os.environ.get("HYPRLAND_INSTANCE_SIGNATURE", "")
+SOCKET_PATH = f"{SOCKET_DIR}/hypr/{INSTANCE_SIG}/.hyprsunset.sock"
+STATE_PATH = pathlib.Path(os.path.expanduser("~/.cache/hyprsunset-state"))
+NIGHT_TEMP = 4500
+
+
+def ipc(cmd):
+    try:
+        s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+        s.settimeout(3)
+        s.connect(SOCKET_PATH)
+        s.send((cmd + "\n").encode())
+        resp = s.recv(4096).decode().strip()
+        s.close()
+        return resp
+    except Exception:
+        return ""
+
+
+def read_state():
+    if STATE_PATH.exists():
+        return STATE_PATH.read_text().strip()
+    return ""
+
+
+def write_state(val):
+    STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    STATE_PATH.write_text(val)
+
+
+def toggle():
+    state = read_state()
+    if state == "on":
+        ipc("identity true")
+        write_state("off")
+    else:
+        ipc("identity false")
+        ipc(f"temperature {NIGHT_TEMP}")
+        write_state("on")
+
+
+def auto():
+    state = read_state()
+    if state in ("on", "off"):
+        return  # manual override, don't auto-change
+    hour = datetime.now().hour
+    if hour >= 19:
+        ipc("identity false")
+        ipc(f"temperature {NIGHT_TEMP}")
+        write_state("on")
+    else:
+        ipc("identity true")
+        write_state("off")
+
+
+def get_temp():
+    val = ipc("temperature")
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return 6500
+
+
+def status():
+    state = read_state()
+    temp = get_temp()
+    if state == "on":
+        out = {"text": f" {temp}K", "class": "on", "tooltip": f"Blue light filter: ON ({temp}K)"}
+    elif state == "off":
+        out = {"text": " off", "class": "off", "tooltip": "Blue light filter: OFF"}
+    else:
+        out = {"text": "?", "class": "off", "tooltip": "hyprsunset not initialized"}
+    print(json.dumps(out))
+
+
+def reset():
+    """Reset to auto mode — next auto timer will take over."""
+    STATE_PATH.unlink(missing_ok=True)
+
+
+def watch():
+    """Run continuously, outputting JSON status on each change."""
+    import time as _time
+    last = ""
+    while True:
+        state = read_state()
+        temp = get_temp()
+        if state == "on":
+            cur = json.dumps({"text": f" {temp}K", "class": "on", "tooltip": f"Blue light filter: ON ({temp}K)"})
+        elif state == "off":
+            cur = json.dumps({"text": " off", "class": "off", "tooltip": "Blue light filter: OFF"})
+        else:
+            cur = json.dumps({"text": "?", "class": "off", "tooltip": "hyprsunset not initialized"})
+        if cur != last:
+            print(cur, flush=True)
+            last = cur
+        _time.sleep(0.1)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: hyprsunsetctl {toggle|auto|status|reset|watch}", file=sys.stderr)
+        sys.exit(1)
+    match sys.argv[1]:
+        case "toggle":
+            toggle()
+        case "auto":
+            auto()
+        case "status":
+            status()
+        case "reset":
+            reset()
+        case "watch":
+            watch()
