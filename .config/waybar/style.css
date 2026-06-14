@@ -102,7 +102,8 @@ window#waybar {
 #power-profiles-daemon.power-saver,
 #idle_inhibitor,
 #temperature,
-#window {
+#window,
+#custom-hyprsunset {
   min-width: 12px;
   padding: 0 4px;
   margin: 1px 3px 1px 3px;
@@ -252,6 +253,15 @@ tooltip label {
 
 #bluetooth.connected {
   color: @primary;
+}
+
+/* ── Hyprsunset States ──────────────────────────────────── */
+#custom-hyprsunset.on {
+  color: @primary;
+}
+
+#custom-hyprsunset.off {
+  color: @on_surface_variant;
 }
 
 /* ── Pulseaudio Muted ───────────────────────────────────── */
