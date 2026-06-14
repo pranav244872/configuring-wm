@@ -1,0 +1,11 @@
+colors = require("modules.colors")
+
+require("modules.monitors")
+require("modules.keybinds")
+require("modules.autostart")
+require("modules.env")
+require("modules.decorations")
+require("modules.windowrules")
+require("modules.layouts")
+require("modules.misc")
+require("modules.input")
