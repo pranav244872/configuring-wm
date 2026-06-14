@@ -1,82 +1,266 @@
 @import "colors.css";
 
 * {
-  font-family: JetBrainsMono Nerd Font Propo;
-  font-size: 14px;
+  border: none;
+  padding: 0px;
+  font-family: "JetBrainsMono Nerd Font";
+  transition: background-color .3s ease-out;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 window#waybar {
-  background-color: @surface_container_lowest;
-  color: @on_surface;
+  background-color: transparent;
+}
+
+#waybar > box {
+  border-radius: 0px;
+  border-bottom: 1.5px solid alpha(@on_surface, 0.1);
+  margin: 0px 0px 2px 0px;
+  background-color: @background;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 1);
+  min-height: 25px;
+  transition-property: background-color;
+  transition-duration: .5s;
+}
+
+.modules-left {
+  margin-left: 4px;
+}
+
+.modules-right {
+  margin-right: 4px;
+}
+
+/* ── Workspaces ─────────────────────────────────────────── */
+#workspaces {
+  margin: 0px 0px;
+  transition: 0.1s ease-in-out;
+  padding: 0px 0px;
 }
 
 #workspaces button {
-  padding: 2px;
-  margin: 5px 0px 5px 5px;
-  background: transparent;
-  border-radius: 2px;
+  all: initial;
+  padding: 0px 4px;
+  margin: 4px 2px;
+  min-width: 10px;
   color: @on_surface;
+  opacity: 1;
+  font-weight: 900;
 }
 
 #workspaces button.active {
-  background: @primary;
   color: @on_primary;
-  font-weight: 700;
+  background-color: @primary;
+  padding: 0px 4px;
+  margin: 4px 2px;
+  opacity: 1.0;
 }
 
-#submap,
-#battery,
-#bluetooth,
-#network,
-#cpu,
-#memory,
-#volume {
-  border-radius: 8px;
-  padding: 5px 8px;
-  background: @surface_container;
-  margin: 5px 10px 5px 0px;
+#workspaces button.empty:hover,
+#workspaces button:hover {
+  background: transparent;
+  color: alpha(@on_surface, 1);
+  transition: all 150ms ease;
+  opacity: 0.75;
 }
 
-#submap,
+#workspaces button.empty {
+  opacity: 0.4;
+  padding: 0px 4px;
+  margin: 4px 2px;
+  color: alpha(@on_surface, 0.45);
+}
+
+#workspaces button.empty.active {
+  opacity: 1;
+  background-color: @on_surface;
+  color: @background;
+}
+
 #workspaces button.urgent {
-  background: @error;
+  background-color: @error;
   color: @on_error;
+  animation: blink 0.8s linear infinite alternate;
 }
 
-#pulseaudio-slider {
-  padding: 0px;
-  margin: 0px;
-  margin-left: 8px;
+/* ── All text modules ───────────────────────────────────── */
+#memory,
+#mpris,
+#custom-expand-icon,
+#tray,
+#cpu,
+#clock,
+#battery,
+#backlight,
+#network,
+#bluetooth,
+#pulseaudio,
+#power-profiles-daemon,
+#power-profiles-daemon.performance,
+#power-profiles-daemon.balanced,
+#power-profiles-daemon.power-saver,
+#idle_inhibitor,
+#temperature,
+#window {
+  min-width: 12px;
+  padding: 0 4px;
+  margin: 1px 3px 1px 3px;
+  opacity: 1;
+  color: @on_surface;
 }
 
-#pulseaudio-slider slider {
-  all: unset;
-  min-height: 0;
+/* ── Active Window ──────────────────────────────────────── */
+#window {
+  font-style: italic;
+  opacity: 0.7;
+}
+
+#window.empty {
+  background: transparent;
+  padding: 0;
+  margin: 0;
   min-width: 0;
-  opacity: 0;
-  background-image: none;
+  min-height: 0;
   border: none;
-  box-shadow: none;
+  opacity: 0;
 }
 
-#pulseaudio-slider trough {
-  min-height: 8px;
-  min-width: 75px;
-  border-radius: 5px;
-  background: @surface_container_high;
+#tray {
+  opacity: 1;
+  padding-top: 2px;
 }
 
-#pulseaudio-slider highlight {
-  min-width: 10px;
-  border-radius: 5px;
-  background: @primary;
+#network {
+  margin-left: 0;
 }
 
+/* ── Separators ─────────────────────────────────────────── */
+#custom-separator7,
+#custom-separator6,
+#custom-separator5,
+#custom-separator4,
+#custom-separator3,
+#custom-separator2,
+#custom-separator {
+  opacity: 0.2;
+  padding-top: 2px;
+  padding-left: 2px;
+  padding-right: 2px;
+  font-size: 14px;
+  color: @on_surface;
+}
+
+/* ── Tooltip ────────────────────────────────────────────── */
 tooltip {
-  background: @surface_container_lowest;
-  border-radius: 5px;
+  padding: 8px;
+  background: @surface_container;
+  border: 1.5px solid alpha(@on_surface, 0.15);
+  border-radius: 8px;
 }
 
 tooltip label {
   color: @on_surface;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+/* ── Hidden ─────────────────────────────────────────────── */
+.hidden {
+  opacity: 0;
+}
+
+/* ── MPRIS Animation ────────────────────────────────────── */
+#mpris {
+  opacity: 1;
+  color: @on_surface;
+  animation: repeat;
+  animation-name: blink-mpris;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes blink-mpris {
+  to {
+    color: @outline_variant;
+  }
+}
+
+/* ── Temperature States ─────────────────────────────────── */
+#temperature.critical {
+  color: @error;
+}
+
+/* ── Battery States ─────────────────────────────────────── */
+#battery.good {
+  color: @tertiary;
+}
+
+#battery.warning {
+  color: @secondary;
+}
+
+@keyframes blink-battery {
+  to {
+    background-color: transparent;
+    color: @error;
+  }
+}
+
+#battery.critical:not(.charging) {
+  background-color: transparent;
+  color: @on_surface;
+  animation-name: blink-battery;
+  animation-duration: 0.5s;
+  animation-timing-function: steps(12);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#battery.charging,
+#battery.plugged {
+  color: @tertiary;
+}
+
+/* ── CPU / Memory / Volume Warning States ───────────────── */
+#pulseaudio.warning,
+#memory.warning,
+#cpu.warning {
+  color: @secondary;
+  background-color: @background;
+}
+
+#pulseaudio.critical,
+#memory.critical,
+#cpu.critical {
+  color: @primary;
+  background-color: @background;
+}
+
+/* ── Network Disconnected ───────────────────────────────── */
+#network.disconnected {
+  color: @error;
+}
+
+/* ── Bluetooth States ───────────────────────────────────── */
+#bluetooth.off,
+#bluetooth.disabled {
+  color: @on_surface_variant;
+}
+
+#bluetooth.connected {
+  color: @primary;
+}
+
+/* ── Pulseaudio Muted ───────────────────────────────────── */
+#pulseaudio.muted {
+  color: @on_surface_variant;
+}
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes blink {
+  from { opacity: 1.0; }
+  to   { opacity: 0.4; }
 }
