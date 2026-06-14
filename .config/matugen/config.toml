@@ -1,18 +1,24 @@
 [config]
+mode = "dark"
+contrast = 0.0
 
 [templates.hyprland]
-input_path = '/home/pranav/.config/matugen/templates/hyprland-colors.conf'
-output_path = '~/.config/hypr/conf/colors.conf'
-post_hook = 'hyprctl reload'
+input_path = "~/.config/matugen/templates/hyprland-colors.lua"
+output_path = "~/.config/hypr/modules/colors.lua"
+
+[templates.hyprlock]
+input_path = "~/.config/matugen/templates/hyprland-colors.conf"
+output_path = "~/.config/hypr/colors-hyprlock.conf"
 
 [templates.kitty]
-input_path = '~/.config/matugen/templates/kitty-colors.conf'
-output_path = '~/.config/kitty/colors.conf'
+input_path = "~/.config/matugen/templates/kitty-colors.conf"
+output_path = "~/.config/kitty/colors.conf"
 
-[templates.quickshell]
-input_path = '~/.config/matugen/templates/quickshell.json'
-output_path = '~/.config/quickshell/colors.json'
+[templates.waybar]
+input_path = "~/.config/matugen/templates/colors.css"
+output_path = "~/.config/waybar/colors.css"
+post_hook = "pkill -SIGUSR2 waybar"
 
-[templates.nvim]
-input_path = "/home/pranav/.config/matugen/templates/nvim-colors.json"
-output_path = "/home/pranav/.config/nvim/matugen-colors.json"
+[templates.opencode]
+input_path = "~/.config/matugen/templates/opencode-colors.json"
+output_path = "~/.config/opencode/themes/matugen.json"

@@ -1,0 +1,82 @@
+@import "colors.css";
+
+* {
+  font-family: JetBrainsMono Nerd Font Propo;
+  font-size: 14px;
+}
+
+window#waybar {
+  background-color: @surface_container_lowest;
+  color: @on_surface;
+}
+
+#workspaces button {
+  padding: 2px;
+  margin: 5px 0px 5px 5px;
+  background: transparent;
+  border-radius: 2px;
+  color: @on_surface;
+}
+
+#workspaces button.active {
+  background: @primary;
+  color: @on_primary;
+  font-weight: 700;
+}
+
+#submap,
+#battery,
+#bluetooth,
+#network,
+#cpu,
+#memory,
+#volume {
+  border-radius: 8px;
+  padding: 5px 8px;
+  background: @surface_container;
+  margin: 5px 10px 5px 0px;
+}
+
+#submap,
+#workspaces button.urgent {
+  background: @error;
+  color: @on_error;
+}
+
+#pulseaudio-slider {
+  padding: 0px;
+  margin: 0px;
+  margin-left: 8px;
+}
+
+#pulseaudio-slider slider {
+  all: unset;
+  min-height: 0;
+  min-width: 0;
+  opacity: 0;
+  background-image: none;
+  border: none;
+  box-shadow: none;
+}
+
+#pulseaudio-slider trough {
+  min-height: 8px;
+  min-width: 75px;
+  border-radius: 5px;
+  background: @surface_container_high;
+}
+
+#pulseaudio-slider highlight {
+  min-width: 10px;
+  border-radius: 5px;
+  background: @primary;
+}
+
+tooltip {
+  background: @surface_container_lowest;
+  border-radius: 5px;
+}
+
+tooltip label {
+  color: @on_surface;
+}
