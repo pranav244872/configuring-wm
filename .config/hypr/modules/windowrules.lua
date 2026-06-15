@@ -48,3 +48,17 @@ hl.window_rule({
 
     no_focus = true,
 })
+
+-- dim around rofi namespace (launcher & powermenu)
+hl.layer_rule({
+    name  = "rofi-dim",
+    match = { namespace = "rofi" },
+    dim_around = true,
+})
+
+-- blur and ignorezero for swaync (control center & popups)
+hl.layer_rule({
+    name  = "swaync-blur",
+    match = { namespace = "swaync" },
+    blur = true,
+})

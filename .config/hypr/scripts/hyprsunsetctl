@@ -74,7 +74,7 @@ def status():
     elif state == "off":
         out = {"text": " off", "class": "off", "tooltip": "Blue light filter: OFF"}
     else:
-        out = {"text": "?", "class": "off", "tooltip": "hyprsunset not initialized"}
+        out = {"text": " off", "class": "off", "tooltip": "Blue light filter: OFF"}
     print(json.dumps(out))
 
 
@@ -95,7 +95,7 @@ def watch():
         elif state == "off":
             cur = json.dumps({"text": " off", "class": "off", "tooltip": "Blue light filter: OFF"})
         else:
-            cur = json.dumps({"text": "?", "class": "off", "tooltip": "hyprsunset not initialized"})
+            cur = json.dumps({"text": " off", "class": "off", "tooltip": "Blue light filter: OFF"})
         if cur != last:
             print(cur, flush=True)
             last = cur
