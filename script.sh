@@ -95,8 +95,6 @@ deploy_configs() {
   cp -r ~/del/configuring-wm/.config/fastfetch ~/.config
   mkdir -p ~/.config/opencode/themes
   cp ~/del/configuring-wm/.config/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc
-  mkdir -p ~/.config/matuwall
-  cp ~/del/configuring-wm/.config/matuwall/config.json ~/.config/matuwall/
   ok "Configs deployed"
 }
 
@@ -115,13 +113,12 @@ enable_services() {
   section "Systemd services"
   systemctl --user daemon-reload
   systemctl --user enable --now hyprsunset-auto.timer 2>&1 | tail -1
-  systemctl --user enable --now matuwall.service 2>&1 | tail -1
-  ok "hyprsunset auto-timer, matuwall daemon enabled"
+  ok "hyprsunset auto-timer enabled"
 }
 
 install_aur_packages() {
   section "AUR packages"
-  paru -Sy --noconfirm vscodium antigravity-cli opencode git-credential-manager otf-rubik matuwall 2>&1 | tail -1
+  paru -Sy --noconfirm vscodium antigravity-cli opencode git-credential-manager otf-rubik 2>&1 | tail -1
   ok "AUR packages installed"
 }
 

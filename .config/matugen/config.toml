@@ -53,7 +53,3 @@ output_path = "~/del/configuring-wm/.config/btop/themes/matugen.theme"
 input_path = "~/.config/matugen/templates/qtct-colors.conf"
 output_path = "~/del/configuring-wm/.config/qt6ct/colors/matugen.conf"
 
-[templates.matuwall]
-input_path = "~/.config/matugen/templates/matuwall-colors.json"
-output_path = "~/.config/matuwall/colors.json"
-
