@@ -15,7 +15,7 @@ install_packages() {
     hyprland kitty gtk4 hyprpolkitagent pipewire xdg-desktop-portal-hyprland \
     qt6-wayland qt5-wayland neovim git mpv firefox which base-devel fzf grep tree ripgrep vim \
     devtools unzip wl-clipboard qt6ct awww hyprshot waybar ttf-jetbrains-mono-nerd \
-    brightnessctl playerctl btop hypridle matugen hyprtoolkit hyprlock hyprsunset rofi mako fastfetch gvfs fish starship adw-gtk-theme 2>&1 | tail -1
+    brightnessctl playerctl btop fastfetch hypridle matugen hyprtoolkit hyprlock hyprsunset rofi mako gvfs fish starship adw-gtk-theme papirus-icon-theme 2>&1 | tail -1
   ok "Packages installed"
 }
 
@@ -102,7 +102,10 @@ setup_gtk() {
   section "GTK theme"
   gsettings set org.gnome.desktop.interface gtk-theme "adw-gtk3-dark"
   gsettings set org.gnome.desktop.interface color-scheme "prefer-dark"
+  gsettings set org.gnome.desktop.interface icon-theme "Papirus"
   gsettings set org.gnome.desktop.interface font-name "Rubik 11"
+  gsettings set org.gnome.desktop.interface font-antialiasing "rgba"
+  gsettings set org.gnome.desktop.interface font-rgba-order "rgb"
   ok "GTK theme set to adw-gtk3-dark, font set to Rubik 11"
 }
 
