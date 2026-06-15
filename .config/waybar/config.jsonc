@@ -21,10 +21,14 @@
   "modules-center": ["custom/separator", "clock", "custom/separator2"],
   "modules-right": [
     "custom/separator",
+    "pulseaudio",
+    "custom/separator3",
+    "pulseaudio#source",
+    "custom/separator3",
     "bluetooth",
     "custom/separator3",
     "custom/hyprsunset",
-    "custom/separator",
+    "custom/separator3",
     "backlight",
     "custom/separator4",
     "battery",
@@ -32,12 +36,6 @@
     "power-profiles-daemon",
     "custom/separator3",
     "network",
-    "custom/separator3",
-    "pulseaudio",
-    "custom/separator3",
-    "memory",
-    "custom/separator3",
-    "cpu",
     "custom/separator2"
   ],
   "hyprland/workspaces": {
@@ -50,25 +48,13 @@
       "2": [],
       "3": [],
       "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": [],
-      "9": [],
-      "10": []
+      "5": []
     }
   },
   "hyprland/window": {
-    "format": "  {title}",
-    "max-length": 40,
-    "separate-outputs": true,
-    "rewrite": {
-      "(.*) — Mozilla Firefox": "  $1",
-      "(.*) - Chromium": "  $1",
-      "(.*) - Visual Studio Code": "󰨞  $1",
-      "ghostty": "  Terminal",
-      "": "  Desktop"
-    }
+    "format": "{class}",
+    "max-length": 20,
+    "separate-outputs": true
   },
   "custom/separator": {
     "format": "[",
@@ -110,15 +96,6 @@
     "return-type": "json",
     "interval": 2
   },
-  "cpu": {
-    "interval": 10,
-    "format": "cpu {usage:02}%",
-    "on-click": "ghostty -e btop",
-    "states": {
-      "warning": 50,
-      "critical": 80
-    }
-  },
   "backlight": {
     "device": "intel_backlight",
     "rotate": 0,
@@ -126,15 +103,6 @@
     "tooltip-format": "Brightness: {percent}%",
     "on-scroll-up": "brightnessctl set +5%",
     "on-scroll-down": "brightnessctl set 5%-"
-  },
-  "memory": {
-    "interval": 2,
-    "format": "mem {percentage:02}%",
-    "on-click": "ghostty -e btop",
-    "states": {
-      "warning": 50,
-      "critical": 80
-    }
   },
   "clock": {
     "format": "{:%H:%M %p - %A, %b %d}",
@@ -158,7 +126,7 @@
   "network": {
     "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
     "format": "{icon}",
-    "format-wifi": "net <span style='italic' weight='900'>  {signalStrength}%</span>",
+    "format-wifi": "net <span style='italic' weight='900'>{signalStrength}%</span>",
     "format-ethernet": "net <span style='italic' weight='900'>on</span>",
     "format-disconnected": "net <span style='italic' weight='900'>off 󰤮 / 󰈀 </span>",
     "tooltip-format-wifi": "{essid} ({frequency} GHz)\n⇣{bandwidthDownBytes}  ⇡{bandwidthUpBytes}",
@@ -194,6 +162,12 @@
     "format-connected": "bt <span style='italic' weight='900'>{status}</span> {num_connections}",
     "tooltip-format": "Devices connected: {num_connections}",
     "on-click": "exec ghostty --title=bluetui -e bluetui"
+  },
+  "pulseaudio#source": {
+    "format": "{format_source}",
+    "format-source": "mic {volume}%",
+    "format-source-muted": "mic <span style='italic' weight='900'>off</span>",
+    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
   },
   "pulseaudio": {
     "justify": "center",

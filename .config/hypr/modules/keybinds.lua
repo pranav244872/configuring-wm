@@ -5,7 +5,7 @@
 -- Set programs that you use
 local terminal    = "kitty"
 local fileManager = "dolphin"
-local menu        = "hyprlauncher"
+local menu        = "~/.config/rofi/launcher/launcher.sh"
 
 ---------------------
 ---- KEYBINDINGS ----
@@ -19,7 +19,7 @@ hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(
     mainMod .. " + M",
-    hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch exit")
+    hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'")
 )
 
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
@@ -27,6 +27,12 @@ hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 
 -- Original: SUPER + F
 hl.bind(mainMod .. " + F", hl.dsp.exec_cmd(menu))
+
+-- Powermenu
+hl.bind(
+    mainMod .. " + ESCAPE",
+    hl.dsp.exec_cmd("~/.config/rofi/powermenu/powermenu.sh")
+)
 
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only

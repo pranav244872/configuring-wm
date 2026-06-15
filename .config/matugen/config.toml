@@ -17,8 +17,39 @@ output_path = "~/.config/kitty/colors.conf"
 [templates.waybar]
 input_path = "~/.config/matugen/templates/colors.css"
 output_path = "~/.config/waybar/colors.css"
-post_hook = "pkill -SIGUSR2 waybar"
+post_hook = "pkill -SIGUSR2 waybar 2>/dev/null; sleep 0.5; pgrep -x waybar >/dev/null || (nohup waybar >/dev/null 2>&1 &)"
+
+[templates.rofi]
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/colors/matugen.rasi"
+post_hook = "pkill -SIGUSR2 waybar 2>/dev/null; sleep 0.5; pgrep -x waybar >/dev/null || (nohup waybar >/dev/null 2>&1 &)"
+[templates.mako]
+input_path = "~/.config/matugen/templates/mako-colors"
+output_path = "~/del/configuring-wm/.config/mako/colors"
+post_hook = "makoctl reload 2>/dev/null || true"
 
 [templates.opencode]
 input_path = "~/.config/matugen/templates/opencode-colors.json"
 output_path = "~/.config/opencode/themes/matugen.json"
+
+[templates.gtk]
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/del/configuring-wm/.config/gtk/gtk.css"
+
+[templates.starship]
+input_path = "~/.config/matugen/templates/starship-colors.toml"
+output_path = "~/del/configuring-wm/.config/starship.toml"
+
+[templates.neovim]
+input_path = "~/.config/matugen/templates/neovim-colors.lua"
+output_path = "~/del/configuring-wm/.config/nvim/matugen.lua"
+post_hook = "pkill -SIGUSR1 nvim 2>/dev/null; true"
+
+[templates.btop]
+input_path = "~/.config/matugen/templates/btop-colors.theme"
+output_path = "~/del/configuring-wm/.config/btop/themes/matugen.theme"
+
+[templates.qtct]
+input_path = "~/.config/matugen/templates/qtct-colors.conf"
+output_path = "~/del/configuring-wm/.config/qt6ct/colors/matugen.conf"
+
