@@ -62,3 +62,20 @@ hl.layer_rule({
     match = { namespace = "swaync" },
     blur = true,
 })
+
+-- Matuwall wallpaper picker
+hl.window_rule({
+    name  = "matuwall",
+    match = { class = "com\\.kwimy\\.Matuwall" },
+    float = true,
+    rounding = 15,
+    border_size = 0,
+    rounding_power = 2,
+    no_shadow = true,
+})
+
+hl.layer_rule({
+    name  = "matuwall-backdrop",
+    match = { namespace = "matuwall-backdrop" },
+    animation = "fade",
+})
