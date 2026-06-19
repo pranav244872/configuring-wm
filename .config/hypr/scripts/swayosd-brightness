@@ -1,0 +1,55 @@
+#!/bin/bash
+
+step="${1:-+5%}"
+
+runtime_dir="${XDG_RUNTIME_DIR:-/tmp}"
+
+exec 9>"$runtime_dir/swayosd-brightness.lock"
+flock -n 9 || exit 0
+
+if [[ $step == "off" ]]; then
+  hyprctl dispatch dpms off
+  exit 0
+elif [[ $step == "on" ]]; then
+  hyprctl dispatch dpms on
+  exit 0
+fi
+
+device="$(ls -1 /sys/class/backlight 2>/dev/null | head -n1)"
+for candidate in amdgpu_bl* intel_backlight acpi_video*; do
+  if [[ -e /sys/class/backlight/$candidate ]]; then
+    device="$candidate"
+    break
+  fi
+done
+
+current=$(brightnessctl -d "$device" -m | cut -d',' -f4 | tr -d '%')
+
+if [[ $step == "+5%" ]]; then
+  if (( current < 5 )); then
+    (( target = current + 1 ))
+  else
+    (( target = current + 5 ))
+  fi
+  (( target > 100 )) && target=100
+  step="$target%"
+elif [[ $step == "5%-" ]]; then
+  if (( current <= 5 )); then
+    (( target = current - 1 ))
+  else
+    (( target = current - 5 ))
+  fi
+  (( target < 1 )) && target=1
+  step="$target%"
+fi
+
+brightnessctl -d "$device" set "$step" >/dev/null
+
+percent=$(brightnessctl -d "$device" -m | cut -d',' -f4 | tr -d '%')
+progress=$(awk -v p="$percent" 'BEGIN{printf "%.2f", p/100}')
+[[ $progress == "0.00" ]] && progress="0.01"
+
+swayosd-client \
+  --custom-icon display-brightness-symbolic \
+  --custom-progress "$progress" \
+  --custom-progress-text "$(printf '%3d%%' "$percent")"

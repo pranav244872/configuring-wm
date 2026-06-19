@@ -1,0 +1,79 @@
+@import "../colors/matugen.rasi"
+
+configuration {
+    show-icons: true;
+}
+
+window {
+    location: west;
+    anchor: west;
+    width: 300px;
+    border-radius: 0px 20px 20px 0px;
+    background-color: @background;
+    border: 0px;
+    padding: 0px;
+}
+
+mainbox {
+    background-color: transparent;
+    padding: 6px;
+    children: [ listview ];
+}
+
+listview {
+    columns: 1;
+    lines: 5;
+    spacing: 6px;
+    padding: 0px;
+    layout: vertical;
+    cycle: true;
+    dynamic: false;
+    fixed-height: true;
+    fixed-columns: true;
+    background-color: transparent;
+}
+
+element {
+    orientation: vertical;
+    spacing: 0px;
+    padding: 0px 4px 4px 4px;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: @background-alt;
+    text-color: @foreground;
+}
+
+element selected.normal {
+    background-color: @selected;
+    text-color: @background;
+}
+
+element-icon {
+    background-color: transparent;
+    size: 150px;
+    margin: 0px;
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align: 0.5;
+    expand: true;
+    background-color: transparent;
+    text-color: inherit;
+    padding: 0px;
+    margin: 0px;
+}
+
+scrollbar {
+    handle-width: 4px;
+    handle-color: @selected;
+    background-color: @background-alt;
+}
+
+error-message {
+    background-color: @background;
+    text-color: @foreground;
+    border-radius: 0px 20px 20px 0px;
+}

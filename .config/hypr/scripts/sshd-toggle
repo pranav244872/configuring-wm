@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+case "${1:-}" in
+  watch)
+    if systemctl is-active --quiet sshd 2>/dev/null; then
+      echo '{"text": "SSH 󰦈", "class": "active", "tooltip": "SSH service: active"}'
+    else
+      echo '{"text": "SSH 󰦈", "class": "", "tooltip": "SSH service: inactive"}'
+    fi
+    ;;
+  toggle)
+    if systemctl is-active --quiet sshd 2>/dev/null; then
+      systemctl stop sshd
+      notify-send "SSH" "Service stopped"
+    else
+      systemctl start sshd
+      notify-send "SSH" "Service started"
+    fi
+    pkill -RTMIN+3 waybar
+    ;;
+esac
