@@ -29,6 +29,10 @@
     "custom/separator3",
     "custom/hyprsunset",
     "custom/separator3",
+    "custom/caffeine",
+    "custom/separator3",
+    "custom/sshd",
+    "custom/separator3",
     "backlight",
     "custom/separator4",
     "battery",
@@ -89,7 +93,24 @@
     "exec": "~/.config/hypr/scripts/hyprsunsetctl watch",
     "exec-on-event": false,
     "on-click": "exec ~/.config/hypr/scripts/hyprsunsetctl toggle",
-    "return-type": "json"
+    "return-type": "json",
+    "tooltip": true
+  },
+  "custom/caffeine": {
+    "exec": "~/.config/hypr/scripts/caffeine-toggle watch",
+    "exec-on-event": false,
+    "on-click": "exec ~/.config/hypr/scripts/caffeine-toggle toggle",
+    "return-type": "json",
+    "signal": 2,
+    "tooltip": true
+  },
+  "custom/sshd": {
+    "exec": "~/.config/hypr/scripts/sshd-toggle watch",
+    "exec-on-event": false,
+    "on-click": "exec ~/.config/hypr/scripts/sshd-toggle toggle",
+    "return-type": "json",
+    "signal": 3,
+    "tooltip": true
   },
   "custom/separator7": {
     "exec": "sh -c 'count=$(busctl --user get-property org.kde.StatusNotifierWatcher /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems | sed -n \"s/^as \\\\([0-9]\\\\+\\\\).*/\\\\1/p\"); if [ \"${count:-0}\" -gt 0 ]; then echo \"{\\\"text\\\":\\\"󰿟\\\",\\\"class\\\":\\\"show\\\"}\"; else echo \" {\\\"text\\\":\\\"\\\",\\\"class\\\":\\\"hide\\\"}\"; fi'",
@@ -134,7 +155,7 @@
     "tooltip-format-disconnected": "Disconnected",
     "interval": 3,
     "spacing": 1,
-    "on-click": "exec nmrs",
+    "on-click": "nmrs",
     "max-length": 30
   },
   "battery": {
@@ -161,13 +182,14 @@
     "format-disabled": "bt <span style='italic' weight='900'>{status}</span>",
     "format-connected": "bt <span style='italic' weight='900'>{status}</span> {num_connections}",
     "tooltip-format": "Devices connected: {num_connections}",
-    "on-click": "exec ghostty --title=bluetui -e bluetui"
+    "on-click": "blueberry"
   },
   "pulseaudio#source": {
     "format": "{format_source}",
     "format-source": "mic {volume}%",
     "format-source-muted": "mic <span style='italic' weight='900'>off</span>",
-    "on-click": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+    "on-click": "pavucontrol",
+    "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
   },
   "pulseaudio": {
     "justify": "center",

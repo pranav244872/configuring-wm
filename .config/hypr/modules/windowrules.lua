@@ -62,3 +62,13 @@ hl.layer_rule({
     match = { namespace = "swaync" },
     blur = true,
 })
+
+-- nmrs network manager (floating)
+hl.window_rule({ match = { class = "org.nmrs.ui" }, float = true, size = {"(monitor_w*0.30)", "(monitor_h*0.50)"} })
+
+-- pavucontrol (floating)
+hl.window_rule({ match = { class = "org.pulseaudio.pavucontrol" }, float = true, size = {"(monitor_w*0.45)", "(monitor_h*0.70)"} })
+
+-- blueberry bluetooth (floating)
+hl.window_rule({ match = { class = "blueberry.py" }, float = true, size = {"(monitor_w*0.30)", "(monitor_h*0.50)"} })
+

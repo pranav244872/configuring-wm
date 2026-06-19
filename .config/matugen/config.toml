@@ -17,12 +17,12 @@ output_path = "~/.config/kitty/colors.conf"
 [templates.waybar]
 input_path = "~/.config/matugen/templates/colors.css"
 output_path = "~/.config/waybar/colors.css"
-post_hook = "pkill -SIGUSR2 waybar 2>/dev/null; sleep 0.5; pgrep -x waybar >/dev/null || (nohup waybar >/dev/null 2>&1 &)"
+post_hook = "bash -c 'pkill -x waybar 2>/dev/null; nohup waybar >/dev/null 2>&1 &'"
 
 [templates.rofi]
 input_path = "~/.config/matugen/templates/rofi-colors.rasi"
 output_path = "~/.config/rofi/colors/matugen.rasi"
-post_hook = "pkill -SIGUSR2 waybar 2>/dev/null; sleep 0.5; pgrep -x waybar >/dev/null || (nohup waybar >/dev/null 2>&1 &)"
+post_hook = "bash -c 'pkill -x waybar 2>/dev/null; nohup waybar >/dev/null 2>&1 &'"
 [templates.mako]
 input_path = "~/.config/matugen/templates/mako-colors"
 output_path = "~/del/configuring-wm/.config/mako/colors"
@@ -52,4 +52,9 @@ output_path = "~/del/configuring-wm/.config/btop/themes/matugen.theme"
 [templates.qtct]
 input_path = "~/.config/matugen/templates/qtct-colors.conf"
 output_path = "~/del/configuring-wm/.config/qt6ct/colors/matugen.conf"
+
+[templates.swayosd]
+input_path = "~/.config/matugen/templates/swayosd-colors.css"
+output_path = "~/.config/swayosd/style.css"
+post_hook = "systemctl --user restart swayosd-server 2>/dev/null; true"
 
