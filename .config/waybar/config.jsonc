@@ -21,17 +21,17 @@
   "modules-center": ["custom/separator", "clock", "custom/separator2"],
   "modules-right": [
     "custom/separator",
-    "pulseaudio",
-    "custom/separator3",
-    "pulseaudio#source",
-    "custom/separator3",
-    "bluetooth",
-    "custom/separator3",
-    "custom/hyprsunset",
-    "custom/separator3",
     "custom/caffeine",
     "custom/separator3",
     "custom/sshd",
+    "custom/separator3",
+    "custom/hyprsunset",
+    "custom/separator3",
+    "bluetooth",
+    "custom/separator3",
+    "pulseaudio",
+    "custom/separator3",
+    "pulseaudio#source",
     "custom/separator3",
     "backlight",
     "custom/separator4",
@@ -119,8 +119,8 @@
   },
   "backlight": {
     "device": "intel_backlight",
-    "rotate": 0,
-    "format": "bl {percent}%",
+    "format": "{icon} {percent}%",
+    "format-icons": ["󰃞", "󰃟", "󰃠"],
     "tooltip-format": "Brightness: {percent}%",
     "on-scroll-up": "brightnessctl set +5%",
     "on-scroll-down": "brightnessctl set 5%-"
@@ -163,11 +163,11 @@
     "bat": "BAT0",
     "adapter": "ADP0",
     "full-at": 98,
-    "format": "bat {capacity}%",
-    "format-discharging": "bat {capacity}%",
-    "format-charging": "bat {capacity}% ",
-    "format-plugged": "bat_p {capacity}%",
-    "format-full": "bat_f {capacity}%",
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󱟢",
+    "format-full": "󱟢 {capacity}%",
+    "format-icons": ["󱊡", "󰁺", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰁿", "󰂂", "󰁹"],
     "tooltip-format-discharging": "{timeTo}\n{capacity}%  •  {power:.1f}W",
     "tooltip-format-charging": "{timeTo}\n{capacity}%  •  {power:.1f}W",
     "states": {
@@ -178,31 +178,32 @@
   },
   "bluetooth": {
     "justify": "center",
-    "format": "bt <span style='italic' weight='900'>{status}</span> {num_connections}",
-    "format-disabled": "bt <span style='italic' weight='900'>{status}</span>",
-    "format-connected": "bt <span style='italic' weight='900'>{status}</span> {num_connections}",
+    "format": " <span style='italic' weight='900'>{status}</span> {num_connections}",
+    "format-disabled": "󰂲",
+    "format-connected": "󰂰 {num_connections}",
     "tooltip-format": "Devices connected: {num_connections}",
     "on-click": "blueberry"
   },
   "pulseaudio#source": {
     "format": "{format_source}",
-    "format-source": "mic {volume}%",
-    "format-source-muted": "mic <span style='italic' weight='900'>off</span>",
+    "format-source": " {volume}%",
+    "format-source-muted": " <span style='italic' weight='900'>off</span>",
     "on-click": "pavucontrol",
     "on-click-right": "pactl set-source-mute @DEFAULT_SOURCE@ toggle"
   },
   "pulseaudio": {
     "justify": "center",
-    "format": "vol {volume}%",
+    "format": "{icon} {volume}%",
     "on-click": "pavucontrol",
     "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
     "tooltip-format": "Playing at {volume}%",
     "scroll-step": 5,
-    "format-muted": "vol <span style='italic' weight='900'>muted</span>",
-    "format-icons": {
-      "headphone": "",
-      "default": ["", "", ""]
-    },
+    "format-muted": " <span style='italic' weight='900'>muted</span>",
+    "format-icons": [
+      "󰕿",
+      "󰖀",
+      "󰕾"
+    ],
     "states": {
       "warning": 50,
       "critical": 10
@@ -210,7 +211,7 @@
   },
   "power-profiles-daemon": {
     "justify": "center",
-    "format": "power {icon}",
+    "format": "󰠠 {icon}",
     "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
     "tooltip": true,
     "format-icons": {

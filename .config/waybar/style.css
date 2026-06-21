@@ -3,7 +3,7 @@
 * {
   border: none;
   padding: 0px;
-  font-family: "JetBrainsMono Nerd Font Mono";
+  font-family: "JetBrainsMono Nerd Font Propo";
   transition: background-color .3s ease-out;
   font-weight: bold;
   font-size: 12px;
@@ -103,7 +103,9 @@ window#waybar {
 #idle_inhibitor,
 #temperature,
 #window,
-#custom-hyprsunset {
+#custom-hyprsunset,
+#custom-caffeine,
+#custom-sshd {
   min-width: 12px;
   padding: 0 4px;
   margin: 1px 3px 1px 3px;

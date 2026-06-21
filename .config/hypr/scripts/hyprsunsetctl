@@ -30,7 +30,7 @@ status() {
   if [ "$CURRENT" = "$OFF_TEMP" ]; then
     echo '{"text":"","class":"off","tooltip":"Daylight (6000K)"}'
   else
-    echo "{\"text\":\" ${CURRENT}K\",\"class\":\"on\",\"tooltip\":\"Nightlight (${CURRENT}K)\"}"
+    echo "{\"text\":\"\",\"class\":\"on\",\"tooltip\":\"Nightlight (${CURRENT}K)\"}"
   fi
 }
 

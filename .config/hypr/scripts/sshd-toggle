@@ -3,9 +3,9 @@
 case "${1:-}" in
   watch)
     if systemctl is-active --quiet sshd 2>/dev/null; then
-      echo '{"text": "SSH 󰦈", "class": "active", "tooltip": "SSH service: active"}'
+      echo '{"text": "SSH", "class": "active", "tooltip": "SSH service: active"}'
     else
-      echo '{"text": "SSH 󰦈", "class": "", "tooltip": "SSH service: inactive"}'
+      echo '{"text": "<s>SSH</s>", "class": "", "tooltip": "SSH service: inactive"}'
     fi
     ;;
   toggle)

@@ -20,6 +20,7 @@ setup_paru
 setup_rofi
 deploy_configs
 setup_gtk
+setup_imv
 setup_intel_gpu
 enable_services
 install_aur_packages
