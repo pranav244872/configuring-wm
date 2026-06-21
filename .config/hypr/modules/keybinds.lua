@@ -25,6 +25,9 @@ hl.bind(
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 
+-- Toggle fullscreen
+hl.bind(mainMod .. " + W", hl.dsp.window.fullscreen({ action = "toggle" }))
+
 -- Original: SUPER + F (launcher)
 hl.bind(mainMod .. " + F", hl.dsp.exec_cmd(menu))
 

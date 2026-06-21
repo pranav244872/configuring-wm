@@ -1,0 +1,21 @@
+[options]
+background = 000000
+fullscreen = false
+width = 1280
+height = 720
+scaling_mode = full
+loop_input = true
+overlay = true
+
+[binds]
+q = quit
+<Left> = prev
+<Right> = next
+<Up> = zoom 1
+<Down> = zoom -1
+f = fullscreen
+x = close
+c = center
+s = scaling next
+r = reset
+p = exec echo $imv_current_file

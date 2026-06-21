@@ -34,6 +34,13 @@ hl.window_rule({
 })
 -- suppressMaximizeRule:set_enabled(false)
 
+-- Inhibit idle/sleep when any window is fullscreen
+hl.window_rule({
+    name  = "idle-inhibit-fullscreen",
+    match = { class = ".*" },
+    idle_inhibit = "fullscreen",
+})
+
 hl.window_rule({
     -- Fix some dragging issues with XWayland
     name  = "fix-xwayland-drags",

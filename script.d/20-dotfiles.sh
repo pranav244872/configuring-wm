@@ -44,8 +44,22 @@ deploy_configs() {
   cp -r ~/del/configuring-wm/.config/fastfetch ~/.config
   mkdir -p ~/.config/opencode/themes
   cp ~/del/configuring-wm/.config/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc
+  mkdir -p ~/.config/imv
+  cp ~/del/configuring-wm/.config/imv/config ~/.config/imv/config
   cp -r ~/del/configuring-wm/.config/swayosd ~/.config/swayosd
   ok "Configs deployed"
+}
+
+setup_imv() {
+  section "Default image viewer (imv)"
+  xdg-mime default imv.desktop image/png
+  xdg-mime default imv.desktop image/jpeg
+  xdg-mime default imv.desktop image/gif
+  xdg-mime default imv.desktop image/webp
+  xdg-mime default imv.desktop image/bmp
+  xdg-mime default imv.desktop image/tiff
+  xdg-mime default imv.desktop image/svg+xml
+  ok "imv set as default image viewer"
 }
 
 setup_gtk() {

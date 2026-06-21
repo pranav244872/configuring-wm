@@ -1,24 +1,29 @@
 #!/usr/bin/env bash
 
 state_file="/tmp/caffeine-mode"
+pid_file="/tmp/caffeine-pid"
 
 case "${1:-}" in
   watch)
     if [[ -f "$state_file" ]]; then
-      echo '{"text": "", "class": "active", "tooltip": "Caffeine mode: on"}'
+      echo '{"text": "󰅶", "class": "active", "tooltip": "Caffeine mode: on"}'
     else
-      echo '{"text": "", "class": "", "tooltip": "Caffeine mode: off"}'
+      echo '{"text": "󰾪", "class": "", "tooltip": "Caffeine mode: off"}'
     fi
     ;;
   toggle)
     if [[ -f "$state_file" ]]; then
       rm -f "$state_file"
-      systemctl --user start hypridle 2>/dev/null
+      if [[ -f "$pid_file" ]]; then
+        kill "$(cat "$pid_file")" 2>/dev/null || true
+        rm -f "$pid_file"
+      fi
       pkill -RTMIN+2 waybar
       notify-send "Caffeine" "Mode disabled"
     else
       touch "$state_file"
-      systemctl --user stop hypridle 2>/dev/null
+      systemd-inhibit --what=idle --who=caffeine --why="Caffeine mode" sleep infinity &
+      echo $! > "$pid_file"
       pkill -RTMIN+2 waybar
       notify-send "Caffeine" "Mode enabled – system will not sleep"
     fi
