@@ -10,11 +10,11 @@ case "${1:-}" in
     ;;
   toggle)
     if systemctl is-active --quiet sshd 2>/dev/null; then
-      systemctl stop sshd
-      notify-send "SSH" "Service stopped"
+      sudo systemctl disable --now sshd
+      notify-send "SSH" "Service stopped & disabled"
     else
-      systemctl start sshd
-      notify-send "SSH" "Service started"
+      sudo systemctl enable --now sshd
+      notify-send "SSH" "Service started & enabled"
     fi
     pkill -RTMIN+3 waybar
     ;;
