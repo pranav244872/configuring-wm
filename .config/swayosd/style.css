@@ -1,7 +1,7 @@
-@define-color background #0e1415;
-@define-color label #dee4e4;
-@define-color image #80d4dc;
-@define-color progress #80d4dc;
+@define-color background #16130b;
+@define-color label #eae1d4;
+@define-color image #e6c26c;
+@define-color progress #e6c26c;
 
 window {
   border-radius: 15px;
