@@ -17,7 +17,7 @@ setup_intel_gpu() {
     packages+=(libva-intel-driver)
   fi
 
-  packages+=(vulkan-intel)
+  packages+=(vulkan-intel lib32-vulkan-intel intel-compute-runtime ocl-icd lib32-ocl-icd openal lib32-openal lib32-alsa-plugins)
 
   if [[ ${#packages[@]} -gt 0 ]]; then
     sudo pacman -Sy --needed --noconfirm "${packages[@]}" 2>&1 | tail -1
