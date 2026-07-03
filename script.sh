@@ -29,6 +29,11 @@ setup_mise
 setup_git
 setup_sddm
 
+read -rp "Install gaming packages? [y/N] " gaming_choice
+if [[ ${gaming_choice,,} == "y" ]]; then
+  install_gaming
+fi
+
 chsh -s "$(which fish)"
 
 rm -f ~/.bashrc
