@@ -79,3 +79,16 @@ hl.window_rule({ match = { class = "org.pulseaudio.pavucontrol" }, float = true,
 -- blueberry bluetooth (floating)
 hl.window_rule({ match = { class = "blueberry.py" }, float = true, size = {"(monitor_w*0.30)", "(monitor_h*0.50)"} })
 
+-- cheatsheet overlay: hide from screenshare
+hl.layer_rule({
+    name  = "cheatsheet-noscreenshare",
+    match = { namespace = "cheatsheet" },
+    no_screen_share = true,
+})
+
+hl.window_rule({
+    name  = "cheatsheet-window-noscreenshare",
+    match = { class = "cheatsheet" },
+    no_screen_share = true,
+})
+
