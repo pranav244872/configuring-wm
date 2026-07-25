@@ -45,15 +45,69 @@ map("n", "<leader>fk", function()
     require("fzf-lua").keymaps()
 end, { desc = "Search keymaps" })
 
+-- <leader>en: Find files in Neovim config directory (~/.config/nvim)
+map("n", "<leader>en", function()
+    require("fzf-lua").files({ cwd = vim.fn.stdpath("config") })
+end, { desc = "Find files in [N]eovim [C]onfig" })
+
 -- ==============================================================
 -- Native Package Manager Dashboard
 -- ==============================================================
 -- <leader>p: Open the custom package manager UI
 map("n", "<leader>p", function()
-    require("plugins.pack-ui").open()
+    require("pack_ui").update()
 end, { desc = "Open [P]ackage Manager UI" })
 
 
+
+-- ==============================================================
+-- Fold Keymaps
+-- ==============================================================
+map("n", "<leader>zj", "zj", { desc = "Next [F]old" })
+map("n", "<leader>zk", "zk", { desc = "Previous [F]old" })
+map("n", "<leader>za", "za", { desc = "Toggle [F]old" })
+map("n", "<leader>zA", "zA", { desc = "Toggle [F]old Recursive" })
+map("n", "<leader>zR", "zR", { desc = "Open All [F]olds" })
+map("n", "<leader>zM", "zM", { desc = "Close All [F]olds" })
+
+-- Search folds via fzf-lua (lists all fold regions in the buffer)
+map("n", "<leader>zf", function()
+  local folds = {}
+  local i = 1
+  while true do
+    local ok, lnum = pcall(vim.fn.foldclosed, i)
+    if not ok then break end
+    if lnum ~= -1 then
+      local end_lnum = vim.fn.foldclosedend(i)
+      local text = vim.fn.getline(lnum)
+      table.insert(folds, { lnum = lnum, end_lnum = end_lnum, text = text })
+      i = end_lnum + 1
+    else
+      i = i + 1
+    end
+    if i > vim.fn.line('$') then break end
+  end
+  if #folds == 0 then
+    vim.notify("No folds in buffer", vim.log.levels.INFO)
+    return
+  end
+  local items = vim.tbl_map(function(f)
+    return string.format("%4d │ %s", f.lnum, f.text)
+  end, folds)
+  require("fzf-lua").fzf_exec(items, {
+    prompt = "Folds > ",
+    actions = {
+      ["default"] = function(selected)
+        if not selected or #selected == 0 then return end
+        local lnum = tonumber(selected[1]:match("%s*(%d+)"))
+        if lnum then
+          vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+          vim.cmd.normal({ "zxzv", bang = true })
+        end
+      end,
+    },
+  })
+end, { desc = "[F]ind [F]olds (fzf)" })
 
 -- ==============================================================
 -- Diagnostics Keymaps
@@ -81,18 +135,6 @@ map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]ui
 -- an+char: around next, in+char: inside next
 -- al+char: around last, il+char: inside last
 -- g[: move to left edge, g]: move to right edge
-
--- ==============================================================
--- Java Keymaps
--- ==============================================================
--- <leader>jc: Java Commands (fzf picker)
-map("n", "<leader>jc", function()
-    if _G.JavaShowCommands then
-        _G.JavaShowCommands()
-    else
-        vim.notify("Java commands not available (nvim-java or fzf-lua not loaded)", vim.log.levels.WARN)
-    end
-end, { desc = "[J]ava [C]ommands" })
 
 -- ==============================================================
 -- LSP Keymaps (set on LspAttach)
@@ -176,5 +218,16 @@ vim.api.nvim_create_autocmd('LspAttach', {
     bufmap('n', '<leader>th', function()
       vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = buf })
     end, '[T]oggle Inlay [H]ints')
+
+    -- C/C++: Switch between source/header file
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    if client and client.name == 'clangd' then
+      bufmap('n', '<leader>h', function()
+        client:request('textDocument/switchSourceHeader', vim.lsp.util.make_text_document_params(buf), function(err, result)
+          if err then return end
+          if result then vim.cmd.edit(vim.uri_to_fname(result)) end
+        end)
+      end, 'Toggle Source/Header')
+    end
   end,
 })

@@ -23,5 +23,5 @@ require('mini.ai').setup({
   search_method = 'cover',
 
   -- Use treesitter for supported textobjects (requires nvim-treesitter)
-  use_treesitter = false,  -- Set to true if you have nvim-treesitter
+  use_treesitter = true,
 })
