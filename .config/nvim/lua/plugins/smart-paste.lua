@@ -1,0 +1,1 @@
+require('smart-paste').setup({})

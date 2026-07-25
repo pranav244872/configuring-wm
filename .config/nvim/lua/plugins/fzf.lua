@@ -6,3 +6,5 @@ require("fzf-lua").setup({
     async_or_timeout = 5000,
   },
 })
+
+require("fzf-lua").register_ui_select()
