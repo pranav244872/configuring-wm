@@ -1,9 +1,9 @@
 install_packages() {
   section "System packages"
   sudo pacman -Sy --needed --noconfirm \
-    hyprland kitty gtk4 hyprpolkitagent pipewire xdg-desktop-portal-hyprland \
+    kitty gtk4 hyprpolkitagent pipewire xdg-desktop-portal-hyprland \
     qt6-wayland qt5-wayland neovim git mpv firefox which base-devel fzf grep tree ripgrep vim \
-    devtools unzip wl-clipboard qt6ct awww hyprshot waybar ttf-jetbrains-mono-nerd \
+    devtools cmake tree-sitter-cli moreutils unzip wl-clipboard qt6ct awww hyprshot waybar ttf-jetbrains-mono-nerd \
     imv brightnessctl playerctl btop fastfetch hypridle matugen hyprtoolkit hyprlock hyprsunset rofi mako gvfs fish starship adw-gtk-theme papirus-icon-theme zoxide eza bat docker docker-compose docker-buildx mise gpu-screen-recorder jq ffmpeg intel-media-driver hyprpicker \
     bluez bluez-utils pavucontrol less 2>&1 | tail -1
   ok "Packages installed"

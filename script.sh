@@ -17,6 +17,7 @@ sudo sed -i '/^Color$/a ILoveCandy' /etc/pacman.conf
 install_packages
 clone_dotfiles
 setup_paru
+setup_hyprland
 setup_rofi
 deploy_configs
 setup_gtk
