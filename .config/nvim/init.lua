@@ -19,20 +19,16 @@ vim.pack.add({
     'https://github.com/saghen/blink.cmp',
     'https://github.com/L3MON4D3/LuaSnip',
     'https://github.com/rafamadriz/friendly-snippets',
-    -- Java development dependencies (nvim-java ecosystem)
-    'https://github.com/nvim-java/nvim-java-test',
-    'https://github.com/nvim-java/nvim-java-core',
-    'https://github.com/nvim-java/lua-async-await',
-    'https://github.com/nvim-java/nvim-java-refactor',
-    'https://github.com/nvim-java/nvim-java-dap',
-    'https://github.com/MunifTanjim/nui.nvim',
-    'https://github.com/mfussenegger/nvim-dap',
-    'https://github.com/JavaHello/spring-boot.nvim',
-    'https://github.com/nvim-java/nvim-java',
     -- Autopairs 
     'https://github.com/nvim-mini/mini.pairs',
     -- Enhanced textobjects (a/i)
     'https://github.com/nvim-mini/mini.ai',
+    -- Treesitter parser management + queries
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+    -- Smart paste with correct indentation
+    'https://github.com/nemanjamalesija/smart-paste.nvim',
+    -- Floating UI for vim.pack
+    'https://github.com/jtprogru/pack-ui.nvim',
 })
 
 -- Plugin setups (auto-require all plugins in lua/plugins/)
