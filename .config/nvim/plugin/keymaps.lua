@@ -209,9 +209,9 @@ vim.api.nvim_create_autocmd('LspAttach', {
     -- grt: [G]oto [T]ype Definition (jump to the type, not the variable definition)
     bufmap('n', 'grt', require('fzf-lua').lsp_typedefs, '[G]oto [T]ype Definition')
 
-    -- K: Show hover documentation with rounded border (built-in LSP hover)
+    -- K: Show pretty hover documentation
     bufmap('n', 'K', function()
-      vim.lsp.buf.hover({ border = 'rounded' })
+      require("pretty_hover").hover()
     end, 'Hover Documentation')
 
     -- <leader>th: [T]oggle Inlay [H]ints (show/hide inline type and parameter hints)

@@ -29,6 +29,8 @@ vim.pack.add({
     'https://github.com/nemanjamalesija/smart-paste.nvim',
     -- Floating UI for vim.pack
     'https://github.com/jtprogru/pack-ui.nvim',
+    -- Pretty LSP hover documentation
+    'https://github.com/Fildo7525/pretty_hover',
 })
 
 -- Plugin setups (auto-require all plugins in lua/plugins/)
