@@ -1,8 +1,8 @@
 require('nvim-treesitter').setup({})
 
-require('nvim-treesitter').install({ 'c', 'cpp' })
+require('nvim-treesitter').install({ 'c', 'cpp', 'markdown', 'markdown_inline' })
 
-local ts_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' }
+local ts_filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'markdown' }
 vim.api.nvim_create_autocmd('FileType', {
   pattern = ts_filetypes,
   callback = function()
