@@ -19,10 +19,10 @@ vim.pack.add({
     'https://github.com/saghen/blink.cmp',
     'https://github.com/L3MON4D3/LuaSnip',
     'https://github.com/rafamadriz/friendly-snippets',
-    -- Autopairs 
-    'https://github.com/nvim-mini/mini.pairs',
     -- Enhanced textobjects (a/i)
     'https://github.com/nvim-mini/mini.ai',
+    -- Autoclose brackets/pairs
+    'https://github.com/m4xshen/autoclose.nvim',
     -- Treesitter parser management + queries
     'https://github.com/nvim-treesitter/nvim-treesitter',
     -- Smart paste with correct indentation
