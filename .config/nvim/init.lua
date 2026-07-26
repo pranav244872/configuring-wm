@@ -23,6 +23,8 @@ vim.pack.add({
     'https://github.com/nvim-mini/mini.ai',
     -- Autoclose brackets/pairs
     'https://github.com/m4xshen/autoclose.nvim',
+    -- Auto-resize splits and UI per focused window
+    'https://github.com/nvim-focus/focus.nvim',
     -- Treesitter parser management + queries
     'https://github.com/nvim-treesitter/nvim-treesitter',
     -- Smart paste with correct indentation
