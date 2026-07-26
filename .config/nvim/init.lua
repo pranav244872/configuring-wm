@@ -31,6 +31,8 @@ vim.pack.add({
     'https://github.com/jtprogru/pack-ui.nvim',
     -- Pretty LSP hover documentation
     'https://github.com/Fildo7525/pretty_hover',
+    -- Markdown / LaTeX rendering
+    'https://github.com/OXY2DEV/markview.nvim',
 })
 
 -- Plugin setups (auto-require all plugins in lua/plugins/)
