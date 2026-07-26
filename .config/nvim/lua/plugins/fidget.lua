@@ -9,10 +9,11 @@ require("fidget").setup({
     },
   },
   notification = {
+    override_vim_notify = true,
     window = {
-      border = "rounded",  -- Rounded border for notification window
-      winblend = 0,           -- No transparency (set to 100 for fully transparent)
-      align = "bottom",        -- Show at bottom of screen
+      border = "rounded",
+      winblend = 0,
+      align = "bottom",
       normal_hl = "NormalFloat",
     },
   },
