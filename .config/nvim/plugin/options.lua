@@ -64,3 +64,6 @@ vim.opt.encoding = "utf-8"
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.o.confirm = true
+
+-- Don't auto-continue comments on Enter / o / O
+vim.opt.formatoptions:remove({ 'r', 'o' })
