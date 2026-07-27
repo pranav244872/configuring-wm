@@ -121,9 +121,20 @@ end, { desc = "Show full diagnostic in float (focused)" })
 map("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
 -- ==============================================================
--- mini.pairs Keymaps
+-- Split Management (smart-splits.nvim)
 -- ==============================================================
--- (No keybinding needed - works automatically when typing quotes, brackets, etc.)
+
+-- Move between splits; creates new split when at edge
+map('n', '<C-h>', require('smart-splits').move_cursor_left, { desc = 'Split: move left / create left' })
+map('n', '<C-j>', require('smart-splits').move_cursor_down, { desc = 'Split: move down / create down' })
+map('n', '<C-k>', require('smart-splits').move_cursor_up, { desc = 'Split: move up / create up' })
+map('n', '<C-l>', require('smart-splits').move_cursor_right, { desc = 'Split: move right / create right' })
+
+-- Resize splits
+map('n', '<A-h>', require('smart-splits').resize_left, { desc = 'Split: resize left' })
+map('n', '<A-j>', require('smart-splits').resize_down, { desc = 'Split: resize down' })
+map('n', '<A-k>', require('smart-splits').resize_up, { desc = 'Split: resize up' })
+map('n', '<A-l>', require('smart-splits').resize_right, { desc = 'Split: resize right' })
 
 -- ==============================================================
 -- mini.ai Textobjects
