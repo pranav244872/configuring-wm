@@ -1,0 +1,5 @@
+# Ignore python project noise
+--glob=!__pycache__/
+--glob=!.venv/
+--glob=!venv/
+--glob=!env/
