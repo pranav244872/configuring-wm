@@ -48,7 +48,7 @@ else
     mesg="Last: $last_file"
   fi
   prompt="󰻂  Recording"
-  chosen=$(echo -e "▶ Start\n🎤  Start (with audio)" | rofi -dmenu -p "$prompt" -mesg "$mesg" -theme "${dir}/${theme}.rasi")
+  chosen=$(echo -e "▶  Start\n🎤  Start (with audio)" | rofi -dmenu -p "$prompt" -mesg "$mesg" -theme "${dir}/${theme}.rasi")
 
   case "$chosen" in
     "▶  Start") ~/.config/hypr/scripts/screenrecord ;;
