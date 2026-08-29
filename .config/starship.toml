@@ -7,15 +7,15 @@ $cmd_duration $directory$git_branch
 palette = 'custom'
 
 [palettes.custom]
-color1 = '#ffb68c'
-color2 = '#532200'
-color3 = '#f0dfd7'
-color4 = '#ffb68c'
-color5 = '#532200'
-color6 = '#321200'
-color7 = '#ffb68c'
-color8 = '#ffb68c'
-color9 = '#ccc992'
+color1 = '#e1b7f5'
+color2 = '#432255'
+color3 = '#e9e0e7'
+color4 = '#e1b7f5'
+color5 = '#432255'
+color6 = '#2c0b3e'
+color7 = '#e1b7f5'
+color8 = '#e1b7f5'
+color9 = '#f4b7b7'
 
 [fill]
 symbol = '-'

@@ -1,5 +1,11 @@
-# Ignore python project noise
+# Ignore project noise - used by fzf-lua live_grep/grep (RIPGREP_CONFIG_PATH)
 --glob=!__pycache__/
 --glob=!.venv/
 --glob=!venv/
 --glob=!env/
+--glob=!node_modules/
+--glob=!.pytest_cache/
+--glob=!.mypy_cache/
+--glob=!.ruff_cache/
+--glob=!.jj/
+--glob=!.git/
