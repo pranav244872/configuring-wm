@@ -23,30 +23,35 @@ setup_rofi() {
 deploy_configs() {
   section "Configs & wallpapers"
   mkdir -p ~/Pictures/{Wallpapers,Screenshots}
-  cp ~/del/configuring-wm/Wallpapers/* ~/Pictures/Wallpapers/
-  cp -r ~/del/configuring-wm/.config/nvim ~/del/configuring-wm/.config/mpv ~/.config/
-  cp -r ~/del/configuring-wm/.config/waybar ~/.config
-  cp -r ~/del/configuring-wm/.config/kitty ~/.config
-  cp -r ~/del/configuring-wm/.config/hypr ~/.config
-  cp -r ~/del/configuring-wm/.config/matugen ~/.config
-  cp -r ~/del/configuring-wm/.config/rofi ~/.config
-  cp -r ~/del/configuring-wm/.config/mako ~/.config
-  cp ~/del/configuring-wm/.config/starship.toml ~/.config/
-  cp -r ~/del/configuring-wm/.config/gtk ~/.config
+  cp "$SCRIPT_DIR/Wallpapers/"* ~/Pictures/Wallpapers/
+  cp -r "$SCRIPT_DIR/.config/nvim" "$SCRIPT_DIR/.config/mpv" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/waybar" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/kitty" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/hypr" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/matugen" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/rofi" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/mako" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/fish" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/ripgrep" ~/.config/
+  cp "$SCRIPT_DIR/.config/starship.toml" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/gtk" ~/.config/
   mkdir -p ~/.config/gtk-3.0 ~/.config/gtk-4.0
-  ln -sf ~/del/configuring-wm/.config/gtk/gtk.css ~/.config/gtk-4.0/gtk.css
-  cp ~/del/configuring-wm/.config/gtk/settings.ini ~/.config/gtk-3.0/settings.ini
+  ln -sf "$SCRIPT_DIR/.config/gtk/gtk.css" ~/.config/gtk-4.0/gtk.css
+  cp "$SCRIPT_DIR/.config/gtk/settings.ini" ~/.config/gtk-3.0/settings.ini
   mkdir -p ~/.config/btop/themes ~/.config/qt6ct/colors
-  cp ~/del/configuring-wm/.config/btop/themes/matugen.theme ~/.config/btop/themes/
-  cp ~/del/configuring-wm/.config/qt6ct/colors/matugen.conf ~/.config/qt6ct/colors/
-  cp ~/del/configuring-wm/.config/qt6ct/qt6ct.conf ~/.config/qt6ct/qt6ct.conf
-  cp -r ~/del/configuring-wm/.config/systemd ~/.config
-  cp -r ~/del/configuring-wm/.config/fastfetch ~/.config
+  cp "$SCRIPT_DIR/.config/btop/themes/matugen.theme" ~/.config/btop/themes/
+  cp "$SCRIPT_DIR/.config/qt6ct/colors/matugen.conf" ~/.config/qt6ct/colors/
+  cp "$SCRIPT_DIR/.config/qt6ct/qt6ct.conf" ~/.config/qt6ct/qt6ct.conf
+  cp -r "$SCRIPT_DIR/.config/systemd" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/fastfetch" ~/.config/
   mkdir -p ~/.config/opencode/themes
-  cp ~/del/configuring-wm/.config/opencode/opencode.jsonc ~/.config/opencode/opencode.jsonc
+  cp "$SCRIPT_DIR/.config/opencode/opencode.jsonc" ~/.config/opencode/opencode.jsonc
   mkdir -p ~/.config/imv
-  cp ~/del/configuring-wm/.config/imv/config ~/.config/imv/config
-  cp -r ~/del/configuring-wm/.config/swayosd ~/.config/swayosd
+  cp "$SCRIPT_DIR/.config/imv/config" ~/.config/imv/config
+  cp -r "$SCRIPT_DIR/.config/swayosd" ~/.config/swayosd
+  if [[ -f "$SCRIPT_DIR/.bashrc" ]]; then
+    cp "$SCRIPT_DIR/.bashrc" ~/.bashrc
+  fi
   ok "Configs deployed"
 }
 
