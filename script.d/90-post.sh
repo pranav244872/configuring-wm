@@ -69,7 +69,6 @@ post_install_manual_steps() {
    │  Pixel Skyscrapers theme with animated background.       │
    │                                                          │
    │  Select "Hyprland" as the session and enter password.    │
-   │  Password: ***REMOVED***                                      │
    │                                                          │
    │  If SDDM doesn't start, reboot or run:                   │
    │    sudo systemctl start sddm.service                     │
@@ -89,7 +88,7 @@ post_install_manual_steps() {
    │    • ALT + vol/brightness   → 1% precise steps           │
    └──────────────────────────────────────────────────────────┘
 
-6. Screen recording (gpu-screen-recorder)
+7. Screen recording (gpu-screen-recorder)
    ┌──────────────────────────────────────────────────────────┐
    │  Open recording menu:                                     │
    │    SUPER + SHIFT + R          # rofi menu with status     │

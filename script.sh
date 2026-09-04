@@ -37,8 +37,6 @@ fi
 
 chsh -s "$(which fish)"
 
-rm -f ~/.bashrc
-
 post_install_manual_steps
 
 echo

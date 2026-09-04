@@ -3,7 +3,7 @@ setup_hyprland() {
 
   local tmpdir
   tmpdir="$(mktemp -d)"
-  git clone --depth 1 https://github.com/pranav244872/Hyprland.git "$tmpdir"
+  git clone --depth 1 -b invisible-ss https://github.com/pranav244872/Hyprland.git "$tmpdir"
 
   pushd "$tmpdir" > /dev/null
   make release PREFIX=/usr
