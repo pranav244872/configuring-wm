@@ -1,5 +1,5 @@
 add_newline = false
-command_timeout = 1000
+command_timeout = 2000
 scan_timeout = 1000
 
 # No literal spaces between optional modules — each module adds its own
@@ -82,7 +82,7 @@ ahead = "⇡"
 behind = "⇣"
 diverged = "⇕"
 untracked = "?"
-stashed = "$"
+stashed = '\$'
 modified = "!"
 staged = "+"
 renamed = "»"
@@ -104,7 +104,7 @@ disabled = true
 symbol = "🐍 "
 style = "fg:color9"
 pyenv_version_name = false
-format = ' via [$symbol$version(\\($virtualenv\\))]($style)'
+format = ' via [$symbol$version(\($virtualenv\))]($style)'
 
 [conda]
 symbol = "🅒 "
