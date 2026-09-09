@@ -12,6 +12,15 @@ done
 sudo sed -i '/^ILoveCandy$/d' /etc/pacman.conf
 sudo sed -i '/^Color$/a ILoveCandy' /etc/pacman.conf
 
+# Cap systemd journal size to prevent unvacuumed log bloat
+sudo sed -i 's/^#\?SystemMaxUse=.*/SystemMaxUse=50M/' /etc/systemd/journald.conf
+sudo systemctl restart systemd-journald 2>/dev/null || true
+
+# Optimize Btrfs mount options on mechanical HDDs (remove discard, add autodefrag)
+if grep -q "btrfs" /etc/fstab; then
+  sudo sed -i 's/discard=async/autodefrag/g' /etc/fstab
+fi
+
 # ── Main ──────────────────────────────────────────────────
 
 install_packages

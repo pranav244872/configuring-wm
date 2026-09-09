@@ -14,12 +14,9 @@ DOCKER_EOF
 DNSStubListenerExtra=172.17.0.1
 DNS_EOF
   sudo systemctl restart systemd-resolved
+  sudo systemctl disable docker.service containerd.service 2>/dev/null || true
   sudo systemctl enable docker.socket
   sudo usermod -aG docker "$USER"
-  sudo tee /etc/systemd/system/docker.service.d/no-block-boot.conf >/dev/null <<'BOOT_EOF'
-[Unit]
-DefaultDependencies=no
-BOOT_EOF
   sudo systemctl daemon-reload
-  ok "Docker configured (log out/in for group)"
+  ok "Docker configured with socket activation (log out/in for group)"
 }

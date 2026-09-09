@@ -1,6 +1,6 @@
 add_newline = false
 command_timeout = 2000
-scan_timeout = 1000
+scan_timeout = 5000
 
 # No literal spaces between optional modules — each module adds its own
 # leading space, so hidden modules don't leave big gaps (which pushed 4s far right).
