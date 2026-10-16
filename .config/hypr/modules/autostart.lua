@@ -2,17 +2,9 @@
 ---- AUTOSTART ----
 -------------------
 
--- See https://wiki.hypr.land/Configuring/Basics/Autostart/
+-- Keep this list as small as possible. Everything else belongs to the rice step.
 
--- Autostart necessary processes (like notifications daemons, status bars, etc.)
--- Or execute your favorite apps at launch like this:
---
 hl.on("hyprland.start", function()
+    -- Polkit authentication agent (GUI password prompts for privileged actions)
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
-    hl.exec_cmd("hypridle")
-    hl.exec_cmd("awww-daemon")
-    hl.exec_cmd("waybar")
-    hl.exec_cmd("mako")
-    hl.exec_cmd("hyprsunset")
-    hl.exec_cmd("systemctl --user start swayosd-server")
 end)
