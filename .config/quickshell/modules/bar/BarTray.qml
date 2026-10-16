@@ -52,12 +52,12 @@ RowLayout {
                     const item = parent.modelData;
                     if (event.button === Qt.LeftButton) {
                         if (item.onlyMenu && item.hasMenu)
-                            root.openMenuFor(item);
+                            root.openMenuFor(item, trayMa, event.x, event.y);
                         else
                             item.activate();
                     } else if (event.button === Qt.RightButton) {
                         if (item.hasMenu)
-                            root.openMenuFor(item);
+                            root.openMenuFor(item, trayMa, event.x, event.y);
                         else
                             item.activate();
                     } else {
@@ -71,9 +71,12 @@ RowLayout {
         }
     }
 
-    function openMenuFor(item) {
-        // Anchor under the icon, in overlay coordinates
-        const p = root.mapToGlobal(0, 0);
-        TrayState.openMenu(item.menu, item.title || item.id, p.x, p.y + root.height + 6);
+    function openMenuFor(item, ma, clickX, clickY) {
+        // Anchor at the click point, hanging below the clicked icon itself
+        // (not the row origin). Global coords == overlay coords, one screen.
+        const click = ma.mapToGlobal(clickX, clickY);
+        const bottom = ma.mapToGlobal(0, ma.height);
+        const top = ma.mapToGlobal(0, 0);
+        TrayState.openMenu(item.menu, item.title || item.id, click.x, top.y, bottom.y + 6);
     }
 }

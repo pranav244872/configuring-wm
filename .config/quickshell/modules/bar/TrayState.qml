@@ -10,14 +10,16 @@ QtObject {
     property var handle: null
     property string appTitle: ""
     property real anchorX: 0
+    property real anchorTop: 0
     property real anchorY: 0
     property bool open: false
 
-    function openMenu(menuHandle, title, x, y) {
+    function openMenu(menuHandle, title, x, yTop, yBottom) {
         root.handle = menuHandle;
         root.appTitle = title ?? "";
         root.anchorX = x;
-        root.anchorY = y;
+        root.anchorTop = yTop;
+        root.anchorY = yBottom;
         root.open = true;
     }
 

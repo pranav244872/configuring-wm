@@ -48,8 +48,10 @@ PanelWindow {
 
         Rectangle {
             id: panel
+            // Below the icon; flips above it when there is no room (tall
+            // menu near the bottom edge). X follows the click, clamped in.
             x: Math.max(4, Math.min(host.width - width - 4, TrayState.anchorX))
-            y: TrayState.anchorY
+            y: (TrayState.anchorY + height + 4 > host.height) ? Math.max(4, TrayState.anchorTop - height - 6) : Math.min(host.height - height - 4, TrayState.anchorY)
             width: 230
             height: menu.implicitHeight + 2
             color: Theme.colors.layer0
