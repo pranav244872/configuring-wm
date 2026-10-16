@@ -12,7 +12,6 @@ FocusScope {
     id: root
 
     required property LockAuth auth
-    property var locker: null
     property string userName: Quickshell.env("USER") || "USER"
 
     // Guarded: surface properties arrive after first evaluation and vanish on
@@ -240,6 +239,8 @@ FocusScope {
                         font.family: Theme.font.main
                         font.pixelSize: Theme.font.size.md
                         font.letterSpacing: 3
+                        // No ligatures in a password field, even under masking
+                        font.features: { "liga": 0, "calt": 0, "clig": 0 }
                         text: root.hasAuth ? root.auth.buffer : ""
 
                         onTextChanged: {
@@ -312,34 +313,6 @@ FocusScope {
                     font.pixelSize: Theme.frame.labelSize
                     font.letterSpacing: Theme.frame.tracking
                     color: (root.hasAuth && root.auth.busy) ? Theme.colors.primary : Theme.colors.error
-                }
-
-                // TEMPORARY debug hatch: sets locker.locked = false (no PAM)
-                Rectangle {
-                    Layout.preferredHeight: 30
-                    Layout.fillWidth: true
-                    color: tempMa.containsMouse ? Theme.colors.primaryContainer : "transparent"
-                    border.width: Theme.frame.line
-                    border.color: Theme.colors.error
-
-                    StyledText {
-                        anchors.centerIn: parent
-                        text: "TEMP UNLOCK (DEBUG)"
-                        font.pixelSize: Theme.frame.labelSize
-                        font.letterSpacing: Theme.frame.tracking
-                        color: Theme.colors.error
-                    }
-
-                    MouseArea {
-                        id: tempMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            if (root.locker)
-                                root.locker.locked = false;
-                        }
-                    }
                 }
             }
         }

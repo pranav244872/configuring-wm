@@ -27,7 +27,6 @@ WlSessionLockSurface {
         width: 408
         height: card.implicitHeight
         auth: root.auth
-        locker: root.lock
     }
 
     Connections {

@@ -1,10 +1,7 @@
 // Session lock host: real WlSessionLock (never a fake overlay). Unlocking is
 // sessionLock.locked = false (WlSessionLock.unlock() is private in 0.3.2).
 // IPC has lock/unlock/isLocked so a TTY can recover without killing qs.
-//
-// Naming: host ids are sessionLock/authState (NOT lock/auth) because the
-// surface declares its own lock/auth properties, which would shadow the ids
-// and self-bind (binding loop, null auth, dead surface).
+// NOTE: host ids must not be lock/auth (surface props would shadow them).
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -59,24 +56,10 @@ Scope {
     function engage() {
         authState.reset();
         sessionLock.locked = true;
-        // TEMPORARY safety net: release the lock if input is dead.
-        safetyTimer.restart();
     }
 
     function disengage() {
-        safetyTimer.stop();
         authState.reset();
         sessionLock.locked = false;
-    }
-
-    // TEMPORARY: auto-unlock 15s after engaging. Remove once password
-    // auth is proven live.
-    Timer {
-        id: safetyTimer
-        interval: 15000
-        onTriggered: {
-            if (sessionLock.locked)
-                host.disengage();
-        }
     }
 }
