@@ -51,6 +51,17 @@ StackView {
         property bool isSubMenu: false
         readonly property bool hasChildren: menuOpener.children.values.some((e) => !e.isSeparator)
 
+        // Leading/trailing separators never render (Electron apps append
+        // trailing ones), nor do text-less rows: strip them from the model.
+        readonly property var cleanChildren: {
+            const vs = menuOpener.children.values.filter((e) => e.isSeparator || (e.text || "") !== "").slice();
+            while (vs.length > 0 && vs[0].isSeparator)
+                vs.shift();
+            while (vs.length > 0 && vs[vs.length - 1].isSeparator)
+                vs.pop();
+            return vs;
+        }
+
         padding: 8
         spacing: 2
 
@@ -61,6 +72,8 @@ StackView {
 
         StyledText {
             width: parent.width - 16
+            // Column still slots hidden items, so collapse their height too
+            height: visible ? implicitHeight : 0
             text: menu.title.toUpperCase()
             font.pixelSize: Theme.frame.labelSize
             font.letterSpacing: Theme.frame.tracking
@@ -71,13 +84,13 @@ StackView {
 
         Rectangle {
             width: parent.width - 16
-            height: Theme.frame.line
+            height: visible ? Theme.frame.line : 0
             color: Theme.colors.outline
             visible: !menu.isSubMenu && menu.title !== ""
         }
 
         Repeater {
-            model: menuOpener.children
+            model: menu.cleanChildren
 
             delegate: Rectangle {
                 required property var modelData
@@ -161,7 +174,7 @@ StackView {
         // Back row for submenus
         Rectangle {
             implicitWidth: 214
-            implicitHeight: 34
+            implicitHeight: menu.isSubMenu ? 34 : 0
             color: backMa.containsMouse ? Theme.colors.stateHover : "transparent"
             visible: menu.isSubMenu
 

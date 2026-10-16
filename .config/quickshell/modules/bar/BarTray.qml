@@ -2,6 +2,7 @@
 // when no icons exist. Left-click activates, right-click opens the app menu.
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Window
 import Quickshell
 import Quickshell.Services.SystemTray
 import Quickshell.Widgets
@@ -72,11 +73,13 @@ RowLayout {
     }
 
     function openMenuFor(item, ma, clickX, clickY) {
-        // Anchor at the click point, hanging below the clicked icon itself
-        // (not the row origin). Global coords == overlay coords, one screen.
+        // mapToGlobal returns window-local coords on layer-shell (the client
+        // never learns the compositor-assigned window pos). The bar window is
+        // top-centered, so its screen origin is ((screen - window) / 2, 0).
+        const ox = (Screen.width - Window.width) / 2;
         const click = ma.mapToGlobal(clickX, clickY);
-        const bottom = ma.mapToGlobal(0, ma.height);
         const top = ma.mapToGlobal(0, 0);
-        TrayState.openMenu(item.menu, item.title || item.id, click.x, top.y, bottom.y + 6);
+        const bottom = ma.mapToGlobal(0, ma.height);
+        TrayState.openMenu(item.menu, item.title, ox + click.x, top.y, bottom.y + 6);
     }
 }
