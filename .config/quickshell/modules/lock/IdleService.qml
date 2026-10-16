@@ -1,6 +1,5 @@
-// Idle service: staged inactivity timers with inhibitor support. FINAL
-// timings active (lock 3m, screen off 5m); suspend stays OFF until the lock
-// round-trip is proven live (never suspend the machine from a test run).
+// Idle service: staged inactivity timers with inhibitor support. Normal
+// timings: lock 3m, screen off 5m (backlight floor 1%), suspend 10m.
 import QtQuick
 import Quickshell
 import Quickshell.Io
@@ -9,15 +8,9 @@ import Quickshell.Wayland
 Item {
     id: root
 
-    readonly property int lockAfter: 180
-    readonly property int offAfter: 300
-    readonly property int suspendAfter: 600
-
-    // Set to false so it doesn't lock every 30s while you work
-    readonly property bool testing: false
-    readonly property int lockSecs: root.testing ? 30 : root.lockAfter
-    readonly property int offSecs: root.testing ? 45 : root.offAfter
-    readonly property bool suspendOn: false
+    readonly property int lockSecs: 180
+    readonly property int offSecs: 300
+    readonly property int suspendSecs: 600
 
     signal lockRequested()
 
@@ -47,8 +40,8 @@ Item {
 
     IdleMonitor {
         id: suspendMonitor
-        enabled: root.suspendOn
-        timeout: root.suspendAfter
+        enabled: true
+        timeout: root.suspendSecs
         respectInhibitors: true
         onIsIdleChanged: {
             if (isIdle)
