@@ -10,8 +10,9 @@ PanelWindow {
         top: true
     }
 
-    // Push tiled windows down: 18 + gaps_out 20 - height 30 = 8px window gap
-    exclusiveZone: 18
+    // Push tiled windows down: zone reserves exactly the bar height, so the
+    // bar gap always equals gaps_out (30 + 12 - 30 = 12px, same as edges)
+    exclusiveZone: 30
 
     implicitWidth: island.implicitWidth
     implicitHeight: island.implicitHeight
