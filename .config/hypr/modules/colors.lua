@@ -1,3 +1,7 @@
+-- Material colour palette (teal) generated from the old wallpaper.
+-- Used by modules.decorations for window borders; also available for future
+-- rice modules (waybar, rofi, mako, ...).
+
 return {
     image = "/home/pranav/Pictures/Wallpapers/5.png",
 
@@ -100,5 +104,4 @@ return {
     tertiary_fixed = "0xffd7e2ff",
 
     tertiary_fixed_dim = "0xffb7c7ea",
-
 }
