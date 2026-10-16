@@ -8,6 +8,7 @@ import Quickshell.Wayland
 import qs.modules
 import qs.modules.widgets
 import qs.modules.screenshot
+import qs.modules.bar
 
 PanelWindow {
     id: host
@@ -46,6 +47,9 @@ PanelWindow {
     }
 
     function show() {
+        // Transient popups lose to capture: the tray menu is a later-created
+        // overlay that would stay on top of the selector. It holds no state.
+        TrayState.closeMenu();
         if (!host.open && !host.capturing)
             host.beginCapture();
     }
@@ -138,6 +142,7 @@ PanelWindow {
         }
         store.outputName = m.name;
         store.outputId = m.id;
+        store.workspaceId = m.activeWorkspace?.id ?? -1;
         store.outputX = m.x;
         store.outputY = m.y;
         // hyprctl reports physical pixels; overlay coordinates are logical
@@ -176,6 +181,9 @@ PanelWindow {
                 if (!c.mapped || c.hidden)
                     continue;
                 if (c.monitor !== undefined && c.monitor !== store.outputId)
+                    continue;
+                // hyprshot rule: only the captured output's active workspace
+                if (c.workspace && c.workspace.id !== store.workspaceId)
                     continue;
                 list.push({
                     x: Math.round(c.at[0] - store.outputX),

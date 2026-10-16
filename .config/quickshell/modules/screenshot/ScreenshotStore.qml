@@ -11,6 +11,7 @@ QtObject {
     property string imagePath: ""
     property string outputName: ""
     property int outputId: -1
+    property int workspaceId: -1      // active workspace of the captured output
     property int outputX: 0
     property int outputY: 0
     property int outputW: 0
@@ -212,6 +213,7 @@ QtObject {
         root.stage = "idle";
         root.imagePath = "";
         root.outputName = "";
+        root.workspaceId = -1;
         root.clients = [];
         root.resetAnnotations();
         root.tool = "pen";
