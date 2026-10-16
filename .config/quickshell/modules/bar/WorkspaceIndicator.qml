@@ -122,6 +122,17 @@ Item {
                 visible: parent.containsMouse && !parent.focused
             }
 
+            // Occupied marker: 2px primary tick under the digit
+            Rectangle {
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+                anchors.bottomMargin: 3
+                width: 12
+                height: 2
+                color: Theme.colors.primary
+                visible: parent.occupied && !parent.focused
+            }
+
             StyledText {
                 anchors.centerIn: parent
                 text: String(parent.wsId)
@@ -136,11 +147,11 @@ Item {
                 readonly property real dockR: centreX + Theme.bar.dockHalf
                 readonly property real coverage: Math.max(0, Math.min(pillR, dockR) - Math.max(pillL, dockL)) / (2 * Theme.bar.dockHalf)
                 readonly property color baseColor: parent.occupied ? Theme.colors.fgLayer1
-                                                                   : ColorUtils.transparentize(Theme.colors.fgLayer1, 0.60)
+                                                                   : ColorUtils.transparentize(Theme.colors.fgLayer1, 0.70)
 
                 color: ColorUtils.mix(baseColor, Theme.colors.fgPrimary, coverage)
                 font.pixelSize: Theme.font.size.xs
-                font.weight: parent.focused ? Font.Black : (parent.occupied ? Font.Bold : Font.DemiBold)
+                font.weight: parent.focused ? Font.Black : (parent.occupied ? Font.Black : Font.DemiBold)
             }
         }
     }

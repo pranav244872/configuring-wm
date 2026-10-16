@@ -19,7 +19,7 @@ Item {
         id: timeText
         anchors.centerIn: parent
 
-        text: Qt.formatDateTime(clock.date, "HH:mm")
+        text: Qt.formatDateTime(clock.date, "ddd, MMM d · HH:mm").toUpperCase()
         color: Theme.colors.fgLayer1
         font.family: Theme.font.main
         font.pixelSize: Theme.bar.clockSize
