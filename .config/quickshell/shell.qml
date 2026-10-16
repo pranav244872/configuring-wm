@@ -7,10 +7,10 @@
 //   shot - screenshot utility: capture, annotate, save/copy
 //   cal  - desktop month calendar (background layer, click-through)
 //
-//   run:  qs            (this file is quickshell's 'default' config)
-//   stop: qs -c default kill
+//   run:  qs -n (single instance; autostarted at login, see hypr autostart)
+//   stop: qs -k
 //
-// Nothing autostarts it; start it from the Hyprland keybind (SUPER + SHIFT + O).
+// Autostarted by Hyprland; SUPER + SHIFT + O restarts it if ever killed.
 
 import QtQuick
 import Quickshell
@@ -19,6 +19,7 @@ import qs.modules.bar
 import qs.modules.launcher
 import qs.modules.screenshot
 import qs.modules.calendar
+import qs.modules.lock
 
 ShellRoot {
     TopBar {}
@@ -27,4 +28,5 @@ ShellRoot {
     ScreenshotHost {}
     CalendarWidget {}
     TrayMenuHost {}
+    LockHost {}
 }

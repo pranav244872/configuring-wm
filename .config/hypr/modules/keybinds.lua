@@ -178,11 +178,17 @@ hl.bind(
     { locked = true }
 )
 
--- Our own UI (quickshell): bar, OSD, and app launcher.
+-- Own shell (autostarted): bind restarts it if ever killed.
 hl.bind(mainMod .. " + SHIFT + O", hl.dsp.exec_cmd("qs -n"))
 hl.bind(
     mainMod .. " + F",
     hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call launcher toggle'")
+)
+
+-- Session lock (own quickshell UI + PAM, replaces hyprlock)
+hl.bind(
+    mainMod .. " + L",
+    hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call lock lock'")
 )
 
 -- Screenshot utility (own quickshell UI): Print captures, annotate in-shell.
