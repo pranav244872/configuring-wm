@@ -3,8 +3,15 @@
 ----------------
 
 hl.config({
+    debug = {
+        -- VFR (variable frame rate): only render when something changes.
+        -- Official recommendation for battery life; on by default.
+        -- Do not turn off unless debugging.
+        vfr = true,
+    },
+
     misc = {
-        force_default_wallpaper = 0,    -- Set to 0 or 1 to disable the anime mascot wallpapers
-        disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
+        force_default_wallpaper = 0,    -- no anime mascot wallpapers
+        disable_hyprland_logo   = true, -- no Hyprland logo on empty workspaces
     },
 })

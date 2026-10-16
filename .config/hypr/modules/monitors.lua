@@ -2,6 +2,7 @@
 ---- MONITORS ----
 ------------------
 
+-- Laptop panel (if this ever doesn't match, Hyprland falls back to auto config).
 hl.monitor({
     output   = "eDP-1",
     mode     = "1920x1080@60",

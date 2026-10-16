@@ -1,48 +1,27 @@
--- Ref https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
--- "Smart gaps" / "No gaps when only"
--- uncomment all if you wish to use that.
--- hl.workspace_rule({ workspace = "w[tv1]", gaps_out = 0, gaps_in = 0 })
--- hl.workspace_rule({ workspace = "f[1]",   gaps_out = 0, gaps_in = 0 })
--- hl.window_rule({
---     name  = "no-gaps-wtv1",
---     match = { float = false, workspace = "w[tv1]" },
---     border_size = 0,
---     rounding    = 0,
--- })
--- hl.window_rule({
---     name  = "no-gaps-f1",
---     match = { float = false, workspace = "f[1]" },
---     border_size = 0,
---     rounding    = 0,
--- })
-
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
 --------------------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Window-Rules/
--- and https://wiki.hypr.land/Configuring/Basics/Workspace-Rules/
 
--- Example window rules that are useful
-
+-- Ignore maximize requests from all apps.
 hl.window_rule({
-    -- Ignore maximize requests from all apps. You'll probably like this.
     name  = "suppress-maximize-events",
     match = { class = ".*" },
 
     suppress_event = "maximize",
 })
--- suppressMaximizeRule:set_enabled(false)
 
--- Inhibit idle/sleep when any window is fullscreen
+-- Inhibit idle/sleep while any window is fullscreen (videos, games, ...)
 hl.window_rule({
     name  = "idle-inhibit-fullscreen",
     match = { class = ".*" },
+
     idle_inhibit = "fullscreen",
 })
 
+-- Fix some dragging issues with XWayland
 hl.window_rule({
-    -- Fix some dragging issues with XWayland
     name  = "fix-xwayland-drags",
     match = {
         class      = "^$",
@@ -56,39 +35,25 @@ hl.window_rule({
     no_focus = true,
 })
 
--- dim around rofi namespace (launcher & powermenu)
+------------------------------------------
+---- SCREENSHARE HIDING (fork feature) ----
+------------------------------------------
+
+-- This fork's feature: any window or layer with no_screen_share = true is
+-- skipped while the screen is being captured (Discord / Zoom / OBS shares).
+-- Copy either rule and change the match to hide anything else:
+--   window rules match on class/title, layer rules match on namespace.
+
 hl.layer_rule({
-    name  = "rofi-dim",
-    match = { namespace = "rofi" },
-    dim_around = true,
-})
-
--- blur and ignorezero for swaync (control center & popups)
-hl.layer_rule({
-    name  = "swaync-blur",
-    match = { namespace = "swaync" },
-    blur = true,
-})
-
--- nmrs network manager (floating)
-hl.window_rule({ match = { class = "org.nmrs.ui" }, float = true, size = {"(monitor_w*0.30)", "(monitor_h*0.50)"} })
-
--- pavucontrol (floating)
-hl.window_rule({ match = { class = "org.pulseaudio.pavucontrol" }, float = true, size = {"(monitor_w*0.45)", "(monitor_h*0.70)"} })
-
--- blueberry bluetooth (floating)
-hl.window_rule({ match = { class = "blueberry.py" }, float = true, size = {"(monitor_w*0.30)", "(monitor_h*0.50)"} })
-
--- cheatsheet overlay: hide from screenshare
-hl.layer_rule({
-    name  = "cheatsheet-noscreenshare",
+    name  = "cheatsheet-layer-noscreenshare",
     match = { namespace = "cheatsheet" },
+
     no_screen_share = true,
 })
 
 hl.window_rule({
     name  = "cheatsheet-window-noscreenshare",
     match = { class = "cheatsheet" },
+
     no_screen_share = true,
 })
-
