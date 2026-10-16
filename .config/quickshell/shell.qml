@@ -26,4 +26,5 @@ ShellRoot {
     LauncherWindow {}
     ScreenshotHost {}
     CalendarWidget {}
+    TrayMenuHost {}
 }

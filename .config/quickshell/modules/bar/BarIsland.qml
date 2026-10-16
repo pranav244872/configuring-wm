@@ -27,6 +27,10 @@ Item {
         anchors.verticalCenterOffset: -1
         spacing: 10
 
+        BarTray {
+            Layout.alignment: Qt.AlignVCenter
+        }
+
         BarClock {
             Layout.alignment: Qt.AlignVCenter
         }
