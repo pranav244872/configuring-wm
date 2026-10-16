@@ -227,10 +227,11 @@ PanelWindow {
 
     readonly property int writeInterval: 50
 
+    // Dragging the slider sets a level AND unmutes (same rule as the volume
+    // keys); the release probe then confirms what actually landed.
     Process {
         id: volumeWriter
-        command: ["wpctl", "set-volume", "-l", "1", "@DEFAULT_AUDIO_SINK@",
-                  Math.round(host.value * 100) + "%"]
+        command: ["sh", "-c", "wpctl set-mute @DEFAULT_AUDIO_SINK@ 0; wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ " + Math.round(host.value * 100) + "%"]
     }
 
     Process {
@@ -273,8 +274,8 @@ PanelWindow {
         writeTimer.stop();
         writeValue();
         keepAlive();
-        // Reconcile with reality: setting a level does not unmute, and the
-        // panel quantises steps, so read back what actually landed.
+        // Reconcile with reality: the panel quantises steps, so read back
+        // what actually landed.
         if (label === "Brightness")
             brightnessProbe.running = true;
         else
