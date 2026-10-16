@@ -16,10 +16,14 @@ Rectangle {
 
     implicitWidth: row.implicitWidth + 32
     implicitHeight: Theme.screenshot.toolbarHeight
-    radius: height / 2
+    radius: 0
     color: Theme.colors.layer1
-    border.width: 2
-    border.color: Theme.colors.primary
+    border.width: Theme.frame.line
+    border.color: Theme.colors.outline
+
+    CornerTicks {
+        anchors.fill: parent
+    }
 
     component ToolButton: Rectangle {
         id: btn
@@ -29,8 +33,8 @@ Rectangle {
 
         implicitWidth: Theme.screenshot.toolSize
         implicitHeight: Theme.screenshot.toolSize
-        radius: height / 2
-        color: btn.active ? Theme.colors.primaryContainer
+        radius: 0
+        color: btn.active ? Theme.colors.primary
             : (btnMa.containsMouse ? Theme.colors.stateHover : "transparent")
 
         StyledText {
@@ -38,7 +42,7 @@ Rectangle {
             text: btn.glyph
             font.family: Theme.font.icon
             font.pixelSize: 20
-            color: btn.active ? Theme.colors.fgPrimaryContainer : Theme.colors.fgLayer0
+            color: btn.active ? Theme.colors.fgPrimary : Theme.colors.fgLayer0
         }
 
         MouseArea {
@@ -89,7 +93,7 @@ Rectangle {
 
                 implicitWidth: Theme.screenshot.swatchSize
                 implicitHeight: Theme.screenshot.swatchSize
-                radius: height / 2
+                radius: 0
                 color: modelData
                 border.width: root.store.penColor == modelData ? 2 : 1
                 border.color: root.store.penColor == modelData ? Theme.colors.primary : Theme.colors.outline
@@ -146,10 +150,10 @@ Rectangle {
         id: widthMenu
         width: 190
         height: widthCol.implicitHeight + 16
-        radius: 12
+        radius: 0
         color: Theme.colors.layer1
-        border.width: 2
-        border.color: Theme.colors.primary
+        border.width: Theme.frame.line
+        border.color: Theme.colors.outline
         visible: root.store.widthMenuOpen
 
         Column {
@@ -224,8 +228,8 @@ Rectangle {
 
                     implicitWidth: 174
                     implicitHeight: 38
-                    radius: 8
-                    color: root.store.penWidth === modelData ? Theme.colors.primaryContainer
+                    radius: 0
+                    color: root.store.penWidth === modelData ? Theme.colors.primary
                         : (sizeMa.containsMouse ? Theme.colors.stateHover : "transparent")
 
                     Rectangle {
@@ -244,7 +248,7 @@ Rectangle {
                         anchors.verticalCenter: parent.verticalCenter
                         text: ["Fine", "Medium", "Bold"][parent.index] ?? ""
                         font.pixelSize: Theme.font.size.xs
-                        color: root.store.penWidth === parent.modelData ? Theme.colors.fgPrimaryContainer : Theme.colors.fgLayer0
+                        color: root.store.penWidth === parent.modelData ? Theme.colors.fgPrimary : Theme.colors.fgLayer0
                     }
 
                     MouseArea {

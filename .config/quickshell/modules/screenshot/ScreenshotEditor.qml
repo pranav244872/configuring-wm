@@ -32,10 +32,14 @@ Item {
     // Rounded shell chrome: 2px primary border, flat layer surfaces
     Rectangle {
         anchors.fill: parent
-        radius: Theme.rounding.lg
+        radius: 0
         color: "transparent"
-        border.width: 2
-        border.color: Theme.colors.primary
+        border.width: Theme.frame.line
+        border.color: Theme.colors.outline
+    }
+
+    CornerTicks {
+        anchors.fill: parent
     }
 
     // Titlebar: flat layer1 with rounded top, drag to move the window
@@ -46,8 +50,8 @@ Item {
         width: parent.width - 4
         height: root.titleH
         color: Theme.colors.layer1
-        topLeftRadius: Theme.rounding.lg - 2
-        topRightRadius: Theme.rounding.lg - 2
+        topLeftRadius: 0
+        topRightRadius: 0
 
         StyledText {
             anchors.left: parent.left
@@ -117,8 +121,8 @@ Item {
         width: parent.width - 4
         height: root.statusH
         color: Theme.colors.layer1
-        bottomLeftRadius: Theme.rounding.lg - 2
-        bottomRightRadius: Theme.rounding.lg - 2
+        bottomLeftRadius: 0
+        bottomRightRadius: 0
 
         // Divider between the crop and the status bar
         Rectangle {

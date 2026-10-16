@@ -14,7 +14,7 @@ Item {
 
     required property ScreenshotStore store
     readonly property real zoom: root.store.zoom
-    readonly property real cornerR: 14
+    readonly property real cornerR: 0
     readonly property int checkerSize: 12
 
     property bool imgReady: false
@@ -101,9 +101,11 @@ Item {
             ctx.clearRect(0, 0, width, height);
             if (width < 1 || height < 1 || root.zoom <= 0)
                 return;
-            root.roundBottomPath(ctx, width, height, Math.min(root.cornerR, width / 2, height / 2));
-            ctx.save();
-            ctx.clip();
+            if (root.cornerR > 0) {
+                root.roundBottomPath(ctx, width, height, Math.min(root.cornerR, width / 2, height / 2));
+                ctx.save();
+                ctx.clip();
+            }
             root.paintCheckers(ctx, width, height);
             // Whole capture scaled so the crop fills the canvas exactly
             if (root.imgReady && strokes.imgUrl !== "" && strokes.isImageLoaded(strokes.imgUrl))
@@ -112,7 +114,8 @@ Item {
             ctx.scale(root.zoom, root.zoom);
             for (const s of root.store.strokes)
                 root.paintStroke(ctx, s.points, s.color, s.width);
-            ctx.restore();
+            if (root.cornerR > 0)
+                ctx.restore();
         }
 
         Connections {

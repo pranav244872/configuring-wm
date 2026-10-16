@@ -49,13 +49,15 @@ PanelWindow {
         host.open = !host.open;
     }
 
-    // Give the text field real focus once the layer surface is up
+    // Single delayed grab: the compositor grants exclusive keyboard focus
+    // asynchronously after mapping. (A retry loop here spammed text-input
+    // enable requests and fought the grant — worse, not better.)
     Timer {
         id: focusTimer
-        interval: 40
+        interval: 150
         repeat: false
         onTriggered: {
-            if (host.open)
+            if (host.open && !content.searchFocused)
                 content.forceSearchFocus();
         }
     }
@@ -82,11 +84,13 @@ PanelWindow {
 
         FocusScope {
             id: panel
-            anchors.verticalCenter: parent.verticalCenter
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             width: 400
-            height: 520
+            focus: true
 
-            // Slide in from the left
+            // Slide in from the left. No left anchor: anchors would pin x
+            // and kill this binding, leaving the drawer stuck on screen.
             x: host.open ? 0 : -width - 20
 
             Behavior on x {
@@ -111,10 +115,11 @@ PanelWindow {
             LauncherContent {
                 id: content
                 anchors.fill: parent
-                anchors.leftMargin: 20
+                anchors.leftMargin: 18
                 anchors.rightMargin: 18
-                anchors.topMargin: 40
-                anchors.bottomMargin: 40
+                anchors.topMargin: 18
+                anchors.bottomMargin: 18
+                visible: host.open
 
                 onLaunch: (app) => {
                     app.execute();

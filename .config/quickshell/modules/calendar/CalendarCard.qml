@@ -36,16 +36,20 @@ Item {
     }
 
     function title() {
-        return (root.monthShift !== 0 ? "• " : "") + Qt.formatDateTime(root.viewing, "MMMM yyyy");
+        return (root.monthShift !== 0 ? "• " : "") + Qt.formatDateTime(root.viewing, "MMMM yyyy").toUpperCase();
     }
 
     Rectangle {
         id: widget
         anchors.fill: parent
-        radius: Theme.rounding.lg
+        radius: 0
         color: Theme.colors.layer0
-        border.width: 2
-        border.color: Theme.colors.primary
+        border.width: Theme.frame.line
+        border.color: Theme.colors.outline
+
+        CornerTicks {
+            anchors.fill: parent
+        }
 
         // One drag surface for the whole card (built-in C++ drag: smooth,
         // thresholded, clamped). filterChildren lets it override for drags
@@ -84,28 +88,26 @@ Item {
                 Layout.fillWidth: true
                 spacing: 6
 
-                Rectangle {
+                Item {
+                    Layout.preferredWidth: titleLabel.implicitWidth
                     Layout.preferredHeight: 32
-                    Layout.preferredWidth: titleLabel.implicitWidth + 28
-                    radius: 16
-                    color: titleMa.containsMouse ? Theme.colors.layer2 : "transparent"
 
-                    StyledText {
-                        id: titleLabel
-                        anchors.centerIn: parent
-                        text: root.title()
-                        font.pixelSize: Theme.font.size.md
-                        font.weight: Font.DemiBold
-                    }
+                        StyledText {
+                            id: titleLabel
+                            anchors.verticalCenter: parent.verticalCenter
+                            text: root.title()
+                            font.pixelSize: Theme.font.size.md
+                            font.weight: Font.DemiBold
+                            font.letterSpacing: Theme.frame.titleTrack
+                        }
 
-                    MouseArea {
-                        id: titleMa
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: root.monthShift = 0
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: root.monthShift = 0
+                        }
                     }
-                }
 
                 Item {
                     Layout.fillWidth: true
@@ -122,8 +124,8 @@ Item {
 
                         Layout.preferredWidth: 32
                         Layout.preferredHeight: 32
-                        radius: 16
-                        color: navMa.containsMouse ? Theme.colors.layer2 : "transparent"
+                        radius: 0
+                        color: navMa.containsMouse ? Theme.colors.stateHover : "transparent"
 
                         StyledText {
                             anchors.centerIn: parent
@@ -156,10 +158,11 @@ Item {
                         required property string modelData
 
                         Layout.preferredWidth: 36
-                        text: modelData
+                        text: modelData.toUpperCase()
                         horizontalAlignment: Text.AlignHCenter
                         font.pixelSize: Theme.font.size.xs
                         font.weight: Font.DemiBold
+                        font.letterSpacing: Theme.frame.tracking
                         color: Theme.colors.subtext
                     }
                 }
@@ -180,7 +183,7 @@ Item {
 
                         Layout.preferredWidth: 36
                         Layout.preferredHeight: 36
-                        radius: 18
+                        radius: 0
                         color: modelData.today === 1 ? Theme.colors.primary
                             : (dayMa.containsMouse ? Theme.colors.stateHover : "transparent")
 

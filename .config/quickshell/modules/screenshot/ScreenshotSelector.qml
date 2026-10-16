@@ -233,10 +233,10 @@ Item {
         anchors.topMargin: 24
         implicitWidth: modeRow.implicitWidth + 24
         implicitHeight: 48
-        radius: 24
+        radius: 0
         color: Theme.colors.layer1
-        border.width: 2
-        border.color: Theme.colors.primary
+        border.width: Theme.frame.line
+        border.color: Theme.colors.outline
 
         RowLayout {
             id: modeRow
@@ -255,8 +255,8 @@ Item {
 
                     implicitWidth: 96
                     implicitHeight: 36
-                    radius: 18
-                    color: root.store.mode === modelData.mode ? Theme.colors.primaryContainer
+                    radius: 0
+                    color: root.store.mode === modelData.mode ? Theme.colors.primary
                         : (modeMa.containsMouse ? Theme.colors.stateHover : "transparent")
 
                     StyledText {
@@ -264,7 +264,7 @@ Item {
                         text: modelData.glyph
                         font.family: Theme.font.icon
                         font.pixelSize: 20
-                        color: root.store.mode === modelData.mode ? Theme.colors.fgPrimaryContainer : Theme.colors.fgLayer0
+                        color: root.store.mode === modelData.mode ? Theme.colors.fgPrimary : Theme.colors.fgLayer0
                     }
 
                     MouseArea {
@@ -295,7 +295,7 @@ Item {
         anchors.bottomMargin: 40
         implicitWidth: shutterLabel.implicitWidth + 40
         implicitHeight: 48
-        radius: 24
+        radius: 0
         color: Theme.colors.primary
         visible: root.store.mode === "full"
 

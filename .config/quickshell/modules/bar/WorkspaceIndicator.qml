@@ -66,12 +66,12 @@ Item {
     implicitWidth: root.wsList.length * Theme.bar.chipSize
     implicitHeight: Theme.bar.chipSize
 
-    // The moving pill sits behind all the numbers
+    // The moving block sits behind all the numbers (square, Chaldea frame)
     Rectangle {
         id: pill
         y: root.inset
         height: Theme.bar.pillSize
-        radius: height / 2
+        radius: 0
         color: Theme.colors.primary
 
         x: root.pillX
@@ -113,11 +113,11 @@ Item {
             cursorShape: Qt.PointingHandCursor
             onClicked: root.focusWorkspace(wsId)
 
-            // Hover state layer; the active slot already has the pill
+            // Hover state layer; the active slot already has the block
             Rectangle {
                 anchors.fill: parent
                 anchors.margins: 2
-                radius: height / 2
+                radius: 0
                 color: Theme.colors.stateHover
                 visible: parent.containsMouse && !parent.focused
             }

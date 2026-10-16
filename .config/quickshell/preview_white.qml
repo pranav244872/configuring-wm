@@ -34,25 +34,25 @@ ShellRoot {
                 activeWsIdOverride: 2
             }
 
-            // 2. Left launcher drawer (real surfaces, 400x520, vertically centred)
+            // 2. Left launcher drawer (real surfaces, full height like production)
             Item {
                 id: launcherDrawer
                 anchors.left: parent.left
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
                 width: 400
-                height: 520
 
                 LauncherSurface {
                     anchors.fill: parent
                 }
 
-                // Same margins LauncherWindow uses: 20 / 18 / 40 / 40
+                // Same margins LauncherWindow uses: 18 all round
                 LauncherContent {
                     anchors.fill: parent
-                    anchors.leftMargin: 20
+                    anchors.leftMargin: 18
                     anchors.rightMargin: 18
-                    anchors.topMargin: 40
-                    anchors.bottomMargin: 40
+                    anchors.topMargin: 18
+                    anchors.bottomMargin: 18
                 }
             }
 

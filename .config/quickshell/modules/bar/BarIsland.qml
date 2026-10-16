@@ -12,7 +12,7 @@ Item {
 
     readonly property real bodyWidth: row.implicitWidth + 2 * Theme.bar.pad
 
-    implicitWidth: bodyWidth + 2 * Theme.bar.flare
+    implicitWidth: bodyWidth
     implicitHeight: Theme.bar.height
 
     BarSurface {

@@ -1,9 +1,9 @@
-// The OSD pill's contents: icon + name + value + bar.
+// The OSD panel contents: icon + tracked name + value + bar.
 // Pure visual - all state comes in as properties.
 //
-// The pill width is a fixed token, never derived from its content (that is what
+// The panel width is a fixed token, never derived from its content (that is what
 // end-4's OsdValueIndicator does), and the icon sits in a fixed-size box, so a
-// different icon or a 3-digit vs 1-digit value can't make the pill resize.
+// different icon or a 3-digit vs 1-digit value can't resize the panel.
 
 import QtQuick
 import QtQuick.Layouts
@@ -25,18 +25,22 @@ Item {
     readonly property bool pointerOnSlider: slider.hovered || slider.dragging
 
     implicitWidth: Theme.sizes.osdWidth
-    implicitHeight: Theme.sizes.osdHeight - 8
+    implicitHeight: Theme.sizes.osdHeight
 
-    Rectangle {                                   // pill surface
+    Rectangle {                                   // square frame surface
         id: surface
         anchors {
             fill: parent
             margins: 4
         }
-        radius: Theme.rounding.full
+        radius: 0
         color: Theme.colors.layer0
-        border.width: 2
-        border.color: Theme.colors.primary
+        border.width: Theme.frame.line
+        border.color: Theme.colors.outline
+
+        CornerTicks {
+            anchors.fill: parent
+        }
 
         RowLayout {
             id: row
@@ -74,9 +78,9 @@ Item {
                         anchors.left: parent.left
                         anchors.verticalCenter: parent.verticalCenter
                         color: Theme.colors.subtext
-                        font.pixelSize: Theme.font.size.xs
-                        font.weight: Font.Medium
-                        text: pill.label
+                        font.pixelSize: Theme.frame.labelSize
+                        font.letterSpacing: Theme.frame.tracking
+                        text: pill.label.toUpperCase()
                     }
 
                     StyledText {

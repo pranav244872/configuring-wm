@@ -102,9 +102,10 @@ QtObject {
 
     // ============================================================== font
     readonly property QtObject font: QtObject {
-        // Text families.
-        readonly property string main:  "Noto Sans"
-        readonly property string mono:  "JetBrainsMono Nerd Font"
+        // Chaldea speaks in monospace everywhere: labels, values, titles.
+        // JetBrains Mono (ttf-jetbrains-mono) carries the tracked-out look.
+        readonly property string main:  "JetBrains Mono"
+        readonly property string mono:  "JetBrains Mono"
         // Icon font: Material Symbols (extra/ttf-material-symbols-variable).
         // Icons are written as *ligature names* ("volume_up"), not codepoints -
         // same trick end-4/dots-hyprland and caelestia-dots/shell use.
@@ -120,8 +121,8 @@ QtObject {
 
     // ============================================================== sizes
     readonly property QtObject sizes: QtObject {
-        readonly property int osdWidth:      240
-        readonly property int osdHeight:     66
+        readonly property int osdWidth:      260
+        readonly property int osdHeight:     72
         readonly property int osdBottom:     44     // gap from the bottom edge
         readonly property int elevation:     10
         readonly property int iconSize:      30
@@ -145,20 +146,27 @@ QtObject {
         readonly property int md:            12
     }
 
+    // ============================================================== frame
+    // Chaldea frame language: 1px hairline borders, square corners, accent
+    // corner ticks, tracked-out uppercase micro-labels, 1px divider rules.
+    // Our teal stays the accent; only the shapes change.
+    readonly property QtObject frame: QtObject {
+        readonly property int line:        1       // hairline border/rule width
+        readonly property int tick:        7       // corner tick arm length
+        readonly property int tracking:    2       // micro-label letter spacing
+        readonly property int titleTrack:   3       // header title letter spacing
+        readonly property int labelSize:    11      // micro-label pixel size
+        readonly property int margins:      18      // frame content margins
+    }
     // ============================================================== bar
-    // Top bar + launcher geometry, one set of tokens so surfaces never drift.
-    // The "flare" is the square block where the body curves into the screen
-    // edge; c1/c2 sit along the tangent axes (~quarter-circle fractions, the
-    // same ratio bar and launcher share). Launcher flares are these rotated 90�.
+    // Bar geometry tokens. The island is a square Chaldea frame now; the old
+    // flare tokens are gone with the curves.
     readonly property QtObject bar: QtObject {
         readonly property int height:    30      // bar body height
-        readonly property int flare:     30      // flare block side (= height)
-        readonly property int flareC1:   17      // ~0.57 of the block, start tangent
-        readonly property int flareC2:   13      // remainder, end tangent
-        readonly property int pad:       10      // inner padding beyond the flares
+        readonly property int pad:       14      // inner horizontal padding
 
-        // Workspace slots: active pill centred (2px inset), trailing between
-        // slots while gliding. end-4 numbers.
+        // Workspace slots: active block centred (2px inset), trailing between
+        // slots while gliding.
         readonly property int chipSize:      26
         readonly property int pillSize:      22
         readonly property int dockHalf:       9   // text colour band around the slot centre

@@ -24,5 +24,6 @@ Item {
         font.family: Theme.font.main
         font.pixelSize: Theme.bar.clockSize
         font.weight: Theme.bar.clockWeight
+        font.letterSpacing: Theme.frame.tracking
     }
 }

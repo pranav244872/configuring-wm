@@ -1,5 +1,5 @@
-// App item: Papirus icon + name + subtitle. end-4 styling: 54px rows, 36px
-// icon, hover state layer, solid primaryContainer selection, click ripple.
+// App item: Papirus icon + uppercase name + subtitle. Chaldea rows: square,
+// 1px separation, solid primary selection with dark text, click ripple.
 import QtQuick
 import Quickshell
 import Quickshell.Widgets
@@ -21,10 +21,10 @@ Item {
         id: bg
         anchors.fill: parent
         anchors.margins: 2
-        radius: 12
+        radius: 0
         clip: true
 
-        color: root.selected ? Theme.colors.primaryContainer
+        color: root.selected ? Theme.colors.primary
             : (mouseArea.containsMouse ? Theme.colors.stateHover : "transparent")
 
         Behavior on color {
@@ -38,7 +38,7 @@ Item {
         Ripple {
             id: ripple
             anchors.fill: parent
-            color: root.selected ? ColorUtils.transparentize(Theme.colors.fgPrimaryContainer, 0.7)
+            color: root.selected ? ColorUtils.transparentize(Theme.colors.fgPrimary, 0.7)
                                  : ColorUtils.transparentize(Theme.colors.fgLayer1, 0.75)
         }
 
@@ -91,9 +91,10 @@ Item {
 
                 StyledText {
                     width: parent.width
-                    text: root.app?.name ?? ""
+                    text: (root.app?.name ?? "").toUpperCase()
                     font.pixelSize: Theme.font.size.md
-                    color: root.selected ? Theme.colors.fgPrimaryContainer : Theme.colors.fgLayer0
+                    font.letterSpacing: 1
+                    color: root.selected ? Theme.colors.fgPrimary : Theme.colors.fgLayer0
                     elide: Text.ElideRight
                 }
 
@@ -101,7 +102,7 @@ Item {
                     width: parent.width
                     text: (root.app?.genericName || root.app?.comment || root.app?.id || "")
                     font.pixelSize: Theme.font.size.xs
-                    color: root.selected ? ColorUtils.transparentize(Theme.colors.fgPrimaryContainer, 0.35)
+                    color: root.selected ? ColorUtils.transparentize(Theme.colors.fgPrimary, 0.35)
                                          : Theme.colors.subtext
                     elide: Text.ElideRight
                     visible: text.length > 0

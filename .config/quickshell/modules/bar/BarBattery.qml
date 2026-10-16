@@ -45,6 +45,7 @@ Item {
             text: Math.round(root.pct * 100) + "%"
             color: root.fgColor
             font.pixelSize: Theme.font.size.xs
+            font.letterSpacing: 1
         }
     }
 }
