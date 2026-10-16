@@ -7,14 +7,23 @@ Welcome to my Hyprland Rice configuration repository! This project showcases my 
  Colorscheme: pywal  
  Font: JetBrains Mono Nerd  
  Text editor: Neovim  
- Top Bar: waybar  
- App Launcher: Rofi  
- Powermenu: Rofi  
+ Top Bar: quickshell (own UI — replaces waybar)  
+ App Launcher: quickshell drawer (`SUPER+F` — replaces Rofi)  
+ Powermenu: quickshell (planned — replaces Rofi)  
+ OSD / screenshots / calendar: quickshell (`PRINT` screenshots, desktop calendar)  
+ MPV: bare config + vendored uosc (old modernz/thumbfast setup removed 2026-10)  
  Terminal: kitty  
  Firefox theme: pywalfox  
  Idle daemon: hypridle  
  Screen lock: hyprlock  
  Display Manager: SDDM  
+
+## 2026 rebuild notes
+
+Bare setup: quickshell replaces waybar / rofi / mako / swayosd / hyprshot
+(see `.config/quickshell`, keybinds `SUPER+F` launcher · `PRINT` screenshots).
+mpv rebuilt bare with vendored uosc; old configs kept nowhere — this repo tracks
+the live setup (`diff -rq .config/<app> ~/.config/<app>` should print nothing).
 
 ## Examples
 ![image](https://github.com/pranav244872/configuring-wm/assets/137860111/bab3ae7d-281c-4643-9ca2-43249bd89c58)

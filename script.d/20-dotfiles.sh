@@ -30,6 +30,7 @@ deploy_configs() {
   cp -r "$SCRIPT_DIR/.config/hypr" ~/.config/
   cp -r "$SCRIPT_DIR/.config/matugen" ~/.config/
   cp -r "$SCRIPT_DIR/.config/rofi" ~/.config/
+  cp -r "$SCRIPT_DIR/.config/quickshell" ~/.config/
   cp -r "$SCRIPT_DIR/.config/mako" ~/.config/
   cp -r "$SCRIPT_DIR/.config/fish" ~/.config/
   cp -r "$SCRIPT_DIR/.config/ripgrep" ~/.config/
