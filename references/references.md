@@ -1,0 +1,40 @@
+# Reference Sources
+
+Where ideas, configs and inspiration come from. **Nothing here is part of the
+install** — these are study clones. Anything adopted still has to obey the rules
+in [preferences.md](preferences.md) (bare minimum, speed first).
+
+## Persistent (live on this machine)
+
+| Source | Location | What it is | What we took / use it for |
+|---|---|---|---|
+| **configuring-wm** | `~/del/configuring-wm` (remote: `github.com/pranav244872/configuring-wm`) | the user's **previous** dotfiles + installer script — this rebuild replaces it; also now tracks this memory folder under `references/` | keybind style (SUPER-centric, scratchpad `magic`), `kitty.conf`, the old `mpv.conf`/`input.conf`, fish+zoxide setup, Material/teal palette, **and the package-management preferences** — `script.d/10-packages.sh` (paru bootstrap from AUR, the `CleanAfter`/`RemoveMake`/"don't accumulate" config) and `script.d/50-services.sh` (`systemctl enable paccache.timer`); see [package-management.md](package-management.md) |
+| **Hyprland fork** | `~/del/Hyprland` (`pranav244872/Hyprland @ invisible-ss`) | our compositor, built from source | the `no_screen_share` feature (step 2) |
+| **Legacy mpv config** | `~/del/mpv-legacy-config/mpv` | previous mpv setup: modernz v0.3.1 OSC, `select.lua`, thumbfast, autoload, playlistmanager, 381-line `modernz.conf` | replaced by uosc; kept purely as a rollback target |
+
+## Ephemeral clones (in `/tmp/opencode`, wiped on reboot)
+
+| Source | Clone as | What it is | What we took / would take |
+|---|---|---|---|
+| **Omarchy** — `github.com/basecamp/omarchy` | `git clone --depth 1 https://github.com/basecamp/omarchy omarchy` | DHH's opinionated Arch+Hyprland. **Lua** Hyprland config split into modules (`default/hypr/*.lua`), with a user override layer (`config/hypr/*.lua`) and per-theme configs | the *config layering* idea (defaults first, personal overrides after — we may adopt this); their `toggles/` pattern; a bindings reference. Note their defaults use slow animations (`global speed 10` ≈ 1 s) and `workspaces` disabled — ours is tuned faster on purpose |
+| **end-4/dots-hyprland** — `github.com/end-4/dots-hyprland` | `git clone --depth 1 https://github.com/end-4/dots-hyprland dots-hyprland` | popular Hyprland rice (16.3k★, active). Also **Lua**, also has a `custom/` override layer, and ships a complete **quickshell** shell (`~/.config/quickshell/ii/`: shell.qml, panelFamilies, services for brightness/volume/battery/cliphist…) | **our primary reference.** What we took: Hyprland→quickshell glue (`qs -c $cfg ipc call …` from binds, with a `\|\|` fallback), the `IpcHandler { target; function … }` shape, the `MaterialSymbol` ligature-icon widget, `RectangularShadow` for elevation, and the design-token idea (their `Appearance.qml` → our `Theme.qml`). Their animations (350–650 ms "expressive") are too slow for us — ours are 120–180 ms |
+| **caelestia-dots/shell** — `github.com/caelestia-dots/shell` | `git clone --depth 1 https://github.com/caelestia-dots/shell caelestia-shell` | fluid morphing shell (12.9k★, active). Same quickshell + Material Symbols approach; `Tokens.qml` design tokens | confirmed the tokens/theme pattern is standard, and their README named the Arch package we use for icons (`ttf-material-symbols-variable`). Their `modules/osd` + `IpcHandler` in services were the cross-check for our OSD |
+| **DankMaterialShell** — `github.com/AvengeMedia/DankMaterialShell` | `git clone --depth 1 --filter=blob:none https://github.com/AvengeMedia/DankMaterialShell dms` | 8.4k★, very active, and **packaged officially** as `extra/dms-shell` (71.9 MiB installed). Replaces waybar/mako/swaylock/swayidle | read as a reference only. Its `DIcon` dispatcher (themed SVG **or** font glyph, via an `IconThemeService`) is the answer if we ever want app/UI icons instead of Material glyphs |
+| **quickshell itself** — `github.com/quickshell-mirror/quickshell` | `git clone --filter=blob:none https://github.com/quickshell-mirror/quickshell quickshell && cd quickshell && git checkout v0.3.2` | the toolkit itself — **our API ground truth** | pinned to the **tag matching our installed 0.3.2**. The QML API lives in the headers: `src/io/ipchandler.hpp` (IPC rules), `src/io/process.hpp` + `datastream.hpp` (Process/stdout), `src/window/panelinterface.hpp` (anchors/exclusion), `src/services/pipewire/qml.hpp` (volume/mute + tracker). Doc comments in those headers explain almost everything |
+| **hyprshot** — `github.com/Gustash/hyprshot` | `git clone --depth 1 https://github.com/Gustash/hyprshot hyprshot` | grim-based screenshot CLI we replaced with our own quickshell UI | `grim -o` capture plumbing and the window-mode **workspace filter** (`clients` filtered to the monitors' `activeWorkspace` ids in `grab_window`) → our picker's "active workspace only" rule (2026-10-16) |
+| **Waybar** — `github.com/Alexays/Waybar` | `git clone --depth 1 https://github.com/Alexays/Waybar waybar` | the standard standalone bar we replaced with our own quickshell bar | behaviour reference while building the qs bar (module layout, tray/clock conventions); nothing adopted, not installed |
+| **hypr-hot-edge** — `github.com/claychinasky/hypr-hot-edge` | `git clone --depth 1 https://github.com/claychinasky/hypr-hot-edge hypr-hot-edge` | Hyprland **plugin**: 4 edges + 4 corners per monitor, each drives its own special-workspace panel; has dwell time, instant slam on the exact edge pixel, corner dead-margin (10 px default), per-monitor slots, keyboard toggle with grace | **the UX reference for our native hotzones work** — dwell / slam / corner-margin semantics are modelled on it. Not adopted as a plugin: it toggles special-workspace panels, not arbitrary dispatchers, and needs an ABI rebuild per fork change |
+| **Chaldea** — `github.com/Aleph1-9012/Chaldea` | `git clone --depth 1 https://github.com/Aleph1-9012/Chaldea chaldea` | interactive **quickshell widget library**: designs previewed in the browser and exported as native QML (quick notes, media players, animated glyphs, lockscreen layouts) | widget/design inspiration for the shell — would take individual widget designs or exported QML |
+
+> Pin the tag: the checked-out `master` is usually ahead of Arch's package and
+> documents features we don't have.
+
+## How to use these references
+
+1. **Never copy blindly.** Adapt to the bare-minimum + speed-first rules, and to
+   the versions actually installed here (our fork is 0.56.2-based; mpv 0.41).
+2. **Re-clone if missing** — `/tmp` is wiped on reboot; the commands are above.
+3. **Record what we adopted here**, so a future session knows why a setting
+   looks the way it does.
+4. Docs in this folder are updated **in the same change** as any install or
+   config edit.
