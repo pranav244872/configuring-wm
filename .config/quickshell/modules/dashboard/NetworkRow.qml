@@ -71,23 +71,16 @@ Item {
     readonly property bool secure: n.security !== WifiSecurityType.Open && n.security !== WifiSecurityType.Owe
     readonly property bool connecting: n.stateChanging || n.state === ConnectionState.Connecting
 
-    readonly property string signalGlyph: [
-        Theme.glyphs.wifi0,
-        Theme.glyphs.wifi1,
-        Theme.glyphs.wifi2,
-        Theme.glyphs.wifi3,
-        Theme.glyphs.wifi4
-    ][Net.signalLevel(n.signalStrength)]
-
+    // State first; the security label only where it adds information (the lock
+    // glyph already marks a secured network).
     readonly property string subtitle: {
         if (root.connecting)
-            return "CONNECTING...";
-        const sec = root.securityLabel(n.security);
+            return "CONNECTING…";
         if (n.connected)
-            return "CONNECTED · " + sec;
+            return "CONNECTED";
         if (n.known)
-            return "SAVED · " + sec;
-        return sec;
+            return "SAVED";
+        return root.securityLabel(n.security);
     }
 
     // A passphrase is being asked for right now.
@@ -186,6 +179,14 @@ Item {
                 clip: true
                 color: headMa.containsMouse && !forgetMa.containsMouse ? Theme.colors.stateHover : "transparent"
 
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.animation.valueDuration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Theme.animation.curveOut
+                    }
+                }
+
                 Ripple {
                     id: ripple
                     anchors.fill: parent
@@ -199,11 +200,9 @@ Item {
                 anchors.rightMargin: 12
                 spacing: 10
 
-                StyledText {
+                SignalBars {
                     Layout.alignment: Qt.AlignVCenter
-                    text: root.signalGlyph
-                    font.family: Theme.font.icon
-                    font.pixelSize: 20
+                    level: n.signalStrength
                     color: n.connected ? Theme.colors.primary : Theme.colors.subtext
                 }
 
@@ -249,21 +248,11 @@ Item {
                     }
                 }
 
-                StyledText {
+                Spinner {
                     Layout.alignment: Qt.AlignVCenter
                     visible: root.connecting
-                    text: Theme.glyphs.wifiBusy
-                    font.family: Theme.font.icon
-                    font.pixelSize: 18
-                    color: Theme.colors.primary
-
-                    RotationAnimator on rotation {
-                        running: root.connecting
-                        from: 0
-                        to: 360
-                        duration: 1200
-                        loops: Animation.Infinite
-                    }
+                    running: root.connecting
+                    size: 16
                 }
 
                 StyledText {
@@ -297,17 +286,35 @@ Item {
             }
         }
 
-        // ---------------- expanded body ----------------
+        // ---------------- expanded body (height + fade animated) ----------------
         Column {
             id: body
 
             width: parent.width
-            visible: root.expanded
+            height: root.expanded ? implicitHeight : 0
+            clip: true
+            opacity: root.expanded ? 1 : 0
+            // Collapsed children still exist while animating; keep them inert.
+            enabled: root.expanded
             spacing: 8
             topPadding: 2
             bottomPadding: 10
             leftPadding: 44
             rightPadding: 12
+
+            Behavior on height {
+                NumberAnimation {
+                    duration: root.expanded ? Theme.animation.enterDuration : Theme.animation.exitDuration
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: root.expanded ? Theme.animation.curveOut : Theme.animation.curveIn
+                }
+            }
+
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: root.expanded ? Theme.animation.enterDuration : Theme.animation.exitDuration
+                }
+            }
 
             // Passphrase for a new secured network
             Row {
@@ -390,6 +397,12 @@ Item {
                     enabled: root.acceptable
                     opacity: root.acceptable ? 1 : 0.4
                     onClicked: root.pskSubmitted(root.draft)
+
+                    Behavior on opacity {
+                        ColorAnimation {
+                            duration: Theme.animation.valueDuration
+                        }
+                    }
                 }
             }
 

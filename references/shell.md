@@ -51,6 +51,8 @@
 | `modules/dashboard/NetworkRow.qml` | one network: signal + SSID + security/state; expands in place for the passphrase, or for Disconnect / Forget + IP when connected |
 | `modules/dashboard/network_list.js` | sort rank (connected → connecting → saved → signal), signal level, PSK validation rules |
 | `modules/widgets/Toggle.qml` | square hairline toggle, shared by dashboard sections |
+| `modules/widgets/Spinner.qml` | loading spinner: eight square dots chasing, snapped to whole pixels (rotating a glyph pixelates — `StyledText` uses `Text.NativeRendering`) |
+| `modules/widgets/SignalBars.qml` | four-bar signal meter (rectangles, crisp at 16-20px) used by the network rows |
 
 Run: autostarted at login (`qs -n`) · stop: `qs -k` · restart: `SUPER + SHIFT + O`.
 `SUPER + F` toggles launcher, `PRINT` toggles screenshots.
@@ -86,6 +88,12 @@ its model the same way with `setDelayModelUpdates`). The passphrase text is owne
 by the section, not the delegate, so nothing can lose it; and NM deletes network
 objects when an AP disappears, so the row binds through a null-safe view
 (`n`) rather than the raw object.
+
+Motion follows the theme tokens: rows fade their hover state, the expanded body
+animates height + opacity, and the rule under the header doubles as a scan track
+with an accent segment sweeping across it. Signal strength is a rectangle bar
+meter and the spinner is a dot-chase — both drawn, not glyphs, because rotating
+a `StyledText` glyph pixelates.
 
 ## Preview benches (use them, don't guess)
 

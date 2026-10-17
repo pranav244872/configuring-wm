@@ -277,18 +277,13 @@ QtObject {
         readonly property string powerReboot:   "restart_alt"
         readonly property string powerShutdown: "power_settings_new"
 
-        // Network / wifi
+        // Network / wifi. Signal strength is drawn as a bar meter
+        // (widgets/SignalBars) rather than a glyph: rotating a glyph spinner
+        // pixelates, because StyledText renders with Text.NativeRendering.
         readonly property string wifiOff:    "signal_wifi_off"
         readonly property string wifiFind:   "wifi_find"
-        readonly property string wifi0:      "signal_wifi_0_bar"
-        readonly property string wifi1:      "network_wifi_1_bar"
-        readonly property string wifi2:      "network_wifi_2_bar"
-        readonly property string wifi3:      "network_wifi_3_bar"
-        readonly property string wifi4:      "network_wifi"
         readonly property string wifiSecure: "lock"
-        readonly property string wifiSaved:  "bookmark"
         readonly property string wifiScan:   "refresh"
-        readonly property string wifiBusy:   "progress_activity"
         readonly property string revealOn:   "visibility"
         readonly property string revealOff:  "visibility_off"
         readonly property string wifiForget: "delete"

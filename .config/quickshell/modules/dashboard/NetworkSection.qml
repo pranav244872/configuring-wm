@@ -148,12 +148,6 @@ Item {
         onTriggered: root.rebuild()
     }
 
-    component Rule: Rectangle {
-        Layout.fillWidth: true
-        Layout.preferredHeight: Theme.frame.line
-        color: Theme.colors.outline
-    }
-
     ColumnLayout {
         anchors.fill: parent
         spacing: 10
@@ -192,12 +186,12 @@ Item {
                 color: scanMa.containsMouse ? Theme.colors.primary : Theme.colors.subtext
                 opacity: root.wifiEnabled ? 1 : 0.35
 
-                RotationAnimator on rotation {
-                    running: root.spinning && root.wifiEnabled
-                    from: 0
-                    to: 360
-                    duration: 900
-                    loops: Animation.Infinite
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.animation.valueDuration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Theme.animation.curveOut
+                    }
                 }
 
                 MouseArea {
@@ -218,7 +212,43 @@ Item {
             }
         }
 
-        Rule {
+        // Hairline rule that doubles as the scan track: while a scan is in
+        // flight an accent segment sweeps across it.
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 2
+
+            Rectangle {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                height: Theme.frame.line
+                color: Theme.colors.outline
+            }
+
+            Rectangle {
+                id: scanSweep
+
+                width: parent.width * 0.28
+                height: 2
+                color: Theme.colors.primary
+                opacity: root.spinning && root.wifiEnabled ? 1 : 0
+
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.animation.valueDuration
+                    }
+                }
+
+                NumberAnimation on x {
+                    running: root.spinning && root.wifiEnabled
+                    from: -scanSweep.width
+                    to: scanSweep.parent.width
+                    duration: 1100
+                    loops: Animation.Infinite
+                    easing.type: Easing.InOutSine
+                }
+            }
         }
 
         // ---------------- body ----------------

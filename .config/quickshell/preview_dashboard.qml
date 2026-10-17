@@ -28,6 +28,17 @@ ShellRoot {
                 address: "192.168.1.4"
             },
             {
+                // Preview of the connecting state: spinner + "CONNECTING…"
+                name: "Harasu",
+                signalStrength: 0.62,
+                security: WifiSecurityType.Wpa2Psk,
+                connected: false,
+                known: false,
+                state: ConnectionState.Connecting,
+                stateChanging: true,
+                address: ""
+            },
+            {
                 name: "Harasu_5G",
                 signalStrength: 0.57,
                 security: WifiSecurityType.Wpa2Psk,
@@ -66,8 +77,8 @@ ShellRoot {
                 state: ConnectionState.Disconnected,
                 stateChanging: false,
                 address: ""
-            }
-        ]
+            },
+       ]
 
         Item {
             id: scene
@@ -106,6 +117,8 @@ ShellRoot {
             content.network.wifiEnabled = true;
             content.network.connectivity = NetworkConnectivity.Full;
             content.network.expandedSsid = "AirFiber-Prateek_EXT";
+            // Show the scan sweep in the preview (does not touch the radio).
+            content.activate();
         }
 
         Timer {
