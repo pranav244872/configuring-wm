@@ -259,5 +259,7 @@ QtObject {
         readonly property string shotDiscard: "close"
         readonly property string shotReselect: "refresh"
         readonly property string shotResize: "south_east"
+
+        readonly property string caffeine: "coffee"
     }
 }

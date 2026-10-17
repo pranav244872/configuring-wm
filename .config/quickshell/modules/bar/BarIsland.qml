@@ -57,5 +57,9 @@ Item {
         BarBattery {
             Layout.alignment: Qt.AlignVCenter
         }
+
+        BarCaffeine {
+            Layout.alignment: Qt.AlignVCenter
+        }
     }
 }

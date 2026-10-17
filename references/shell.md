@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons **done**; lock screen built, live auth test pending; notifications next.
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle **done**; lock screen built, live auth test pending; notifications next.
 
 ## What exists today
 
@@ -41,9 +41,18 @@
 | `modules/screenshot/ScreenshotEditor.qml` | floating window: titlebar move, SE resize (aspect-locked), status bar |
 | `modules/screenshot/AnnotationToolbar.qml` | reselect / pen+text / swatches+width menu / undo+redo / save+copy+discard pill |
 | `modules/calendar/` (`CalendarWidget`, `CalendarCard`, `calendar_layout.js`) | desktop month window: background layer, click-through mask, drag anywhere, Monday-first grid |
+| `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
+| `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
 
 Run: autostarted at login (`qs -n`) · stop: `qs -k` · restart: `SUPER + SHIFT + O`.
 `SUPER + F` toggles launcher, `PRINT` toggles screenshots.
+
+**Keep-awake (caffeine)** — the coffee button at the right of the bar toggles a
+wayland idle inhibitor held by the bar window (`TopBar.qml`). `IdleService` uses
+`respectInhibitors: true`, so lock / screen-off / suspend all stop while it is
+on. Not persisted: it resets to off on a shell restart. IPC: `qs ipc call
+caffeine <toggle|enable|disable|isEnabled>`. Mechanism and the layer-surface
+proof are in [notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-10-17.
 
 ## Preview benches (use them, don't guess)
 

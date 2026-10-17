@@ -11,6 +11,7 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
 **QML language**
 
 - `pragma Singleton` needs a **`QtObject`** root, not a `Singleton { }` block → `Singleton is not a type`.
+- A `pragma Singleton` therefore has **no default property** — non-visual children (`IpcHandler`, a `PanelWindow`) cannot live in one; it must hold only properties/functions. Put the objects in a window instead (0.3.2 has no `Singleton` type to root on).
 - A property named `on<Something>` is parsed as a **signal handler**, so `onError:` fails with *"Cannot assign a value to a signal"*. Never name properties `onX`.
 - `StyledText is not a type` → the file imports `qs.modules` but not `qs.modules.widgets`.
 - `TypeError: Property 'close' of object <PanelWindow> is not a function` — `PanelWindow`
