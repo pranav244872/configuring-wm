@@ -10,10 +10,11 @@
 -- (isActive = enabled AND runtime flag). Edit it to arm/disarm; the config
 -- reloads live, so no restart is needed.
 --
--- Geometry: a zone is the outer `trigger_px` of the monitor. Touching the exact
--- outermost pixel is an instant "slam"; anywhere else the dwell timer applies.
--- Corners are `trigger_px` squares; edges skip `corner_margin_px` at both ends
--- and stay quiet where the monitor has a neighbour outside that edge.
+-- Geometry: a zone is the outer `trigger_px` of the monitor, and the cursor has
+-- to rest there for `dwell_ms`. `slam` (off here) would let a *corner* fire
+-- instantly on the exact outermost pixel. Corners are `trigger_px` squares; edges
+-- skip `corner_margin_px` at both ends and stay quiet where the monitor has a
+-- neighbour outside that edge.
 --
 -- Action strings are "<dispatcher>, <args>"; `exec` runs them through the shell.
 
