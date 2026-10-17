@@ -31,8 +31,9 @@ Actions may use any registered dispatcher — `exec, <shell command>` is the usu
   ends so corners never clip.
 - **Slam** is **opt-in** (`hotzone:slam`, default `false`) and corner-only: with it
   on, the exact outermost pixel of a **corner** fires immediately, bypassing the
-  dwell. Off by default so every zone waits the full 1 s — an edge is a line the
-  cursor clamps onto while dragging, and a slam there fires by accident.
+  dwell. Off by default so every zone waits out the configured `dwell_ms` — an
+  edge is a line the cursor clamps onto while dragging, and a slam there fires by
+  accident.
 - An edge with a monitor neighbour outside it is a shared/internal boundary and
   does **not** fire.
 - Suppressed while: the session is locked, input is constrained (an exclusive
