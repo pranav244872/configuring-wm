@@ -25,7 +25,7 @@
 | `modules/bar/WorkspaceIndicator.qml` | workspaces 1..5 + active/occupied >5; sliding block, pill-tracked digits, occupied tick markers, dim empties (center module) |
 | `modules/bar/BarBattery.qml` | UPower battery indicator with dynamic charge icons and percentage (right module) |
 | `modules/launcher/LauncherWindow.qml` + `AppTracker.qml` | full-height left drawer on Super+F / IPC; frequencies persist to cache |
-| `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; SUPER+L |
+| `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; no keybind (idle lock / IPC) |
 | `modules/lock/LockSurface.qml` | per-output lock surface: near-black backdrop, centered card |
 | `modules/lock/LockCard.qml` | formation card: user chip, big clock+date, password field + submit |
 | `modules/lock/LockAuth.qml` | password-only PAM machine (`login` stack); buffer cleared every path |

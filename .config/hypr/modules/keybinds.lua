@@ -185,11 +185,8 @@ hl.bind(
     hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call launcher toggle'")
 )
 
--- Session lock (own quickshell UI + PAM, replaces hyprlock)
-hl.bind(
-    mainMod .. " + L",
-    hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call lock lock'")
-)
+-- Session lock: no keybind (idle lock is automatic; by hand:
+-- `qs ipc call lock lock`, or `qs ipc call lock unlock`).
 
 -- Screenshot utility (own quickshell UI): Print captures, annotate in-shell.
 hl.bind(
