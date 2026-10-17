@@ -31,7 +31,7 @@ Actions may use any registered dispatcher — `exec, <shell command>` is the usu
 - **Slam** (corners only): resting on the exact outermost pixel of a **corner**
   fires immediately, bypassing the dwell. Edges deliberately do not slam — a
   dragged cursor clamps onto an edge line, so an edge slam fires by accident.
-  Edges always wait out the dwell (the dashboard's bottom edge uses 900 ms).
+  Edges always wait out the dwell (currently 1 s).
 - An edge with a monitor neighbour outside it is a shared/internal boundary and
   does **not** fire.
 - Suppressed while: the session is locked, input is constrained (an exclusive
