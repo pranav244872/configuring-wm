@@ -69,6 +69,10 @@ Equivalent shorthand (repo's Makefile): `make release PREFIX=/usr && sudo make i
   `/usr/share/wayland-sessions/hyprland.desktop`
 - Keep the pacman `hyprland` package uninstalled — it would conflict on
   `/usr/bin/Hyprland`, `/usr/bin/hyprctl` and the wayland-session files.
+- **Rollback**: keep a copy of the previous binary before installing
+  (`sudo cp -a /usr/bin/Hyprland /usr/bin/Hyprland.bak`). The 2026-10-15 binary is
+  saved as `/usr/bin/Hyprland.bak`; restore with
+  `sudo cp -a /usr/bin/Hyprland.bak /usr/bin/Hyprland` and restart the compositor.
 - First configure needs network (glaze FetchContent).
 
 ## Verify after install

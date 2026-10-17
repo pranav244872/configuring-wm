@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle **done**; lock screen built, live auth test pending; notifications next.
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
 
 ## What exists today
 
@@ -25,7 +25,7 @@
 | `modules/bar/WorkspaceIndicator.qml` | workspaces 1..5 + active/occupied >5; sliding block, pill-tracked digits, occupied tick markers, dim empties (center module) |
 | `modules/bar/BarBattery.qml` | UPower battery indicator with dynamic charge icons and percentage (right module) |
 | `modules/launcher/LauncherWindow.qml` + `AppTracker.qml` | full-height left drawer on Super+F / IPC; frequencies persist to cache |
-| `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; no keybind (idle lock / IPC) |
+| `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; locks on idle (3m) or `F9` |
 | `modules/lock/LockSurface.qml` | per-output lock surface: near-black backdrop, centered card |
 | `modules/lock/LockCard.qml` | formation card: user chip, big clock+date, password field + submit |
 | `modules/lock/LockAuth.qml` | password-only PAM machine (`login` stack); buffer cleared every path |
