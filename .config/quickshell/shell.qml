@@ -17,6 +17,7 @@ import Quickshell
 import qs.modules.osd
 import qs.modules.bar
 import qs.modules.launcher
+import qs.modules.powermenu
 import qs.modules.screenshot
 import qs.modules.calendar
 import qs.modules.lock
@@ -25,6 +26,7 @@ ShellRoot {
     TopBar {}
     OsdHost {}
     LauncherWindow {}
+    PowerMenuHost {}
     ScreenshotHost {}
     CalendarWidget {}
     TrayMenuHost {}

@@ -261,5 +261,12 @@ QtObject {
         readonly property string shotResize: "south_east"
 
         readonly property string caffeine: "coffee"
+
+        // Session / power menu
+        readonly property string powerLock:     "lock"
+        readonly property string powerLogout:   "logout"
+        readonly property string powerSuspend:  "bedtime"
+        readonly property string powerReboot:   "restart_alt"
+        readonly property string powerShutdown: "power_settings_new"
     }
 }

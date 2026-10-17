@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
 
 ## What exists today
 
@@ -43,6 +43,9 @@
 | `modules/calendar/` (`CalendarWidget`, `CalendarCard`, `calendar_layout.js`) | desktop month window: background layer, click-through mask, drag anywhere, Monday-first grid |
 | `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
+| `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hot zone or `qs ipc call powermenu toggle`; Escape / click-away closes |
+| `modules/powermenu/PowerMenuContent.qml` + `PowerMenuItem.qml` | entries Lock / Log out / Suspend / Reboot / Shut down; Chaldea rows with the accent fill sliding in on hover (shared with the bench) |
+| `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
 
 Run: autostarted at login (`qs -n`) · stop: `qs -k` · restart: `SUPER + SHIFT + O`.
 `SUPER + F` toggles launcher, `PRINT` toggles screenshots.
@@ -54,6 +57,12 @@ on. Not persisted: it resets to off on a shell restart. IPC: `qs ipc call
 caffeine <toggle|enable|disable|isEnabled>`. Mechanism and the layer-surface
 proof are in [notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-10-17.
 
+**Session menu** — the right screen edge is a native hot zone
+(`right = { action = "exec, qs ipc call powermenu toggle" }` in
+`~/.config/hypr/modules/hotzones.lua`) that slides the session menu in. Hot zones
+are a fork feature: config keys, geometry and the runtime API are in
+[notes/hotzones.md](notes/hotzones.md).
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
@@ -63,6 +72,7 @@ qs -p ~/.config/quickshell/preview.qml        # → /tmp/opencode/preview.png
 qs -p ~/.config/quickshell/preview_white.qml  # → /tmp/opencode/preview_white.png
 qs -p ~/.config/quickshell/preview_screenshot.qml # → /tmp/opencode/preview_screenshot.png
 qs -p ~/.config/quickshell/preview_calendar.qml # → /tmp/opencode/preview_calendar.png
+qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_powermenu.png
 ```
 
 | Bench | What it renders | Uses |
@@ -72,6 +82,7 @@ qs -p ~/.config/quickshell/preview_calendar.qml # → /tmp/opencode/preview_cale
 | `preview_screenshot.qml` | floating editor + toolbar with mock strokes/texts (no capture) | pen rendering, toolbar layout |
 | `preview_calendar.qml` | desktop calendar card on dark bg | grid math, today pill, chrome |
 | `preview_lock.qml` | formation card in typing + failed states (no session lock) | card visuals, auth states |
+| `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
 
