@@ -18,6 +18,7 @@ import qs.modules.osd
 import qs.modules.bar
 import qs.modules.launcher
 import qs.modules.powermenu
+import qs.modules.dashboard
 import qs.modules.screenshot
 import qs.modules.calendar
 import qs.modules.lock
@@ -27,6 +28,7 @@ ShellRoot {
     OsdHost {}
     LauncherWindow {}
     PowerMenuHost {}
+    DashboardHost {}
     ScreenshotHost {}
     CalendarWidget {}
     TrayMenuHost {}

@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (network) **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
 
 ## What exists today
 
@@ -46,6 +46,11 @@
 | `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hot zone or `qs ipc call powermenu toggle`; Escape / click-away closes |
 | `modules/powermenu/PowerMenuContent.qml` + `PowerMenuItem.qml` | entries Lock / Log out / Suspend / Reboot / Shut down; Chaldea rows with the accent fill sliding in on hover (shared with the bench) |
 | `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
+| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height, centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes |
+| `modules/dashboard/NetworkSection.qml` | wifi switch, scanning list, inline passphrase, connect / disconnect / forget, portal + off states; scans only while the sheet is open |
+| `modules/dashboard/NetworkRow.qml` | one network: signal + SSID + security/state; expands in place for the passphrase, or for Disconnect / Forget + IP when connected |
+| `modules/dashboard/network_list.js` | sort rank (connected → connecting → saved → signal), signal level, PSK validation rules |
+| `modules/widgets/Toggle.qml` | square hairline toggle, shared by dashboard sections |
 
 Run: autostarted at login (`qs -n`) · stop: `qs -k` · restart: `SUPER + SHIFT + O`.
 `SUPER + F` toggles launcher, `PRINT` toggles screenshots.
@@ -63,6 +68,16 @@ proof are in [notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-10-17
 are a fork feature: config keys, geometry and the runtime API are in
 [notes/hotzones.md](notes/hotzones.md).
 
+**Dashboard** — the bottom screen edge is a hot zone
+(`bottom = "exec, qs ipc call dashboard toggle"`) that slides a 720×40 % sheet
+up. Phase 1 is the network section: wifi on/off, a scanning list, and an inline
+passphrase prompt whose Connect stays disabled until the input validates for the
+security type (WEP: 5/13 chars or 10/26 hex; otherwise 8–64 — rules ported from
+plasma-nm's applet). Bluetooth, audio (input/output) and night light are next.
+Networking uses quickshell's native `Quickshell.Networking` (NetworkManager over
+DBus) — no `nmcli` spawning, unlike caelestia/end-4. Note the scan takes a few
+seconds to fill the list after opening.
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
@@ -73,6 +88,7 @@ qs -p ~/.config/quickshell/preview_white.qml  # → /tmp/opencode/preview_white.
 qs -p ~/.config/quickshell/preview_screenshot.qml # → /tmp/opencode/preview_screenshot.png
 qs -p ~/.config/quickshell/preview_calendar.qml # → /tmp/opencode/preview_calendar.png
 qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_powermenu.png
+qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_dashboard.png
 ```
 
 | Bench | What it renders | Uses |
@@ -83,6 +99,7 @@ qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_pow
 | `preview_calendar.qml` | desktop calendar card on dark bg | grid math, today pill, chrome |
 | `preview_lock.qml` | formation card in typing + failed states (no session lock) | card visuals, auth states |
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
+| `preview_dashboard.qml` | dashboard sheet on a mock desktop with a **mocked** network list (connected / saved / secured / open) and the passphrase prompt pinned open | section layout, row states, inline PSK, list scrolling |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
 

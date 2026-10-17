@@ -29,5 +29,9 @@ hl.config({
         -- Right edge opens the session menu (PowerMenuHost; closes on Escape /
         -- click-away -- deliberately not on hover-out).
         right = { action = "exec, qs ipc call powermenu toggle" },
+
+        -- Bottom edge opens the dashboard (network first; bluetooth/audio/night
+        -- light follow). Closes on Escape / click-away.
+        bottom = { action = "exec, qs ipc call dashboard toggle" },
     },
 })

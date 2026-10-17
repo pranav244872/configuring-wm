@@ -63,6 +63,12 @@ Actions may use any registered dispatcher — `exec, <shell command>` is the usu
 right = { action = "exec, qs ipc call powermenu toggle" },
 ```
 
+## Our use: bottom edge opens the dashboard
+
+```lua
+bottom = { action = "exec, qs ipc call dashboard toggle" },
+```
+
 ## Verifying / rolling back
 
 - After arming: `hyprctl configerrors` must be empty (the *running* binary must

@@ -127,6 +127,11 @@ QtObject {
         // Session menu panel. Fits "SHUT DOWN" + icon at font.size.md with
         // tracking; the panel is content-sized in height, fixed in width.
         readonly property int sessionWidth:  220
+
+        // Dashboard (bottom sheet): deliberately narrower than the screen, a
+        // fixed share of the monitor height, so the sections scroll.
+        readonly property int  dashboardWidth:       720
+        readonly property real dashboardHeightRatio: 0.40
         readonly property int elevation:     10
         readonly property int iconSize:      30
         readonly property int barThickness:  4
@@ -271,5 +276,21 @@ QtObject {
         readonly property string powerSuspend:  "bedtime"
         readonly property string powerReboot:   "restart_alt"
         readonly property string powerShutdown: "power_settings_new"
+
+        // Network / wifi
+        readonly property string wifiOff:    "signal_wifi_off"
+        readonly property string wifiFind:   "wifi_find"
+        readonly property string wifi0:      "signal_wifi_0_bar"
+        readonly property string wifi1:      "network_wifi_1_bar"
+        readonly property string wifi2:      "network_wifi_2_bar"
+        readonly property string wifi3:      "network_wifi_3_bar"
+        readonly property string wifi4:      "network_wifi"
+        readonly property string wifiSecure: "lock"
+        readonly property string wifiSaved:  "bookmark"
+        readonly property string wifiScan:   "refresh"
+        readonly property string wifiBusy:   "progress_activity"
+        readonly property string revealOn:   "visibility"
+        readonly property string revealOff:  "visibility_off"
+        readonly property string wifiForget: "delete"
     }
 }
