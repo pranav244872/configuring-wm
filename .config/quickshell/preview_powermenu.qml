@@ -28,7 +28,7 @@ ShellRoot {
                 id: panel
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                width: 300
+                width: Theme.sizes.sessionWidth
                 height: menuContent.implicitHeight + 2 * Theme.frame.margins
 
                 PowerMenuSurface {

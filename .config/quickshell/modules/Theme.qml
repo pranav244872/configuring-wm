@@ -124,6 +124,9 @@ QtObject {
         readonly property int osdWidth:      260
         readonly property int osdHeight:     72
         readonly property int osdBottom:     44     // gap from the bottom edge
+        // Session menu panel. Fits "SHUT DOWN" + icon at font.size.md with
+        // tracking; the panel is content-sized in height, fixed in width.
+        readonly property int sessionWidth:  220
         readonly property int elevation:     10
         readonly property int iconSize:      30
         readonly property int barThickness:  4

@@ -13,7 +13,7 @@ PanelWindow {
 
     property bool open: false
 
-    readonly property int panelWidth: 300
+    readonly property int panelWidth: Theme.sizes.sessionWidth
 
     // Full-screen overlay so a click outside dismisses.
     anchors {
