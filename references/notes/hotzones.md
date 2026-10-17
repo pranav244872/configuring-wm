@@ -15,6 +15,7 @@ Back to [notes index](README.md) - [docs index](../README.md)
 | `hotzone:trigger_px` | `12` | zone thickness at the bezel, in px |
 | `hotzone:rearm_margin_px` | `24` | travel *out* of a fired zone before it can fire again |
 | `hotzone:corner_margin_px` | `10` | corners carve this much out of the neighbouring **edge** zones |
+| `hotzone:slam` | `false` | corners fire instantly on the exact bezel pixel, bypassing the dwell |
 | `hotzone:suppress_on_fullscreen` | `true` | skip while a covering fullscreen window is on that monitor |
 | `<zone>:enabled` | `true` | per-zone switch |
 | `<zone>:action` | `""` | `"<dispatcher>, <args>"`; an **empty action makes the zone inert** (it still locks out after firing) |
@@ -28,10 +29,10 @@ Actions may use any registered dispatcher — `exec, <shell command>` is the usu
 - A zone is the outer `trigger_px` of the monitor. Corners are `trigger_px`
   **squares**; edges are `trigger_px` strips that skip `corner_margin_px` at both
   ends so corners never clip.
-- **Slam** (corners only): resting on the exact outermost pixel of a **corner**
-  fires immediately, bypassing the dwell. Edges deliberately do not slam — a
-  dragged cursor clamps onto an edge line, so an edge slam fires by accident.
-  Edges always wait out the dwell (currently 1 s).
+- **Slam** is **opt-in** (`hotzone:slam`, default `false`) and corner-only: with it
+  on, the exact outermost pixel of a **corner** fires immediately, bypassing the
+  dwell. Off by default so every zone waits the full 1 s — an edge is a line the
+  cursor clamps onto while dragging, and a slam there fires by accident.
 - An edge with a monitor neighbour outside it is a shared/internal boundary and
   does **not** fire.
 - Suppressed while: the session is locked, input is constrained (an exclusive

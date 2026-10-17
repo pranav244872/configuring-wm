@@ -20,7 +20,8 @@
 hl.config({
     hotzone = {
         enabled         = true, -- master switch
-        dwell_ms        = 1000, -- rest time in the zone before firing (0 = instant)
+        dwell_ms        = 5000, -- rest time in the zone before firing (0 = instant) [TEST]
+        slam            = false, -- corners fire instantly on the exact bezel pixel
         trigger_px      = 12,   -- bezel thickness that counts as "in the zone"
         rearm_margin_px = 24,   -- travel out of a fired zone needed to re-arm it
         corner_margin_px = 10,  -- corner zones carve this out of neighbouring edges
