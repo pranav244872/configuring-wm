@@ -29,7 +29,7 @@
 | `modules/lock/LockSurface.qml` | per-output lock surface: near-black backdrop, centered card |
 | `modules/lock/LockCard.qml` | formation card: user chip, big clock+date, password field + submit |
 | `modules/lock/LockAuth.qml` | password-only PAM machine (`login` stack); buffer cleared every path |
-| `modules/lock/IdleService.qml` | staged IdleMonitors: lock 3m, screen-off 5m (floor 1%), suspend 10m |
+| `modules/lock/IdleService.qml` | staged IdleMonitors: lock 3m, screen-off 5m (floor 1%), suspend 10m; fullscreen holds all three, MPRIS playback holds blank+suspend |
 | `modules/launcher/LauncherSurface.qml` | full-height drawer: layer0 fill, ticks, no bezel-side borders (shared) |
 | `modules/launcher/LauncherContent.qml` | tracked header + rule, square search, ranked list, footer hint (shared) |
 | `modules/launcher/LauncherItem.qml` | square rows, uppercase names, solid primary selection + ripple |
