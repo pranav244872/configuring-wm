@@ -20,7 +20,7 @@
 hl.config({
     hotzone = {
         enabled         = true, -- master switch
-        dwell_ms        = 400,  -- rest time in the zone before firing (0 = instant)
+        dwell_ms        = 700,  -- rest time in the zone before firing (0 = instant)
         trigger_px      = 12,   -- bezel thickness that counts as "in the zone"
         rearm_margin_px = 24,   -- travel out of a fired zone needed to re-arm it
         corner_margin_px = 10,  -- corner zones carve this out of neighbouring edges
@@ -31,7 +31,8 @@ hl.config({
         right = { action = "exec, qs ipc call powermenu toggle" },
 
         -- Bottom edge opens the dashboard (network first; bluetooth/audio/night
-        -- light follow). Closes on Escape / click-away.
-        bottom = { action = "exec, qs ipc call dashboard toggle" },
+        -- light follow). Closes on Escape / click-away. Longer dwell than the
+        -- global default: this one is easy to graze during normal mouse use.
+        bottom = { action = "exec, qs ipc call dashboard toggle", dwell_ms = 900 },
     },
 })

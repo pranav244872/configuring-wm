@@ -28,8 +28,10 @@ Actions may use any registered dispatcher — `exec, <shell command>` is the usu
 - A zone is the outer `trigger_px` of the monitor. Corners are `trigger_px`
   **squares**; edges are `trigger_px` strips that skip `corner_margin_px` at both
   ends so corners never clip.
-- **Slam**: the cursor sitting on the exact outermost pixel row/column fires
-  immediately, bypassing the dwell.
+- **Slam** (corners only): resting on the exact outermost pixel of a **corner**
+  fires immediately, bypassing the dwell. Edges deliberately do not slam — a
+  dragged cursor clamps onto an edge line, so an edge slam fires by accident.
+  Edges always wait out the dwell (the dashboard's bottom edge uses 900 ms).
 - An edge with a monitor neighbour outside it is a shared/internal boundary and
   does **not** fire.
 - Suppressed while: the session is locked, input is constrained (an exclusive

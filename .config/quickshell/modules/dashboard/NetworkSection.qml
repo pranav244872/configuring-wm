@@ -217,6 +217,8 @@ Item {
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 2
+            // The sweep runs past both ends; clip it to the rule.
+            clip: true
 
             Rectangle {
                 anchors.left: parent.left
