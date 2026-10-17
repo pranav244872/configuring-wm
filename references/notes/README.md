@@ -13,6 +13,7 @@ Back to [docs index](../README.md)
 | [quickshell.md](quickshell.md) | QML/API traps in 0.3.2 (singletons, `on*` names, `Behavior`, `PanelWindow`, `IpcHandler`, `Process`, PipeWire), the `opacity: 0` input trap and the `mask` fix |
 | [shell-ui.md](shell-ui.md) | building our own UI: drag-a-value slider rules, and how to verify quickshell UI without guessing |
 | [idle-inhibit.md](idle-inhibit.md) | keep-awake: `IdleInhibitor` + `respectInhibitors`, why a barrier on a layer surface works, the probe test |
+| [keyboard-fn-keys.md](keyboard-fn-keys.md) | the F-row vs Fn: hotkey mode, the `fn_lock` sysfs switch, why plain F9 is unbindable, and how to identify unknown keys |
 | [screenshot.md](screenshot.md) | screenshot utility: grim-before-overlay capture, workspace-scoped window pick, native annotation, Print/Esc close rules |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |

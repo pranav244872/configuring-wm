@@ -186,10 +186,10 @@ hl.bind(
 )
 
 -- Session lock (own quickshell UI + PAM, replaces hyprlock).
--- F9, plus the laptop "lock" media keysym in case Fn+F9 is what emits it.
+-- Reached with Fn+F9: plain F9 is the firmware "lock screen" hotkey and emits
+-- nothing Linux can see (no evdev keycode, no ACPI); Fn+F9 sends the real F9.
 local lockCmd = "sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call lock lock'"
 hl.bind("F9", hl.dsp.exec_cmd(lockCmd))
-hl.bind("XF86ScreenSaver", hl.dsp.exec_cmd(lockCmd))
 
 -- Screenshot utility (own quickshell UI): Print captures, annotate in-shell.
 hl.bind(
