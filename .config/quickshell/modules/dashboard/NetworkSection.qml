@@ -16,13 +16,30 @@ import "network_list.js" as Net
 Item {
     id: root
 
-    // Settable defaults so the bench can inject a mock list (no radio needed).
-    property var networks: Net.sortNetworks(root.device ? root.device.networks.values : [])
+    // The list is a *snapshot*, not a live binding: rebuilding it on every
+    // property change (signal strengths tick during a scan) reorders rows and
+    // resets delegates mid-edit. Both reference applets avoid this -- plasma-nm
+    // freezes its model with setDelayModelUpdates() while the password field is
+    // open, nm-applet reuses its menu items by hash. The network objects stay
+    // live; only order/membership is frozen.
+    property var networks: []
     property bool wifiEnabled: Networking.wifiEnabled
     property int connectivity: Networking.connectivity
 
+    // Bench hook: a mocked list must not be clobbered by the live refresh.
+    property bool mock: false
+
+    // Sheet visibility (set by DashboardContent); the refresh below only runs
+    // while open.
+    property bool active: false
+
     property string expandedSsid: ""
     property string errorText: ""
+    property string pskDraft: ""
+
+    readonly property bool editing: root.expandedSsid.length > 0
+
+    onEditingChanged: if (!root.editing) root.rebuild()
 
     readonly property var device: Networking.devices.values.find(d => d.type === DeviceType.Wifi) ?? null
     readonly property bool portal: root.connectivity === NetworkConnectivity.Portal
@@ -31,18 +48,36 @@ Item {
     // NM's own scan state is not exposed, so this is a bounded affordance.
     readonly property bool spinning: spinTimer.running
 
+    // Recompute the snapshot. `force` bypasses the identical-snapshot check
+    // (used when the sheet opens); a normal refresh never runs while a prompt is
+    // open, so typing is never disturbed.
+    function rebuild(force) {
+        if (root.mock)
+            return;
+        if (!force && root.editing)
+            return;
+        const next = Net.sortNetworks(root.device ? root.device.networks.values : []);
+        if (!force && Net.sameOrder(next, root.networks))
+            return;
+        root.networks = next;
+    }
+
     function activate() {
         if (root.device)
             root.device.scannerEnabled = true;
+        root.active = true;
+        root.rebuild(true);
         spinTimer.restart();
     }
 
     function deactivate() {
         if (root.device)
             root.device.scannerEnabled = false;
+        root.active = false;
         spinTimer.stop();
         root.expandedSsid = "";
         root.errorText = "";
+        root.pskDraft = "";
     }
 
     function rescan() {
@@ -81,6 +116,36 @@ Item {
         // Covers the observed NM scan latency (~6s) so the header shows that a
         // refresh is in flight while the list is still filling.
         interval: 6000
+    }
+
+    // Membership changes arrive as model signals. Rebuild on those instead of
+    // waiting for the 1s refresh, so a removed AP cannot linger as a dead
+    // wrapper; the 150ms debounce collapses a scan burst into one rebuild.
+    Timer {
+        id: modelChangedTimer
+        interval: 150
+        onTriggered: root.rebuild()
+    }
+
+    Connections {
+        target: root.device ? root.device.networks : null
+
+        function onObjectInsertedPost() {
+            modelChangedTimer.restart();
+        }
+
+        function onObjectRemovedPost() {
+            modelChangedTimer.restart();
+        }
+    }
+
+    // Membership/order refresh while the sheet is open. 1s is well under NM's
+    // scan cadence and costs one small in-memory sort.
+    Timer {
+        interval: 1000
+        repeat: true
+        running: root.active && root.wifiEnabled
+        onTriggered: root.rebuild()
     }
 
     component Rule: Rectangle {
@@ -229,6 +294,8 @@ Item {
 
                     width: list.width
                     net: modelData
+                    draft: root.pskDraft
+                    deviceAddress: root.device ? root.device.address : ""
                     expanded: root.expandedSsid === modelData.name
                     errorText: root.expandedSsid === modelData.name ? root.errorText : ""
 
@@ -237,7 +304,10 @@ Item {
                         list.positionViewAtIndex(index, ListView.Contain);
                     }
 
+                    onDraftEdited: (text) => root.pskDraft = text
+
                     onToggleExpanded: {
+                        root.pskDraft = "";
                         if (root.expandedSsid === modelData.name) {
                             root.expandedSsid = "";
                             root.errorText = "";
@@ -251,21 +321,27 @@ Item {
                     onConnectRequested: {
                         root.errorText = "";
                         root.expandedSsid = "";
+                        root.pskDraft = "";
                         modelData.connect();
                     }
 
                     onPskSubmitted: (psk) => {
                         root.errorText = "";
+                        // Close the prompt (the row shows its spinner); the draft
+                        // is kept so a failure reopens with the text to fix.
+                        root.expandedSsid = "";
                         modelData.connectWithPsk(psk);
                     }
 
                     onDisconnectRequested: {
                         root.expandedSsid = "";
+                        root.pskDraft = "";
                         modelData.disconnect();
                     }
 
                     onForgetRequested: {
                         root.expandedSsid = "";
+                        root.pskDraft = "";
                         modelData.forget();
                     }
 

@@ -14,11 +14,33 @@ Item {
     id: root
 
     required property var net
+
+    // NM deletes a network object when its access point disappears, and a view
+    // can hold that dead wrapper for a frame. Bind through this null-safe view
+    // instead of touching `net` directly.
+    readonly property var n: root.net !== null && root.net !== undefined ? root.net : root.emptyNet
+    readonly property var emptyNet: ({
+        name: "",
+        signalStrength: 0,
+        security: WifiSecurityType.Unknown,
+        connected: false,
+        known: false,
+        state: ConnectionState.Disconnected,
+        stateChanging: false
+    })
+
+    visible: root.net !== null && root.net !== undefined
     required property bool expanded
+    // The passphrase text lives in the section, not the delegate: a view reset
+    // can never lose what has been typed.
+    required property string draft
+    // The IP lives on the WifiDevice, not on the network object.
+    property string deviceAddress: ""
     property string errorText: ""
 
     signal toggleExpanded()
     signal connectRequested()
+    signal draftEdited(string text)
     signal pskSubmitted(string psk)
     signal disconnectRequested()
     signal forgetRequested()
@@ -34,20 +56,20 @@ Item {
     }
 
     // Simple (passphrase) security vs enterprise, which needs a full editor.
-    readonly property bool wep: net.security === WifiSecurityType.StaticWep || net.security === WifiSecurityType.DynamicWep
+    readonly property bool wep: n.security === WifiSecurityType.StaticWep || n.security === WifiSecurityType.DynamicWep
     readonly property bool pskCapable: [
         WifiSecurityType.WpaPsk,
         WifiSecurityType.Wpa2Psk,
         WifiSecurityType.Sae,
         WifiSecurityType.StaticWep
-    ].includes(net.security)
+    ].includes(n.security)
     readonly property bool enterprise: [
         WifiSecurityType.WpaEap,
         WifiSecurityType.Wpa2Eap,
         WifiSecurityType.Leap
-    ].includes(net.security)
-    readonly property bool secure: net.security !== WifiSecurityType.Open && net.security !== WifiSecurityType.Owe
-    readonly property bool connecting: net.stateChanging || net.state === ConnectionState.Connecting
+    ].includes(n.security)
+    readonly property bool secure: n.security !== WifiSecurityType.Open && n.security !== WifiSecurityType.Owe
+    readonly property bool connecting: n.stateChanging || n.state === ConnectionState.Connecting
 
     readonly property string signalGlyph: [
         Theme.glyphs.wifi0,
@@ -55,22 +77,33 @@ Item {
         Theme.glyphs.wifi2,
         Theme.glyphs.wifi3,
         Theme.glyphs.wifi4
-    ][Net.signalLevel(net.signalStrength)]
+    ][Net.signalLevel(n.signalStrength)]
 
     readonly property string subtitle: {
         if (root.connecting)
             return "CONNECTING...";
-        const sec = root.securityLabel(root.net.security);
-        if (root.net.connected)
+        const sec = root.securityLabel(n.security);
+        if (n.connected)
             return "CONNECTED · " + sec;
-        if (root.net.known)
+        if (n.known)
             return "SAVED · " + sec;
         return sec;
     }
 
     // A passphrase is being asked for right now.
-    readonly property bool asksPsk: root.expanded && !net.known && pskCapable
-    readonly property bool acceptable: Net.isValidPsk(root.wep, pskField.text)
+    readonly property bool asksPsk: root.expanded && !n.known && pskCapable
+    readonly property bool acceptable: Net.isValidPsk(root.wep, root.draft)
+
+    // Focus is granted asynchronously by the compositor (same delayed grab the
+    // launcher uses for its search field).
+    Timer {
+        id: focusTimer
+        interval: 120
+        onTriggered: if (root.asksPsk) pskField.forceActiveFocus()
+    }
+
+    onAsksPskChanged: if (root.asksPsk) focusTimer.restart()
+    Component.onCompleted: if (root.asksPsk) focusTimer.restart()
 
     function securityLabel(type) {
         switch (type) {
@@ -151,7 +184,7 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 2
                 clip: true
-                color: headMa.containsMouse && !rowHoverElsewhere ? Theme.colors.stateHover : "transparent"
+                color: headMa.containsMouse && !forgetMa.containsMouse ? Theme.colors.stateHover : "transparent"
 
                 Ripple {
                     id: ripple
@@ -159,10 +192,6 @@ Item {
                     color: ColorUtils.transparentize(Theme.colors.fgLayer1, 0.78)
                 }
             }
-
-            // The forget glyph sits inside the row; hover on it should not light
-            // the whole row like a normal hover.
-            readonly property bool rowHoverElsewhere: headMa.containsMouse && !forgetMa.containsMouse
 
             RowLayout {
                 anchors.fill: parent
@@ -175,7 +204,7 @@ Item {
                     text: root.signalGlyph
                     font.family: Theme.font.icon
                     font.pixelSize: 20
-                    color: root.net.connected ? Theme.colors.primary : Theme.colors.subtext
+                    color: n.connected ? Theme.colors.primary : Theme.colors.subtext
                 }
 
                 ColumnLayout {
@@ -185,9 +214,9 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: root.net.name
+                        text: n.name
                         font.pixelSize: Theme.font.size.md
-                        color: root.net.connected ? Theme.colors.primary : Theme.colors.fgLayer0
+                        color: n.connected ? Theme.colors.primary : Theme.colors.fgLayer0
                         elide: Text.ElideRight
                     }
 
@@ -204,7 +233,7 @@ Item {
                 // Saved + idle: reveal Forget on hover (the row click connects).
                 StyledText {
                     Layout.alignment: Qt.AlignVCenter
-                    visible: !root.connecting && root.net.known && !root.net.connected && headMa.containsMouse
+                    visible: !root.connecting && n.known && !n.connected && headMa.containsMouse
                     text: Theme.glyphs.wifiForget
                     font.family: Theme.font.icon
                     font.pixelSize: 18
@@ -243,7 +272,7 @@ Item {
                     text: Theme.glyphs.wifiSecure
                     font.family: Theme.font.icon
                     font.pixelSize: 18
-                    color: root.net.connected ? Theme.colors.primary : Theme.colors.subtext
+                    color: n.connected ? Theme.colors.primary : Theme.colors.subtext
                 }
             }
 
@@ -260,7 +289,7 @@ Item {
                 onCanceled: ripple.release()
 
                 onClicked: {
-                    if (root.net.connected || root.enterprise || (root.secure && !root.net.known && root.pskCapable))
+                    if (n.connected || root.enterprise || (root.secure && !n.known && root.pskCapable))
                         root.toggleExpanded();
                     else
                         root.connectRequested();
@@ -310,8 +339,11 @@ Item {
                         font.pixelSize: Theme.font.size.sm
                         echoMode: revealed ? TextInput.Normal : TextInput.Password
                         selectByMouse: true
+                        text: root.draft
 
                         property bool revealed: false
+
+                        onTextEdited: root.draftEdited(text)
 
                         StyledText {
                             anchors.verticalCenter: parent.verticalCenter
@@ -325,7 +357,7 @@ Item {
 
                         onAccepted: {
                             if (root.acceptable)
-                                root.pskSubmitted(text);
+                                root.pskSubmitted(root.draft);
                         }
                     }
                 }
@@ -357,14 +389,14 @@ Item {
                     accent: true
                     enabled: root.acceptable
                     opacity: root.acceptable ? 1 : 0.4
-                    onClicked: root.pskSubmitted(pskField.text)
+                    onClicked: root.pskSubmitted(root.draft)
                 }
             }
 
             // Enterprise networks cannot be set up with just a passphrase.
             StyledText {
                 width: parent.width - parent.leftPadding - parent.rightPadding
-                visible: root.expanded && root.enterprise && !root.net.known
+                visible: root.expanded && root.enterprise && !n.known
                 text: "ENTERPRISE — NEEDS A SAVED PROFILE"
                 font.pixelSize: Theme.font.size.xs
                 font.letterSpacing: Theme.frame.tracking
@@ -385,7 +417,7 @@ Item {
             Row {
                 width: parent.width - parent.leftPadding - parent.rightPadding
                 spacing: 8
-                visible: root.expanded && root.net.connected
+                visible: root.expanded && n.connected
 
                 MicroButton {
                     label: "DISCONNECT"
@@ -398,11 +430,11 @@ Item {
                 }
             }
 
-            // Address of the live connection
+            // Address of the live connection (from the device, not the network)
             StyledText {
                 width: parent.width - parent.leftPadding - parent.rightPadding
-                visible: root.net.connected && root.net.address.length > 0
-                text: "IP " + root.net.address
+                visible: n.connected && root.deviceAddress.length > 0
+                text: "IP " + root.deviceAddress
                 font.pixelSize: Theme.font.size.xs
                 font.letterSpacing: Theme.frame.tracking
                 color: Theme.colors.subtext

@@ -101,6 +101,7 @@ ShellRoot {
 
         // Feed the mocked list into the section (overrides its live binding).
         Component.onCompleted: {
+            content.network.mock = true;
             content.network.networks = mockNetworks;
             content.network.wifiEnabled = true;
             content.network.connectivity = NetworkConnectivity.Full;

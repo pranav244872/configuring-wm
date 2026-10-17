@@ -78,6 +78,15 @@ Networking uses quickshell's native `Quickshell.Networking` (NetworkManager over
 DBus) — no `nmcli` spawning, unlike caelestia/end-4. Note the scan takes a few
 seconds to fill the list after opening.
 
+The list is deliberately a **stable snapshot**, not a live binding: a binding over
+the model re-sorts on every signal-strength tick during a scan, which reorders
+rows and resets delegates **mid-typing**. So `rebuild()` only assigns when the
+SSID order actually changes, and never while a row is expanded (plasma-nm freezes
+its model the same way with `setDelayModelUpdates`). The passphrase text is owned
+by the section, not the delegate, so nothing can lose it; and NM deletes network
+objects when an AP disappears, so the row binds through a null-safe view
+(`n`) rather than the raw object.
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
