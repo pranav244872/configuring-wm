@@ -103,8 +103,14 @@ Last updated: 2026-10-16
   falls back to real paths. `cdi` = interactive picker (needs fzf).
 - `kitty` config ported verbatim from the old setup: JetBrainsMono Nerd Font
   Mono 12, 90 % opacity, teal palette, `ctrl+shift+t` new tab with cwd.
-- Deliberately **not** ported yet (tools absent): starship prompt, mise, eza /
-  bat / fzf aliases, vssh tunnel helpers.
+- **`eza` replaces `ls`** (installed 2026-10-18, `extra/eza` 0.23.5):
+  `ls` = `eza -la --group-directories-first --icons=auto` and `lt` = a two-level
+  tree with git status — the old setup's flags, restored in `config.fish`. `lt`
+  is a **function, not an alias**: eza 0.23 prints *nothing* for a bare
+  `eza --tree`, so the old alias would have looked broken here; ours passes `.`
+  unless a path is given. Icons ride on the Nerd Font kitty already uses.
+- Deliberately **not** ported yet (tools absent): starship prompt, mise, bat /
+  fzf aliases, vssh tunnel helpers.
 
 ## Workflow — how the user wants us to work
 

@@ -4,7 +4,7 @@ How this machine gets and keeps its packages: pacman settings and the AUR
 helper. The `paccache` trim timer is documented separately in
 [notes/cache.md](notes/cache.md).
 
-Last updated: 2026-10-16
+Last updated: 2026-10-18
 
 ## Packages installed for this setup (explicit `pacman -S` args only)
 
@@ -25,6 +25,7 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `steam` | game runtime (The Spike Cross); replaces the standalone Proton experiment | 2026-10-16 |
 | `vulkan-intel` | Vulkan driver for the UHD 620 — DXVK needs an ICD | 2026-10-16 |
 | `jq` | JSON CLI for `hyprctl -j` one-liners (screenshot workspace-filter verification, future scripts) | 2026-10-16 |
+| `eza` | modern `ls` (fish `ls` / `lt`) — the last piece of the old repo's shell aliases | 2026-10-18 |
 
 ```bash
 # quickshell UI fonts and application icons
@@ -41,6 +42,9 @@ sudo pacman -S --needed --noconfirm steam
 
 # JSON CLI for hyprctl scripting/debugging
 sudo pacman -S --needed --noconfirm jq
+
+# modern ls replacement (already in extra; --git needs libgit2, pulled as a dep)
+sudo pacman -S --needed --noconfirm eza
 ```
 
 ### Docker

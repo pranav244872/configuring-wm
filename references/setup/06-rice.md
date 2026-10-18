@@ -1,11 +1,14 @@
 # Step 4 — Rice Layer
 
-**Status: ⬜ planned — nothing installed yet**
+**Status: 🔄 partially done** — the shell, OSD, lock screen and screenshots were
+replaced by our own quickshell work (see [../shell.md](../shell.md)), so this
+table now tracks the *remaining* rice packages. Off it, **`eza`** is done
+(2026-10-18, fish `ls`/`lt` — see [../preferences.md](../preferences.md)); the
+rest of the extras are not installed.
 
-Everything deferred on purpose so the WM could be usable and fast first. None
-of it is installed; all of it is in official repos. Install order is up to taste,
-but each item needs the previous layer's pieces (e.g. a bar wants a font +
-theme colours).
+Everything deferred on purpose so the WM could be usable and fast first. All of
+it is in official repos. Install order is up to taste, but each item needs the
+previous layer's pieces (e.g. a bar wants a font + theme colours).
 
 | Piece | Packages | Binds it would serve (from the old setup) |
 |---|---|---|
