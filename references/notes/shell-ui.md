@@ -95,3 +95,46 @@ different family and won't match). No rounding, no pills, no shadows.
 - **Window Gap Math**: Bar height 30px with `exclusiveZone: 18` leaves exact 8px window gap with `gaps_out: 20` (18 + 20 - 30 = 8).
 - **Startup Silence**: 1200ms `ready` timer in `OsdHost.qml` suppresses PipeWire sink initialization popup.
 - **Input Trap Fix**: `mask: Region { item: surface; intersection: ... }` prevents clickthrough swallowing when hidden.
+
+## Bar Network Item & Hover Tooltips
+
+- **Glyph at rest, details on hover** (2026-10-18): the bar shows only the signal meter
+  (`widgets/SignalBars`). An inline label that expanded on hover was built first and
+  rejected on sight ("it looks ugly"); waybar splits it instead — `{icon}` in the bar,
+  `{essid}` + details in the tooltip.
+- **Native data, no polling**: `Networking.devices.values` → `DeviceType.Wifi` device →
+  `networks.values.find(n => n && n.connected)` gives `name` + `signalStrength` (0.0–1.0);
+  `Networking.wifiEnabled` is the radio, `Networking.connectivity`
+  `Portal`/`Limited` the captive state (reads `Unknown` when NM's connectivity check is
+  off, so the quiet "connected" look is the safe fallback). Down states swap the meter
+  for the `wifi_find` / `signal_wifi_off` glyphs, like the dashboard rows.
+- **Tooltip = `PopupWindow` anchored to the bar**: `mask: Region { item: null }` so it can
+  never eat a click, a **300ms dwell** (hot-zone vocabulary — sweeping the bar must not
+  flash tooltips) and a **6px gap** under the bar.
+- **Anchor to the bar's bottom edge, not the icon's**: the item is vertically centred in
+  the 30px bar, so `item.y + item.height` (≈23px) puts the popup *inside* the bar.
+  `anchor.rect.y: window.height + 6` is the fix. The tray menu now follows the same rule
+  (`Window.height + 6` in `BarTray.openMenuFor`), so a right-click menu and a hover
+  tooltip hang at the same distance from the bar.
+- **"On open" goes in the popup's `Component.onCompleted`**: with the bench's
+  `pinTooltip` the tooltip is already visible at creation, so `onTooltipVisibleChanged`
+  never fires and the IP lookup silently never ran. Triggers kept: pointer-enter
+  (pre-fetch during the dwell, so the box opens at its final width), `onDevChanged` /
+  `onOnlineChanged` (device or connection appearing while it is up) and that completion.
+- **Re-anchor when the content resizes** (`onImplicitWidthChanged: Qt.callLater(anchor.updateAnchor)`):
+  a popup's position is computed when it is shown, and the IP arriving or `9%` → `100%`
+  changes the width — otherwise the box grows off-centre under the pointer.
+- **The IP is the one non-native bit**: quickshell exposes only the *hardware* address
+  (`NetworkDevice.address` is the MAC), so the tooltip runs
+  `ip -4 -o addr show dev <if>` once per hover — a `Process`, never a poll.
+- **Verification traps worth remembering**:
+  - `hyprctl dispatch movecursor` does **not** drive hover: no motion/enter event reaches
+    the layer surface (a debug MouseArea in the window stayed silent), so hover paths
+    need a real pointer. `qs ipc call` + `grim` prove position and content, not hovering.
+  - A bench that reproduces the bar on the **overlay** layer draws *above fullscreen
+    windows* (the real bar is level `top`, which the compositor hides), so it looks like
+    "the bar doesn't hide in fullscreen"; and it carries no `TrayMenuHost`, so tray
+    right-click looks dead there. Both were reported as bugs while such a probe was live
+    — keep probes temporary and delete them.
+  - `TrayMenu` logs a benign `Binding loop detected for property "height"` (its title row)
+    each time a menu opens — pre-existing, harmless, not yet chased.

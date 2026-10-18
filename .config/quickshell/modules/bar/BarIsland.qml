@@ -10,6 +10,9 @@ Item {
 
     property alias activeWsIdOverride: wsIndicator.activeWsIdOverride
 
+    // Bench hook: lets the previews drive the network item's mocks.
+    property alias network: networkItem
+
     readonly property real bodyWidth: row.implicitWidth + 2 * Theme.bar.pad
 
     implicitWidth: bodyWidth
@@ -52,6 +55,11 @@ Item {
             Layout.preferredHeight: 14
             Layout.alignment: Qt.AlignVCenter
             color: ColorUtils.transparentize(Theme.colors.outline, 0.4)
+        }
+
+        BarNetwork {
+            id: networkItem
+            Layout.alignment: Qt.AlignVCenter
         }
 
         BarBattery {

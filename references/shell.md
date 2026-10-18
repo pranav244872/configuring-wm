@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (network) **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (network), bar network status (hover tooltip) **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
 
 ## What exists today
 
@@ -18,8 +18,8 @@
 | `modules/osd/` (`OsdHost`, `OsdIndicator`) | volume/brightness pill: reactive PipeWire, IPC brightness, drag-to-set, 1.4s hide |
 | `modules/bar/TopBar.qml` | top bar window: 30px square island, exclusiveZone 30 (12px gap = gaps_out) |
 | `modules/bar/BarSurface.qml` | square island: 1px hairline border + corner ticks (shared) |
-| `modules/bar/BarIsland.qml` | surface + tracked clock/dividers/workspaces/battery row, 1px optical lift |
-| `modules/bar/BarTray.qml` | tray icons left of clock, hidden when empty; left = activate, right = menu (opens under the clicked icon, flips up at the bottom edge), wheel = scroll |
+| `modules/bar/BarIsland.qml` | surface + content row: tray, clock, workspaces, network meter, battery, caffeine (1px optical lift) |
+| `modules/bar/BarTray.qml` | tray icons left of clock, hidden when empty; left = activate, right = menu (hangs 6px under the bar, flips up at the bottom edge), wheel = scroll |
 | `modules/bar/TrayMenu.qml` + `TrayMenuHost.qml` | app context menu (QsMenuOpener stack) in an overlay; `TrayState` singleton shares open state |
 | `modules/bar/BarClock.qml` + `BarBattery.qml` | weekday/date/time clock + UPower battery, tracked mono |
 | `modules/bar/WorkspaceIndicator.qml` | workspaces 1..5 + active/occupied >5; sliding block, pill-tracked digits, occupied tick markers, dim empties (center module) |
@@ -43,6 +43,8 @@
 | `modules/calendar/` (`CalendarWidget`, `CalendarCard`, `calendar_layout.js`) | desktop month window: background layer, click-through mask, drag anywhere, Monday-first grid |
 | `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
+| `modules/bar/BarNetwork.qml` | signal meter at rest; tooltip on 300ms hover (SSID · strength · security · IP) 6px under the bar; click opens the dashboard. Native `Quickshell.Networking`, IP from a one-shot `ip` |
+| `modules/bar/NetworkTooltip.qml` | tooltip frame content (layer0 fill, hairline + corner ticks); shared with the bench |
 | `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hot zone or `qs ipc call powermenu toggle`; Escape / click-away closes |
 | `modules/powermenu/PowerMenuContent.qml` + `PowerMenuItem.qml` | entries Lock / Log out / Suspend / Reboot / Shut down; Chaldea rows with the accent fill sliding in on hover (shared with the bench) |
 | `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
@@ -95,6 +97,14 @@ with an accent segment sweeping across it. Signal strength is a rectangle bar
 meter and the spinner is a dot-chase — both drawn, not glyphs, because rotating
 a `StyledText` glyph pixelates.
 
+**Bar network status** — the right cluster ends with a signal meter
+(`modules/bar/BarNetwork.qml`): meter only at rest, and on a 300ms hover a tooltip
+drops 6px under the bar with SSID, strength, security and IP; clicking it opens the
+dashboard (network section). Data is native `Quickshell.Networking`; the IP is the
+only subprocess (one shot per hover — the toolkit exposes just the MAC). Verified
+2026-10-18 with the user's mouse. Rules, anchoring lessons and the click-through
+mask are in [notes/shell-ui.md](notes/shell-ui.md).
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
@@ -106,6 +116,7 @@ qs -p ~/.config/quickshell/preview_screenshot.qml # → /tmp/opencode/preview_sc
 qs -p ~/.config/quickshell/preview_calendar.qml # → /tmp/opencode/preview_calendar.png
 qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_powermenu.png
 qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_dashboard.png
+qs -p ~/.config/quickshell/preview_network.qml # → /tmp/opencode/preview_network.png
 ```
 
 | Bench | What it renders | Uses |
@@ -117,6 +128,7 @@ qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_das
 | `preview_lock.qml` | formation card in typing + failed states (no session lock) | card visuals, auth states |
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
 | `preview_dashboard.qml` | dashboard sheet on a mock desktop with a **mocked** network list (connected / saved / secured / open) and the passphrase prompt pinned open | section layout, row states, inline PSK, list scrolling |
+| `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
 

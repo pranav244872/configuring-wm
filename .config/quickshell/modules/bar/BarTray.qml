@@ -79,7 +79,8 @@ RowLayout {
         const ox = (Screen.width - Window.width) / 2;
         const click = ma.mapToGlobal(clickX, clickY);
         const top = ma.mapToGlobal(0, 0);
-        const bottom = ma.mapToGlobal(0, ma.height);
-        TrayState.openMenu(item.menu, item.title, ox + click.x, top.y, bottom.y + 6);
+        // Hang the menu off the bar's bottom edge, not the icon's: the same 6px
+        // gap the hover tooltip uses.
+        TrayState.openMenu(item.menu, item.title, ox + click.x, top.y, Window.height + 6);
     }
 }
