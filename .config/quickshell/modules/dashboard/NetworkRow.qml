@@ -15,10 +15,22 @@ Item {
 
     required property var net
 
-    // NM deletes a network object when its access point disappears, and a view
-    // can hold that dead wrapper for a frame. Bind through this null-safe view
-    // instead of touching `net` directly.
-    readonly property var n: root.net !== null && root.net !== undefined ? root.net : root.emptyNet
+    // NM deletes a network object when its access point disappears, and the view
+    // can hold that dead wrapper for a frame. Reading a property off it throws
+    // ("Value is null and could not be converted to an object"), and no null
+    // check or `?.` can see it: the JS value is not null, the QObject behind it
+    // is gone. So every read goes through `n()`, which probes and falls back.
+    function n() {
+        try {
+            if (root.net === null || root.net === undefined)
+                return root.emptyNet;
+            void root.net.name; // touching a property is the aliveness test
+            return root.net;
+        } catch (e) {
+            return root.emptyNet;
+        }
+    }
+
     readonly property var emptyNet: ({
         name: "",
         signalStrength: 0,
@@ -56,35 +68,35 @@ Item {
     }
 
     // Simple (passphrase) security vs enterprise, which needs a full editor.
-    readonly property bool wep: n.security === WifiSecurityType.StaticWep || n.security === WifiSecurityType.DynamicWep
+    readonly property bool wep: n().security === WifiSecurityType.StaticWep || n().security === WifiSecurityType.DynamicWep
     readonly property bool pskCapable: [
         WifiSecurityType.WpaPsk,
         WifiSecurityType.Wpa2Psk,
         WifiSecurityType.Sae,
         WifiSecurityType.StaticWep
-    ].includes(n.security)
+    ].includes(n().security)
     readonly property bool enterprise: [
         WifiSecurityType.WpaEap,
         WifiSecurityType.Wpa2Eap,
         WifiSecurityType.Leap
-    ].includes(n.security)
-    readonly property bool secure: n.security !== WifiSecurityType.Open && n.security !== WifiSecurityType.Owe
-    readonly property bool connecting: n.stateChanging || n.state === ConnectionState.Connecting
+    ].includes(n().security)
+    readonly property bool secure: n().security !== WifiSecurityType.Open && n().security !== WifiSecurityType.Owe
+    readonly property bool connecting: n().stateChanging || n().state === ConnectionState.Connecting
 
     // State first; the security label only where it adds information (the lock
     // glyph already marks a secured network).
     readonly property string subtitle: {
         if (root.connecting)
             return "CONNECTING…";
-        if (n.connected)
+        if (n().connected)
             return "CONNECTED";
-        if (n.known)
+        if (n().known)
             return "SAVED";
-        return root.securityLabel(n.security);
+        return root.securityLabel(n().security);
     }
 
     // A passphrase is being asked for right now.
-    readonly property bool asksPsk: root.expanded && !n.known && pskCapable
+    readonly property bool asksPsk: root.expanded && !n().known && pskCapable
     readonly property bool acceptable: Net.isValidPsk(root.wep, root.draft)
 
     // Focus is granted asynchronously by the compositor (same delayed grab the
@@ -202,8 +214,8 @@ Item {
 
                 SignalBars {
                     Layout.alignment: Qt.AlignVCenter
-                    level: n.signalStrength
-                    color: n.connected ? Theme.colors.primary : Theme.colors.subtext
+                    level: n().signalStrength
+                    color: n().connected ? Theme.colors.primary : Theme.colors.subtext
                 }
 
                 ColumnLayout {
@@ -213,9 +225,9 @@ Item {
 
                     StyledText {
                         Layout.fillWidth: true
-                        text: n.name
+                        text: n().name
                         font.pixelSize: Theme.font.size.md
-                        color: n.connected ? Theme.colors.primary : Theme.colors.fgLayer0
+                        color: n().connected ? Theme.colors.primary : Theme.colors.fgLayer0
                         elide: Text.ElideRight
                     }
 
@@ -232,7 +244,7 @@ Item {
                 // Saved + idle: reveal Forget on hover (the row click connects).
                 StyledText {
                     Layout.alignment: Qt.AlignVCenter
-                    visible: !root.connecting && n.known && !n.connected && headMa.containsMouse
+                    visible: !root.connecting && n().known && !n().connected && headMa.containsMouse
                     text: Theme.glyphs.wifiForget
                     font.family: Theme.font.icon
                     font.pixelSize: 18
@@ -261,7 +273,7 @@ Item {
                     text: Theme.glyphs.wifiSecure
                     font.family: Theme.font.icon
                     font.pixelSize: 18
-                    color: n.connected ? Theme.colors.primary : Theme.colors.subtext
+                    color: n().connected ? Theme.colors.primary : Theme.colors.subtext
                 }
             }
 
@@ -278,7 +290,7 @@ Item {
                 onCanceled: ripple.release()
 
                 onClicked: {
-                    if (n.connected || root.enterprise || (root.secure && !n.known && root.pskCapable))
+                    if (n().connected || root.enterprise || (root.secure && !n().known && root.pskCapable))
                         root.toggleExpanded();
                     else
                         root.connectRequested();
@@ -409,7 +421,7 @@ Item {
             // Enterprise networks cannot be set up with just a passphrase.
             StyledText {
                 width: parent.width - parent.leftPadding - parent.rightPadding
-                visible: root.expanded && root.enterprise && !n.known
+                visible: root.expanded && root.enterprise && !n().known
                 text: "ENTERPRISE — NEEDS A SAVED PROFILE"
                 font.pixelSize: Theme.font.size.xs
                 font.letterSpacing: Theme.frame.tracking
@@ -430,7 +442,7 @@ Item {
             Row {
                 width: parent.width - parent.leftPadding - parent.rightPadding
                 spacing: 8
-                visible: root.expanded && n.connected
+                visible: root.expanded && n().connected
 
                 MicroButton {
                     label: "DISCONNECT"
@@ -446,7 +458,7 @@ Item {
             // Address of the live connection (from the device, not the network)
             StyledText {
                 width: parent.width - parent.leftPadding - parent.rightPadding
-                visible: n.connected && root.deviceAddress.length > 0
+                visible: n().connected && root.deviceAddress.length > 0
                 text: "IP " + root.deviceAddress
                 font.pixelSize: Theme.font.size.xs
                 font.letterSpacing: Theme.frame.tracking

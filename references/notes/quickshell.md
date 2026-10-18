@@ -28,6 +28,16 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
 - Never redeclare `clicked`/`pressed`/`onX` signals — `MouseArea` already has them (`Duplicate signal name`).
 - Inner properties shadow outer ids: `LockSurface { lock: lock }` self-binds when the surface
   declares its own `lock` (binding loop, null value). Name host ids distinctly (`sessionLock`).
+- **A destroyed QObject held in a `var` property is a dead wrapper, not `null`.**
+  When NetworkManager deletes a network object (its AP disappeared) the JS value
+  stays non-null, so `x !== null`, `??` and `?.` all pass — but any property read
+  throws *"Value is null and could not be converted to an object"*. Probe inside a
+  function and catch (`try { void obj.name; return obj } catch (e) { return fallback }`),
+  and **call it at each use**: a one-shot `property var x: …` binding evaluates once
+  and keeps the dead wrapper, because nothing changes when the object dies.
+- `height: visible ? implicitHeight : 0` is a **self-referencing binding** and trips
+  QML's loop detector on every re-layout (`TrayMenu` title row, fixed 2026-10-18).
+  A `Column`/`Row` does not position invisible items, so `visible` alone is enough.
 - `WlSessionLock.unlock()` is a private slot in 0.3.2 (verified in source) — unlock via
   `lock.locked = false`; `PamContext` does have `onPamMessage` (emitted after each message update).
 - `Item.mapToGlobal()` returns window-local coords on layer-shell (the client never

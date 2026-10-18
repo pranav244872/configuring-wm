@@ -71,19 +71,23 @@ StackView {
         }
 
         StyledText {
-            width: parent.width - 16
-            // Column still slots hidden items, so collapse their height too
-            height: visible ? implicitHeight : 0
+            // Fixed width, like the row delegates (214 + the Column's 2x8
+            // padding = the panel's 230).
+            width: 214
             text: menu.title.toUpperCase()
             font.pixelSize: Theme.frame.labelSize
             font.letterSpacing: Theme.frame.tracking
             color: Theme.colors.subtext
             elide: Text.ElideRight
+            // `visible` alone collapses the row: a Column does not position
+            // invisible items. The old `height: visible ? implicitHeight : 0`
+            // collapsed it by hand and tripped QML's binding-loop detector on
+            // every menu fetch.
             visible: !menu.isSubMenu && menu.title !== ""
         }
 
         Rectangle {
-            width: parent.width - 16
+            width: 214
             height: visible ? Theme.frame.line : 0
             color: Theme.colors.outline
             visible: !menu.isSubMenu && menu.title !== ""

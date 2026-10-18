@@ -88,8 +88,9 @@ rows and resets delegates **mid-typing**. So `rebuild()` only assigns when the
 SSID order actually changes, and never while a row is expanded (plasma-nm freezes
 its model the same way with `setDelayModelUpdates`). The passphrase text is owned
 by the section, not the delegate, so nothing can lose it; and NM deletes network
-objects when an AP disappears, so the row binds through a null-safe view
-(`n`) rather than the raw object.
+objects when an AP disappears, so the row reads through `n()` — a probe that
+catches the dead wrapper and falls back to an empty network
+(see [notes/quickshell.md](notes/quickshell.md#qml-and-api-traps-in-032)).
 
 Motion follows the theme tokens: rows fade their hover state, the expanded body
 animates height + opacity, and the rule under the header doubles as a scan track

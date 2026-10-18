@@ -136,5 +136,15 @@ different family and won't match). No rounding, no pills, no shadows.
     "the bar doesn't hide in fullscreen"; and it carries no `TrayMenuHost`, so tray
     right-click looks dead there. Both were reported as bugs while such a probe was live
     — keep probes temporary and delete them.
-  - `TrayMenu` logs a benign `Binding loop detected for property "height"` (its title row)
-    each time a menu opens — pre-existing, harmless, not yet chased.
+  - `TrayMenu`'s title row used to log `Binding loop detected for property "height"`
+    on every menu open (baseline: 1 warning per open, still in the live log as late as
+    2026-10-18). Cause: `height: visible ? implicitHeight : 0`, a self-referencing
+    binding. Fixed 2026-10-18 — a Column does not position invisible items, so
+    `visible` alone collapses the row (verified with an empty appTitle: no gap), and
+    the title + rule now use the delegates' fixed 214px width instead of `parent.width`.
+    Re-verified against a live Steam menu: 8 opens, 0 warnings, layout unchanged.
+    To reproduce at all you need a tray item: `steam -silent` provides one
+    (`busctl --user get-property org.kde.StatusNotifierWatcher
+    /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems`),
+    and a bench only receives it once the running shell's watcher has notified it —
+    with no tray app running there is nothing to test.
