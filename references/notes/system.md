@@ -22,6 +22,19 @@ Back to [notes index](README.md) - [docs index](../README.md)
   updates are incremental: `git pull` → `cmake --build ./build --config Release -j4`
   → `sudo cmake --install ./build`.
 
+## Cameras
+
+- Internal: USB `5986:2130` on `1-7` → `/dev/video0,1`. External: `0c45:6366` on
+  `1-4` → `video2,3`.
+- The EC camera switch (`…/VPC2004:00/camera_power`, the Fn+F8 key) is **inert on
+  this model**: writing 0/1 changes nothing and the read is stuck at 0. Do not
+  rely on it to disable the camera.
+- Hiding the internal camera from apps (reversible; a reboot or a USB
+  re-enumeration also restores it):
+  `sudo sh -c 'echo 1-7 > /sys/bus/usb/drivers/usb/unbind'`,
+  revert with `…/usb/bind`. Verified: `v4l2-ctl --list-devices` then shows only
+  the external camera and `1-7` has no driver symlink.
+
 ## Measuring speed
 
 - **`systemd-analyze time` / `blame` only measure up to `graphical.target`.**
