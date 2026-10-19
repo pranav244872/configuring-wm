@@ -19,7 +19,7 @@ Back to [docs index](../README.md)
 | [notifications.md](notifications.md) | our notification daemon: server capabilities, lifetime/DND/history policy, toast placement, the `ListModel`/`tracked` traps, live verification |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |
-| [packages.md](packages.md) | Arch merging `cargo` into `rust`, paru's stale PKGBUILD, makepkg without a TTY |
+| [packages.md](packages.md) | Arch merging `cargo` into `rust`, paru's stale PKGBUILD, makepkg without a TTY, and how git pushes were finally authenticated (`gh`, 2026-10-19) |
 | [system.md](system.md) | aborted pacman runs (`db.lck`, `download-*`), `/tmp` being wiped, rebuild workflow, Docker, measuring boot speed |
 | [launch-performance.md](launch-performance.md) | why Firefox/kitty launched slowly on the spinning disk, what was changed, and why zswap must stay off |
 | [cache.md](cache.md) | `paccache.timer`: the drop-in, why it exists, whether it slows boot, measured cache size |

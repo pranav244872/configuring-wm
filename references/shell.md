@@ -249,3 +249,8 @@ Each item also closes an entry in [qol/](qol/README.md) when adopted.
 - Config lives in `~/.config/quickshell/`; keep it small, commented, and driven by `qs -c <name>` configs rather than one giant file.
 - Every key-driven feature also gets a mouse path (user preference).
 - Quickshell autostarts at login (`autostart.lua`); `SUPER + SHIFT + O` restarts it.
+  Stop it with `qs kill` (there is no `-k` flag), restart with `qs -nd`.
+- **Work lands in the dotfiles repo**: the live config and these docs are mirrored
+  into `~/del/configuring-wm` (copied by hand, nothing syncs automatically) and
+  pushed to `github.com/pranav244872/configuring-wm` — `git push` works as-is
+  since 2026-10-19 (`gh` credentials, see [notes/packages.md](notes/packages.md#pushing-to-github)).

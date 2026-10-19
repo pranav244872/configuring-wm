@@ -25,11 +25,18 @@ Back to [preferences.md](preferences.md) - [docs index](README.md)
 
 ## Notifications
 
-- **No notification daemon** — `mako` was installed in step 1, then
-  **removed on 2026-10-15**: the user does not use notifications and nothing
-  else depended on it. Nothing autostarts a daemon, nothing reads
-  notifications. If a notification UI is ever wanted, build it with
-  `quickshell` rather than pulling a daemon back in.
+- **Our shell is the notification daemon** (built 2026-10-19) — see
+  [shell.md](shell.md) and [notes/notifications.md](notes/notifications.md). It
+  was not always so: `mako` was installed in step 1 and **removed on
+  2026-10-15** (the user did not use notifications then, and nothing else
+  depended on it), and for a while nothing owned
+  `org.freedesktop.Notifications` at all. `quickshell`'s `NotificationServer` now
+  takes the bus name, so **do not install a daemon back in**: no mako, dunst or
+  swaync, and no `libnotify` either.
+- Toasts are sent to us over plain D-Bus, which is also how they are tested:
+  `gdbus call --session --dest org.freedesktop.Notifications --object-path
+  /org/freedesktop/Notifications --method org.freedesktop.Notifications.Notify
+  "App" 0 "" "Summary" "Body" "[]" "{'urgency': <byte 2>}" 0` (no library needed).
 
 ## Desktop shell (quickshell)
 

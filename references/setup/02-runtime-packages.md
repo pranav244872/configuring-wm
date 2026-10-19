@@ -57,6 +57,20 @@ sudo pacman -S --needed grim slurp
 sudo pacman -S --needed ttf-jetbrains-mono
 ```
 
+## Added for GitHub pushes (2026-10-19)
+
+| Package | Version | What it's for |
+|---|---|---|
+| `github-cli` | 2.102.0-1 | `gh` — authenticates git pushes to the dotfiles repo (`~/del/configuring-wm` → `github.com/pranav244872/configuring-wm`), replacing the token-in-a-URL dance |
+
+```bash
+sudo pacman -S --needed github-cli
+gh auth login --hostname github.com --git-protocol https --web   # device code
+gh auth setup-git --hostname github.com
+```
+
+Details and the traps are in [notes/packages.md](../notes/packages.md#pushing-to-github).
+
 ## Notes for a fresh install
 
 - Audio (pipewire + wireplumber), polkit, mesa (GL/Vulkan), glib2 and fontconfig
@@ -69,7 +83,7 @@ sudo pacman -S --needed ttf-jetbrains-mono
 | Item | Why |
 |---|---|
 | `qt5-wayland` | No Qt5 apps installed yet |
-| `mako` | **Removed 2026-10-15** — user does not use notifications; nothing else depended on it. `quickshell` is the candidate if a notification UI is ever wanted |
+| `mako` | **Removed 2026-10-15** — user does not use notifications; nothing else depended on it. `quickshell` was the candidate if a notification UI was ever wanted, and that is now built: our own `NotificationServer` owns `org.freedesktop.Notifications` (2026-10-19, [shell.md](../shell.md)) — nothing to install, and no daemon to add back |
 | `xdg-desktop-portal-gtk` | Pulls gtk3 — add when the first GTK app arrives |
 | `uwsm` | User choice: launch directly from TTY |
 | pacman `hyprland` | Replaced by the fork source build (step 2) |
