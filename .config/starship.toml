@@ -1,172 +1,104 @@
 add_newline = false
-command_timeout = 2000
-scan_timeout = 5000
 
-# No literal spaces between optional modules — each module adds its own
-# leading space, so hidden modules don't leave big gaps (which pushed 4s far right).
-format = "$username$hostname$directory$git_branch$git_status$git_state$python$conda$mise$nodejs$rust$golang$java$docker_context$nix_shell$jobs$cmd_duration$line_break$character"
+format = """
+$cmd_duration $directory$git_branch
+  $character"""
 
 palette = 'custom'
 
 [palettes.custom]
-color1 = '#80d4dc'
-color2 = '#00363b'
-color3 = '#dee4e4'
-color4 = '#80d4dc'
-color5 = '#00363b'
-color6 = '#002022'
-color7 = '#80d4dc'
-color8 = '#80d4dc'
-color9 = '#b7c7ea'
+color1 = '#ffb4aa'
+color2 = '#690003'
+color3 = '#f6ddd9'
+color4 = '#ffb4aa'
+color5 = '#690003'
+color6 = '#410001'
+color7 = '#ffb4aa'
+color8 = '#ffb4aa'
+color9 = '#f8bc5c'
+
+[fill]
+symbol = '-'
+style = 'fg:color3'
 
 [character]
-success_symbol = "[❯](bold fg:color3)"
-error_symbol = "[✗](bold fg:color9)"
+success_symbol = "[ ](bold fg:color3)"
+error_symbol = "[ ](bold fg:color9)"
 
 [package]
 disabled = true
 
-[username]
-style_user = "bold bg:color4 fg:color6"
-style_root = "red bold"
-format = "[](bold fg:color4)[ $user@]($style)"
-disabled = false
-show_always = true
-
-[hostname]
-ssh_only = false
-style = "bg:color4 bold fg:color6"
-format = "[$hostname ]($style)[](bold fg:color4)"
-trim_at = ".companyname.com"
-disabled = false
-
-[directory]
-home_symbol = "~"
-read_only = " 🔒"
-style = "bg:color9 fg:color2"
-truncation_length = 3
-truncation_symbol = "…/"
-# leading space = gap between pills; only rendered when module shows
-format = ' [](bold fg:color9)[ $path$read_only ]($style)[](bold fg:color9)'
-
-[directory.substitutions]
-"Desktop" = " 🖥 "
-"Documents" = " 📄 "
-"Downloads" = " 📥 "
-"Music" = " 🎵 "
-"Pictures" = " 🖼 "
-"Videos" = " 🎬 "
-"GitHub" = " 🐙 "
-
 [git_branch]
-style = "bg:color2 fg:color3"
-symbol = " "
-truncation_length = 24
-truncation_symbol = "…"
-# distinct dark pill so it doesn't blend into the cyan/lavender ones
-format = ' [](bold fg:color2)[ $symbol$branch ]($style)[](bold fg:color2)'
+style = "bg:color4"
+symbol = "󰘬"
+truncation_length = 12
+truncation_symbol = ""
+format = " 󰜥 [](bold fg:color4)[$symbol $branch(:$remote_branch)](fg:color6 bg:color4)[](bold fg:color4)"
 
 [git_commit]
 commit_hash_length = 4
-tag_symbol = "  "
+tag_symbol = " "
 
 [git_state]
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
-cherry_pick = "[󰞣 PICKING](bold red)"
+cherry_pick = "[🍒 PICKING](bold red)"
 
 [git_status]
-# minimal symbols, no emoji — sits AFTER the branch pill as plain text
-style = "bold fg:color9"
-conflicted = "=:"
-ahead = "⇡"
-behind = "⇣"
-diverged = "⇕"
-untracked = "?"
-stashed = '\$'
-modified = "!"
-staged = "+"
-renamed = "»"
-deleted = "✘"
-format = ' [$all_status$ahead_behind]($style)'
+conflicted = " 🏳 "
+ahead = " 🏎💨 "
+behind = " 😰 "
+diverged = " 😵 "
+untracked = " 🤷 ‍"
+stashed = " 📦 "
+modified = " 📝 "
+staged = '[++\($count\)](green)'
+renamed = " ✍️ "
+deleted = " 🗑 "
+
+[hostname]
+ssh_only = false
+format =  "[•$hostname](bg:color4 bold fg:color6)[](bold fg:color4)"
+trim_at = ".companyname.com"
+disabled = false
 
 [line_break]
 disabled = false
 
 [memory_usage]
 disabled = true
+threshold = -1
+symbol = " "
+style = "bold dimmed green"
 
 [time]
 disabled = true
+format = '🕙[\[ $time \]]($style) '
+time_format = "%T"
 
-# ---------- dev / env awareness (subtle `via` text, not pill spam) ----------
+[username]
+style_user = "bold bg:color4 fg:color6"
+style_root = "red bold"
+format = "[](bold fg:color4)[$user]($style)"
+disabled = false
+show_always = true
 
-[python]
-symbol = "🐍 "
-style = "fg:color9"
-pyenv_version_name = false
-format = ' via [$symbol$version(\($virtualenv\))]($style)'
+[directory]
+home_symbol = " "
+read_only = "  "
+style = "bg:color7 fg:color6"
+truncation_length = 2
+truncation_symbol = ".../"
+format = '[](bold fg:color7)[󰉋 → $path]($style)[](bold fg:color7)'
 
-[conda]
-symbol = "🅒 "
-style = "fg:color9"
-ignore_base = true
-format = ' via [$symbol$environment]($style)'
-
-[mise]
-symbol = "mise "
-style = "fg:color9"
-format = ' via [$symbol$health]($style)'
-detect_files = ["mise.toml", "mise.local.toml", ".mise.toml", ".mise.local.toml", "mise.*.toml"]
-
-[nodejs]
-symbol = " "
-style = "fg:color9"
-version_format = "v${raw}"
-format = ' via [$symbol$version]($style)'
-
-[rust]
-symbol = " "
-style = "fg:color9"
-version_format = "v${raw}"
-format = ' via [$symbol$version]($style)'
-
-[golang]
-symbol = " "
-style = "fg:color9"
-version_format = "v${raw}"
-format = ' via [$symbol$version]($style)'
-
-[java]
-symbol = " "
-style = "fg:color9"
-version_format = "v${raw}"
-format = ' via [$symbol$version]($style)'
-
-[docker_context]
-symbol = " "
-style = "fg:color9"
-format = ' via [$symbol$context]($style)'
-only_with_files = true
-
-[nix_shell]
-symbol = " "
-style = "fg:color9"
-format = ' via [$symbol$state]($style)'
-
-[jobs]
-symbol = "✦ "
-style = "bold fg:color9"
-format = ' [$symbol$number]($style)'
+[directory.substitutions]
+"Desktop" = "  "
+"Documents" = "  "
+"Downloads" = "  "
+"Music" = " 󰎈 "
+"Pictures" = "  "
+"Videos" = "  "
+"GitHub" = " 󰊤 "
 
 [cmd_duration]
-min_time = 2000
-min_time_to_notify = 45000
-style = "fg:color9"
-format = ' took [$duration]($style)'
-show_notifications = false
-
-[sudo]
-disabled = true
-
-[status]
-disabled = true
+min_time = 0
+format = '[](bold fg:color4)[󰪢 $duration](bold bg:color4 fg:color6)[](bold fg:color4)'

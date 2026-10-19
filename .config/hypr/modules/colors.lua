@@ -1,107 +1,104 @@
--- Material colour palette (teal) generated from the old wallpaper.
--- Used by modules.decorations for window borders; also available for future
--- rice modules (waybar, rofi, mako, ...).
-
 return {
-    image = "/home/pranav/Pictures/Wallpapers/5.png",
+    image = "/home/pranav/Pictures/Wallpapers/wallhaven-1q83qg_1920x1080.png",
 
-    background = "0xff0e1415",
+    background = "0xff1d100f",
 
     error = "0xffffb4ab",
 
     error_container = "0xff93000a",
 
-    inverse_on_surface = "0xff2b3232",
+    inverse_on_surface = "0xff3c2d2b",
 
-    inverse_primary = "0xff006970",
+    inverse_primary = "0xffaf2f26",
 
-    inverse_surface = "0xffdee4e4",
+    inverse_surface = "0xfff6ddd9",
 
-    on_background = "0xffdee4e4",
+    on_background = "0xfff6ddd9",
 
     on_error = "0xff690005",
 
     on_error_container = "0xffffdad6",
 
-    on_primary = "0xff00363b",
+    on_primary = "0xff690003",
 
-    on_primary_container = "0xff9df0f9",
+    on_primary_container = "0xffffffff",
 
-    on_primary_fixed = "0xff002022",
+    on_primary_fixed = "0xff410001",
 
-    on_primary_fixed_variant = "0xff004f55",
+    on_primary_fixed_variant = "0xff8d1511",
 
-    on_secondary = "0xff1b3437",
+    on_secondary = "0xff571d17",
 
-    on_secondary_container = "0xffcce8ea",
+    on_secondary_container = "0xffffdcd7",
 
-    on_secondary_fixed = "0xff051f22",
+    on_secondary_fixed = "0xff3b0805",
 
-    on_secondary_fixed_variant = "0xff324b4d",
+    on_secondary_fixed_variant = "0xff74332b",
 
-    on_surface = "0xffdee4e4",
+    on_surface = "0xfff6ddd9",
 
-    on_surface_variant = "0xffbec8c9",
+    on_surface_variant = "0xffe1bfba",
 
-    on_tertiary = "0xff21304c",
+    on_tertiary = "0xff442c00",
 
-    on_tertiary_container = "0xffd7e2ff",
+    on_tertiary_container = "0xffffffff",
 
-    on_tertiary_fixed = "0xff0b1b36",
+    on_tertiary_fixed = "0xff281800",
 
-    on_tertiary_fixed_variant = "0xff384764",
+    on_tertiary_fixed_variant = "0xff614000",
 
-    outline = "0xff899393",
+    outline = "0xffa88a86",
 
-    outline_variant = "0xff3f4849",
+    outline_variant = "0xff59413e",
 
-    primary = "0xff80d4dc",
+    primary = "0xffffb4aa",
 
-    primary_container = "0xff004f55",
+    primary_container = "0xffc13c31",
 
-    primary_fixed = "0xff9df0f9",
+    primary_fixed = "0xffffdad5",
 
-    primary_fixed_dim = "0xff80d4dc",
+    primary_fixed_dim = "0xffffb4aa",
 
     scrim = "0xff000000",
 
-    secondary = "0xffb1cbce",
+    secondary = "0xffffb4aa",
 
-    secondary_container = "0xff324b4d",
+    secondary_container = "0xff77352d",
 
-    secondary_fixed = "0xffcce8ea",
+    secondary_fixed = "0xffffdad5",
 
-    secondary_fixed_dim = "0xffb1cbce",
+    secondary_fixed_dim = "0xffffb4aa",
 
     shadow = "0xff000000",
 
-    source_color = "0xff03b4c0",
+    source_color = "0xffc13c31",
 
-    surface = "0xff0e1415",
+    surface = "0xff1d100f",
 
-    surface_bright = "0xff343a3b",
+    surface_bright = "0xff453533",
 
-    surface_container = "0xff1a2121",
+    surface_container = "0xff2a1c1a",
 
-    surface_container_high = "0xff252b2c",
+    surface_container_high = "0xff352625",
 
-    surface_container_highest = "0xff303637",
+    surface_container_highest = "0xff41312f",
 
-    surface_container_low = "0xff161d1d",
+    surface_container_low = "0xff251817",
 
-    surface_container_lowest = "0xff090f10",
+    surface_container_lowest = "0xff170b0a",
 
-    surface_dim = "0xff0e1415",
+    surface_dim = "0xff1d100f",
 
-    surface_tint = "0xff80d4dc",
+    surface_tint = "0xffffb4aa",
 
-    surface_variant = "0xff3f4849",
+    surface_variant = "0xff59413e",
 
-    tertiary = "0xffb7c7ea",
+    tertiary = "0xfff8bc5c",
 
-    tertiary_container = "0xff384764",
+    tertiary_container = "0xff916200",
 
-    tertiary_fixed = "0xffd7e2ff",
+    tertiary_fixed = "0xffffddb0",
 
-    tertiary_fixed_dim = "0xffb7c7ea",
+    tertiary_fixed_dim = "0xfff8bc5c",
+
 }

@@ -85,10 +85,26 @@ Details and the traps are in [notes/packages.md](../notes/packages.md#pushing-to
 sudo pacman -S --needed neovim fzf tree-sitter-cli unzip fd
 ```
 
-Not installed on purpose: `matugen` (the config *watches* a committed JSON, so
-the binary is only needed to regenerate colours from a wallpaper) and
-`python-pip` (mason builds its own venv). Bootstrap + traps:
+Not installed on purpose: `python-pip` (mason builds its own venv). Bootstrap + traps:
 [notes/neovim.md](../notes/neovim.md).
+
+## Added for dynamic colours (2026-10-19)
+
+| Package | Version | What it's for |
+|---|---|---|
+| `matugen` | 4.2.0-1 | wallpaper → Material-3 palette for the shell, Hyprland, kitty, nvim, GTK and qt6ct |
+| `adw-gtk-theme` | 6.5-1 | `adw-gtk3-dark` — the GTK3 theme that consumes the named colours matugen writes |
+| `qt6ct` | 0.11-9 | Qt6 platform theme, selected with `QT_QPA_PLATFORMTHEME=qt6ct` |
+
+```bash
+sudo pacman -S --needed matugen adw-gtk-theme qt6ct
+gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-dark
+gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+```
+
+The pipeline, role mapping, per-consumer reloads and what GTK/Qt actually honour:
+[notes/matugen.md](../notes/matugen.md). The environment side is
+[notes/environment.md](../notes/environment.md).
 
 ## Notes for a fresh install
 
@@ -106,6 +122,6 @@ the binary is only needed to regenerate colours from a wallpaper) and
 | `xdg-desktop-portal-gtk` | Pulls gtk3 — add when the first GTK app arrives |
 | `uwsm` | User choice: launch directly from TTY |
 | pacman `hyprland` | Replaced by the fork source build (step 2) |
-| waybar / rofi / hyprpaper / hyprlock / hypridle | Rice phase — step 4 |
+| waybar / rofi / hyprpaper / hyprlock / hypridle | Replaced by the shell itself (bar, picker, wallpaper background, lock) — see [shell.md](../shell.md) |
 | grim+slurp | Installed 2026-10-16 as capture plumbing (own quickshell screenshot UI, not hyprshot) |
 | SDDM or any display manager | TTY launch = fewer services, faster boot |

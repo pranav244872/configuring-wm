@@ -4,7 +4,7 @@ How this machine gets and keeps its packages: pacman settings and the AUR
 helper. The `paccache` trim timer is documented separately in
 [notes/cache.md](notes/cache.md).
 
-Last updated: 2026-10-18
+Last updated: 2026-10-19
 
 ## Packages installed for this setup (explicit `pacman -S` args only)
 
@@ -31,6 +31,9 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `tree-sitter-cli` | `nvim-treesitter` **main** compiles parsers with it (>= 0.26.1, not the npm one) | 2026-10-19 |
 | `unzip` | mason requirement — clangd ships as a `.zip`, lua-language-server as `.tar.gz` | 2026-10-19 |
 | `fd` | the config passes `fd_opts` for the file picker; without it fzf-lua falls back to rg/find silently | 2026-10-19 |
+| `matugen` | wallpaper-derived Material 3 palette for the shell, Hyprland, kitty, nvim, GTK and qt6ct — see [notes/matugen.md](notes/matugen.md) | 2026-10-19 |
+| `adw-gtk-theme` | `adw-gtk3-dark`: the GTK3 theme that consumes the named colours matugen writes | 2026-10-19 |
+| `qt6ct` | Qt6 platform theme (`QT_QPA_PLATFORMTHEME=qt6ct`) applying the dark matugen palette | 2026-10-19 |
 
 ```bash
 # quickshell UI fonts and application icons

@@ -1,0 +1,4 @@
+{
+  "image": "{{image}}",<* for name, color in colors *>
+  "{{ name }}": "{{ color.default.hex }}"<* if {{ loop.last }} *><* else *>,<* endif *><* endfor *>
+}

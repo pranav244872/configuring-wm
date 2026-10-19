@@ -1,3 +1,21 @@
+# matugen config — wallpaper-derived Material 3 colours for the whole desktop.
+#
+# Triggered by the shell: WallpaperService.apply() -> `matugen image <path>`
+# (see ~/.config/quickshell, module `Scheme`). Run it by hand the same way:
+#   matugen image ~/Pictures/Wallpapers/<file> --type scheme-content --prefer darkness
+#
+# Outputs are the *live* paths this machine's configs already point at:
+#   hyprland -> ~/.config/hypr/modules/colors.lua   (hyprland.lua: colors = require("modules.colors"))
+#   kitty    -> ~/.config/kitty/colors.conf         (kitty.conf: include colors.conf)
+#   neovim   -> ~/.config/nvim/matugen-colors.json  (daedlock/matugen.nvim watches it)
+#
+# Dropped from the old configuring-wm set (no consumer on this machine any more,
+# all replaced by our quickshell UI): waybar, rofi, mako, swayosd, hyprlock, and
+# the base16 `neovim-colors.lua` -> matugen.lua that nothing required.
+#
+# btop, qt6ct and starship are generated for completeness (they were in the old
+# set) but those apps are not installed here yet — the files are inert until then.
+
 [config]
 mode = "dark"
 contrast = 0.0
@@ -5,56 +23,42 @@ contrast = 0.0
 [templates.hyprland]
 input_path = "~/.config/matugen/templates/hyprland-colors.lua"
 output_path = "~/.config/hypr/modules/colors.lua"
-
-[templates.hyprlock]
-input_path = "~/.config/matugen/templates/hyprland-colors.conf"
-output_path = "~/.config/hypr/colors-hyprlock.conf"
+# The compositor only re-reads its config on a reload; verified that a reload
+# picks the new colours up and does not duplicate the shell (autostart uses
+# hl.on("hyprland.start"), which does not fire again).
+post_hook = "hyprctl reload"
 
 [templates.kitty]
 input_path = "~/.config/matugen/templates/kitty-colors.conf"
 output_path = "~/.config/kitty/colors.conf"
+post_hook = "pkill -SIGUSR1 -x kitty"
 
-[templates.waybar]
-input_path = "~/.config/matugen/templates/colors.css"
-output_path = "~/.config/waybar/colors.css"
-post_hook = "bash -c 'pkill -x waybar 2>/dev/null; nohup waybar >/dev/null 2>&1 &'"
+[templates.neovim]
+input_path = "~/.config/matugen/templates/nvim-colors.json"
+output_path = "~/.config/nvim/matugen-colors.json"
 
-[templates.rofi]
-input_path = "~/.config/matugen/templates/rofi-colors.rasi"
-output_path = "~/.config/rofi/colors/matugen.rasi"
-post_hook = "bash -c 'pkill -x waybar 2>/dev/null; nohup waybar >/dev/null 2>&1 &'"
-[templates.mako]
-input_path = "~/.config/matugen/templates/mako-colors"
-output_path = "~/del/configuring-wm/.config/mako/colors"
-post_hook = "makoctl reload 2>/dev/null || true"
+[templates.quickshell]
+input_path = "~/.config/matugen/templates/quickshell-colors.json"
+output_path = "~/.config/quickshell/colors.json"
+
+[templates.gtk]
+# One canonical file; ~/.config/gtk-{3,4}.0/gtk.css are symlinks to it (the
+# adw-gtk3-dark GTK3 theme and libadwaita both read these named colours).
+input_path = "~/.config/matugen/templates/gtk-colors.css"
+output_path = "~/.config/gtk/gtk.css"
+
+[templates.qtct]
+input_path = "~/.config/matugen/templates/qtct-colors.conf"
+output_path = "~/.config/qt6ct/colors/matugen.conf"
+
+[templates.btop]
+input_path = "~/.config/matugen/templates/btop-colors.theme"
+output_path = "~/.config/btop/themes/matugen.theme"
+
+[templates.starship]
+input_path = "~/.config/matugen/templates/starship-colors.toml"
+output_path = "~/.config/starship.toml"
 
 [templates.opencode]
 input_path = "~/.config/matugen/templates/opencode-colors.json"
 output_path = "~/.config/opencode/themes/matugen.json"
-
-[templates.gtk]
-input_path = "~/.config/matugen/templates/gtk-colors.css"
-output_path = "~/del/configuring-wm/.config/gtk/gtk.css"
-
-[templates.starship]
-input_path = "~/.config/matugen/templates/starship-colors.toml"
-output_path = "~/del/configuring-wm/.config/starship.toml"
-
-[templates.neovim]
-input_path = "~/.config/matugen/templates/neovim-colors.lua"
-output_path = "~/del/configuring-wm/.config/nvim/matugen.lua"
-post_hook = "pkill -SIGUSR1 nvim 2>/dev/null; true"
-
-[templates.btop]
-input_path = "~/.config/matugen/templates/btop-colors.theme"
-output_path = "~/del/configuring-wm/.config/btop/themes/matugen.theme"
-
-[templates.qtct]
-input_path = "~/.config/matugen/templates/qtct-colors.conf"
-output_path = "~/del/configuring-wm/.config/qt6ct/colors/matugen.conf"
-
-[templates.swayosd]
-input_path = "~/.config/matugen/templates/swayosd-colors.css"
-output_path = "~/.config/swayosd/style.css"
-post_hook = "systemctl --user restart swayosd-server 2>/dev/null; true"
-

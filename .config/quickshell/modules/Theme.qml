@@ -2,7 +2,7 @@
 //
 // THE design system for our own quickshell UI.
 //
-//   palette      raw Material-3 roles  <- the only place hex codes live
+//   palette      raw Material-3 roles  <- wallpaper-derived, hex is the fallback
 //   colors       semantic roles        <- computed from palette (ColorUtils)
 //   rounding     corner radius scale
 //   font         families + sizes
@@ -10,12 +10,15 @@
 //   animation    motion tokens (durations + curves, our own fast values)
 //   transparency surface opacity knobs (static for now, hook for dynamic later)
 //
-// The palette is seeded from the Material/teal scheme already used by Hyprland
-// (~/.config/hypr/modules/colors.lua) and kitty, so every UI piece matches.
+// The palette follows the wallpaper now: Scheme.qml reads the matugen output
+// (~/.config/quickshell/colors.json) and every role below asks it for that
+// role. The same roles feed Hyprland (~/.config/hypr/modules/colors.lua) and
+// kitty, so every UI piece matches.
 //
-// Swapping the theme later (wallpaper-derived colours, a second palette, a
-// generator like matugen) means replacing the values in `palette` only -
-// components consume the semantic `colors` and never a hex code.
+// The hex literals are the built-in fallback, used until the first palette has
+// been generated (or if the file is missing). Components consume the semantic
+// `colors` and never a hex code, which is what lets a wallpaper switch repaint
+// the whole UI without touching a single component.
 //
 // Structure follows end-4/dots-hyprland's Appearance.qml.
 
@@ -28,29 +31,34 @@ QtObject {
     id: theme
 
     // ============================================================== palette
+    // Raw Material-3 roles, one per role named by matugen (snake_case). Each
+    // line reads the live palette and keeps the old static teal value as the
+    // fallback, so the shell looks right even before anything is generated.
     readonly property QtObject palette: QtObject {
-        readonly property color background:          "#0e1415"
-        readonly property color surface:             "#1a2121"
-        readonly property color surfaceLowest:       "#090f10"
-        readonly property color surfaceLow:          "#161d1d"
-        readonly property color surfaceContainer:   "#1a2121"
-        readonly property color surfaceHigh:         "#252b2c"
-        readonly property color surfaceHighest:      "#303637"
-        readonly property color fgSurface:           "#dee4e4"
-        readonly property color fgSurfaceVariant:    "#bec8c9"
-        readonly property color outline:             "#899393"
-        readonly property color outlineVariant:      "#3f4849"
-        readonly property color primary:             "#80d4dc"
-        readonly property color fgPrimary:            "#00363b"
-        readonly property color primaryContainer:    "#004f55"
-        readonly property color fgPrimaryContainer:  "#9df0f9"
-        readonly property color secondary:           "#b1cbce"
-        readonly property color secondaryContainer:  "#324b4d"
-        readonly property color tertiary:            "#b7c7ea"
-        readonly property color error:               "#ffb4ab"
-        readonly property color errorFg:            "#690005"
-        readonly property color shadow:              "#000000"
-        readonly property color scrim:               "#000000"
+        readonly property color background:          Scheme.color("background", "#0e1415")
+        // surface mirrors surfaceContainer on purpose: in the old static scheme
+        // they were the same lifted surface (#1a2121), not M3's base surface.
+        readonly property color surface:             Scheme.color("surface_container", "#1a2121")
+        readonly property color surfaceLowest:       Scheme.color("surface_container_lowest", "#090f10")
+        readonly property color surfaceLow:          Scheme.color("surface_container_low", "#161d1d")
+        readonly property color surfaceContainer:    Scheme.color("surface_container", "#1a2121")
+        readonly property color surfaceHigh:         Scheme.color("surface_container_high", "#252b2c")
+        readonly property color surfaceHighest:      Scheme.color("surface_container_highest", "#303637")
+        readonly property color fgSurface:           Scheme.color("on_surface", "#dee4e4")
+        readonly property color fgSurfaceVariant:    Scheme.color("on_surface_variant", "#bec8c9")
+        readonly property color outline:             Scheme.color("outline", "#899393")
+        readonly property color outlineVariant:      Scheme.color("outline_variant", "#3f4849")
+        readonly property color primary:             Scheme.color("primary", "#80d4dc")
+        readonly property color fgPrimary:           Scheme.color("on_primary", "#00363b")
+        readonly property color primaryContainer:    Scheme.color("primary_container", "#004f55")
+        readonly property color fgPrimaryContainer:  Scheme.color("on_primary_container", "#9df0f9")
+        readonly property color secondary:           Scheme.color("secondary", "#b1cbce")
+        readonly property color secondaryContainer:  Scheme.color("secondary_container", "#324b4d")
+        readonly property color tertiary:            Scheme.color("tertiary", "#b7c7ea")
+        readonly property color error:               Scheme.color("error", "#ffb4ab")
+        readonly property color errorFg:             Scheme.color("on_error", "#690005")
+        readonly property color shadow:              Scheme.color("shadow", "#000000")
+        readonly property color scrim:               Scheme.color("scrim", "#000000")
     }
 
     // ============================================================== colors

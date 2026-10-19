@@ -66,6 +66,25 @@ PanelWindow {
         }
     }
 
+    // Colours follow the wallpaper: Scheme regenerates the matugen palette when
+    // the image changes. It reads the palette on disk at startup, so nothing is
+    // regenerated when it is already current.
+    function followWallpaper() {
+        if (WallpaperService.mock)
+            return; // a bench drives `current` itself; never generate from it
+        Scheme.sync(WallpaperService.current);
+    }
+
+    Connections {
+        target: WallpaperService
+
+        function onCurrentChanged() {
+            host.followWallpaper();
+        }
+    }
+
+    Component.onCompleted: host.followWallpaper()
+
     FocusScope {
         id: windowScope
         anchors.fill: parent

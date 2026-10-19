@@ -9,6 +9,7 @@ Back to [docs index](../README.md)
 | File | Covers |
 |---|---|
 | [hyprland.md](hyprland.md) | animation speed units, `debug.vfr`, fullscreen enum, `no_screen_share`, Lua `require` behaviour |
+| [environment.md](environment.md) | the single env source (`hypr/modules/env.lua`): what is essential vs redundant here (Qt6/SDL/Firefox/iHD evidence, the Hyprland `getenv` set), and the reload-vs-login trap for removed vars |
 | [validation.md](validation.md) | how to validate Hyprland Lua, kitty, mpv and quickshell before restarting anything |
 | [quickshell.md](quickshell.md) | QML/API traps in 0.3.2 (singletons, `on*` names, `Behavior`, `PanelWindow`, `IpcHandler`, `Process`, PipeWire, `WlSessionLock.locked` notifying only on lock), the `opacity: 0` input trap and the `mask` fix |
 | [shell-ui.md](shell-ui.md) | building our own UI: bar/launcher flares and stroke insets, the Chaldea frame language, motion + selection rows, escape/focus grabbing, bar tooltips |
@@ -20,6 +21,7 @@ Back to [docs index](../README.md)
 | [notifications.md](notifications.md) | our notification daemon: server capabilities, lifetime/DND/history policy, toast placement, the `ListModel`/`tracked` traps, live verification |
 | [dashboard.md](dashboard.md) | the bottom sheet: tab row design, tab-gated wifi scanning (proved with NM's `LastScan`), tab movement (mouse/keyboard/IPC), full-width history rows, and the ✕ bug that had two independent causes |
 | [wallpaper.md](wallpaper.md) | the wallpaper drawn by the shell (background layer, decode-then-flip crossfade) and the picker carousel: `StrictlyEnforceRange` strip, wrap, click-to-apply, the `contentX` dimming bug, the `FolderListModel` adopt gate, why the lock screen draws its own copy |
+| [matugen.md](matugen.md) | wallpaper → matugen → every consumer: the trigger chain, template→output map, Theme role mapping, the live shell binding, per-consumer reloads, and what GTK/Qt actually honour |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |
 | [neovim.md](neovim.md) | editor bootstrap and traps: `vim.pack` lockfile vs `vim.pack.add` (installed-but-inert plugins), `pcall(require,…)` hiding a missing plugin, treesitter `main` needing the CLI + a compiler, mason pypi needing no `python-pip`, why the `matugen` binary isn't needed, and driving a live nvim over its socket to verify the UI |
