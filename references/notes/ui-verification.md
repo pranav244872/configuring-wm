@@ -61,10 +61,10 @@ as `w`, hit no bind, and the keybind was written off as broken (2026-10-19).
   an unknown name fails **loudly** (`unknown key in combo: meta+s`). Do not pipe
   the injector's stderr to `/dev/null` while using it — that is how a bad combo
   reads as "the bind does not work".
-- Prove the *modifier* path separately from the bind: a multi-key combo on a
-  bind you have already seen work, or an idle 1:1 check like
-  `super + s` (toggles the `magic` scratchpad), before blaming the new bind in
-  `keybinds.lua`.
+- Prove the *modifier* path separately from the bind, but only with a key that
+  is actually mapped: a combo's letter must exist in `KEYS` (add it if the probe
+  needs it). `meta+s` cannot work, so "the modifier is broken" is the wrong
+  conclusion to draw from it.
 - Verified this way on 2026-10-19: `SUPER + SHIFT + W` opens the wallpaper
   picker, and `Escape` closes it.
 
