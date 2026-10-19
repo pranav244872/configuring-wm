@@ -61,7 +61,7 @@
 | `modules/widgets/Spinner.qml` | loading spinner: eight square dots chasing, snapped to whole pixels (rotating a glyph pixelates — `StyledText` uses `Text.NativeRendering`) |
 | `modules/widgets/SignalBars.qml` | four-bar signal meter (rectangles, crisp at 16-20px) used by the network rows |
 
-Run: autostarted at login (`qs -n`) · stop: `qs -k` · restart: `SUPER + SHIFT + O`.
+Run: autostarted at login (`qs -n`) · stop: `qs kill` · restart: `SUPER + SHIFT + O`.
 `SUPER + F` toggles launcher, `PRINT` toggles screenshots.
 
 **Keep-awake (caffeine)** — the coffee button at the right of the bar toggles a

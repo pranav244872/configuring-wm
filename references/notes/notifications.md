@@ -89,8 +89,10 @@ normal toast (count unchanged, history +1) while a critical one from `gdbus`
 punched through; `replaces_id` rewrote the card in place (one toast, countdown
 restarted); a burst of five left four on screen; the `default` action emitted
 `ActionInvoked` (seen with `dbus-monitor`) and dismissed the toast; the DND file
-round-tripped `{"dnd":true}` → `{"dnd":false}`. Dashboard rows render the archived
-text (screenshot). Card states + both bar states are in `preview_notifications`.
+round-tripped `{"dnd":true}` → `{"dnd":false}`, and a **real restart**
+(`qs kill` + `qs -nd`) came back up hydrated (DND still on) with no errors and
+toasts working. Dashboard rows render the archived text (screenshot). Card states
++ both bar states are in `preview_notifications`.
 
 Not scriptable: **hover pauses the countdown** — `hyprctl dispatch movecursor`
 produces no motion/enter event for Qt (see [shell-ui.md](shell-ui.md)), so that

@@ -105,7 +105,8 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
 **IPC & CLI**
 
 - `IpcHandler` functions must declare argument and return types: `function fn(): void`.
-- `qs` = run default config, `-n` = single instance, `-c <name>` / `-p <path>`, `-k` = kill.
+- `qs` = run default config, `-n` = single instance, `-d` = daemonize, `-c <name>` / `-p <path>`.
+  **`qs -k` does not exist in 0.3.2** — kill with the subcommand (`qs kill`, `qs list`, `qs log`, `qs ipc`).
 
 ## Launcher (0.3.2)
 
