@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
 
 ## What exists today
 
@@ -44,6 +44,7 @@
 | `modules/screenshot/ScreenshotEditor.qml` | floating window: titlebar move, SE resize (aspect-locked), status bar |
 | `modules/screenshot/AnnotationToolbar.qml` | reselect / pen+text / swatches+width menu / undo+redo / save+copy+discard pill |
 | `modules/calendar/` (`CalendarWidget`, `CalendarCard`, `calendar_layout.js`) | desktop month window: background layer, click-through mask, drag anywhere, Monday-first grid |
+| `modules/cp_tracker/` (`CpTrackerWidget`, `CpTrackerCard`) | desktop CP tracker card (Codeforces/AtCoder ratings + contest schedule) on the background layer, draggable, 15-minute polls — **built by another agent**, see [notes/cp-tracker.md](notes/cp-tracker.md) |
 | `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
 | `modules/bar/BarNetwork.qml` | signal meter at rest; tooltip on 300ms hover (SSID · strength · security · IP) 6px under the bar; click opens the dashboard. Native `Quickshell.Networking`, IP from a one-shot `ip` |
@@ -188,6 +189,7 @@ qs -p ~/.config/quickshell/preview_lock.qml # → /tmp/opencode/preview_lock.png
 | `preview_white.qml` | 960×560 mock screen: bar, launcher drawer (real Papirus icons, frequency-sorted), OSD — with marked screen boundary | frame language check, overall trip |
 | `preview_screenshot.qml` | floating editor + toolbar with mock strokes/texts (no capture) | pen rendering, toolbar layout |
 | `preview_calendar.qml` | desktop calendar card on dark bg | grid math, today pill, chrome |
+| `preview_cp_tracker.qml` | CP tracker card on a dark plate (third-party widget) | ratings blocks, featured countdown, schedule list |
 | `preview_lock.qml` | the formation card in typing + failed states over the real lock backdrop (wallpaper, blurred + scrimmed) | card visuals, auth states, the lock's background |
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
 | `preview_dashboard.qml` | both dashboard tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
