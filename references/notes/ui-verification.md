@@ -57,7 +57,8 @@ as `w`, hit no bind, and the keybind was written off as broken (2026-10-19).
 `MODS` values must be declared too.
 
 - The `KEYS`/`MODS` maps hold only what verification needed
-  (`escape`/`enter`/`←`/`→`/`↑`/`↓`/`tab`/`w`, and the left-hand modifiers), and
+  (`escape`/`enter`/`←`/`→`/`↑`/`↓`/`tab`/`w`/`f`/`r`, and the left-hand
+  modifiers — `f`/`r` were added for the screenshot selector's mode keys), and
   an unknown name fails **loudly** (`unknown key in combo: meta+s`). Do not pipe
   the injector's stderr to `/dev/null` while using it — that is how a bad combo
   reads as "the bind does not work".

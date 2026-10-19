@@ -47,6 +47,9 @@ KEYS = {
     "down": 108,
     "tab": 15,
     "w": 17,
+    # the screenshot selector's mode keys (f full / r region / w window)
+    "f": 33,
+    "r": 19,
 }
 
 # Modifiers for --combo (LEFT variants: our keybinds use SUPER == left meta).

@@ -134,8 +134,10 @@ while a session lock is up — so the hot zones are the only leak.
   `g_pSessionLockManager->isSessionLocked()` (`SessionLockManager.cpp:143` →
   `PROTO::sessionLock->isLocked()`). Needs a rebuild + a Hyprland restart.
 - What we do instead (no rebuild): `modules/lock/LockState.qml` is set by the
-  lock host's `engage()`/`disengage()`, and the three hosts refuse to open while
-  it is set, and close themselves when a lock starts.
+  lock host's `engage()`/`disengage()` — *and* by the password unlock path, which
+  bypassed it on 2026-10-19 and left every guarded host refusing to open — with a
+  1 s backstop timer re-syncing it from `sessionLock.locked`. The three hosts
+  refuse to open while it is set, and close themselves when a lock starts.
 - Either way, test it by locking and then driving each zone with injected
   motion; watch for a sheet that opens behind the card.
 

@@ -22,7 +22,10 @@ Scope {
 
     LockAuth {
         id: authState
-        onUnlocked: sessionLock.locked = false
+        // The password path unlocks directly — route it through disengage() too,
+        // or LockState stays set (that bug shut every guarded surface on
+        // 2026-10-19 until the shell was restarted).
+        onUnlocked: host.disengage()
     }
 
     IdleService {
@@ -53,12 +56,11 @@ Scope {
         }
     }
 
-    // Every lock/unlock path in the shell goes through these two (idle, the
-    // Fn+F9 bind via IPC, `qs ipc call lock`), so they are the source of truth
-    // for LockState. It is set here rather than from a `lockedChanged` signal:
-    // 0.3.2's WlSessionLock does not notify `locked` on the way back to false
-    // (verified 2026-10-19 -- the flag then stuck, and the guards below refused
-    // to open anything for the rest of the session).
+    // Lock/unlock paths: idle and the Fn+F9 bind reach engage(); the password
+    // path (LockAuth.unlocked, above) and `qs ipc call lock unlock` reach
+    // disengage(). LockState is set from these rather than from a
+    // `lockedChanged` signal, because 0.3.2's WlSessionLock does not notify
+    // `locked` on the way back to false (verified 2026-10-19).
     function engage() {
         authState.reset();
         sessionLock.locked = true;
@@ -69,5 +71,17 @@ Scope {
         authState.reset();
         sessionLock.locked = false;
         LockState.locked = false;
+    }
+
+    // Backstop, for the same reason: `locked` always *reads* correctly, it just
+    // does not notify. A missed path must not leave the guards stuck again.
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            if (LockState.locked !== sessionLock.locked)
+                LockState.locked = sessionLock.locked;
+        }
     }
 }

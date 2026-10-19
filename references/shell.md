@@ -36,7 +36,7 @@
 | `modules/launcher/LauncherContent.qml` | tracked header + rule, square search, ranked list, footer hint (shared) |
 | `modules/launcher/LauncherItem.qml` | square rows, uppercase names, solid primary selection + ripple |
 | `modules/launcher/LauncherWindow.qml` | full-height left drawer on Super+F / `qs ipc call launcher toggle` |
-| `modules/screenshot/ScreenshotHost.qml` | Print captures output → select (region/window/full) → annotate in a floating window; Print+Esc always close (`qs ipc call screenshot toggle`) |
+| `modules/screenshot/ScreenshotHost.qml` | Print captures output → select (region/window/full) → annotate in a floating window; Print+Esc always close (`qs ipc call screenshot toggle`). Created **last** in `shell.qml`: on one layer, creation order decides stacking, and behind the wallpaper picker's sheet its Save/Copy toolbar was unreachable |
 | `modules/screenshot/ScreenshotStore.qml` | crop view, strokes, movable/resizable text labels, undo/redo stacks, tool state |
 | `modules/screenshot/ScreenshotSelector.qml` | dimmed capture + region drag (aim lines, clamped) + window hover-pick (active workspace only) |
 | `modules/screenshot/AnnotationStage.qml` | canvas: checkerboard, cropped capture, pen strokes, text labels; the export target |
@@ -162,7 +162,7 @@ countdown. Policy rationale and the `ListModel` traps we hit are in
 
 Two lock traps, both proved live and both logged in [notes/hotzones.md](notes/hotzones.md) and [notes/quickshell.md](notes/quickshell.md):
 - the compositor's hot zones keep firing **while locked** (Hyprland's `InputManager::isLocked()` means "a pointer constraint is active", not "the session is locked"), so the corner opened the picker behind the lock — the hosts now consult `LockState` and refuse, and close when a lock starts;
-- 0.3.2's `WlSessionLock` does not notify `locked` on the way back to `false`, so `LockState` is driven from the shell's own `engage()`/`disengage()`.
+- 0.3.2's `WlSessionLock` does not notify `locked` on the way back to `false`, so `LockState` is driven from the shell's own `engage()`/`disengage()` — and the **password** unlock path (`LockAuth.unlocked`) has to be routed through `disengage()` as well: it unlocks directly, and on 2026-10-19 missing that left the flag set, so every guarded surface refused to open until the shell was restarted. A 1-second timer re-syncs it from `sessionLock.locked` (which always *reads* correctly) as a backstop.
 
 ## Preview benches (use them, don't guess)
 

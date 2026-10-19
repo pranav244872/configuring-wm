@@ -33,7 +33,6 @@ ShellRoot {
     LauncherWindow {}
     PowerMenuHost {}
     DashboardHost {}
-    ScreenshotHost {}
     // Before the calendar on purpose: the wallpaper is the lowest of the two
     // background-layer surfaces, and creation order decides their stacking.
     WallpaperBackground {}
@@ -42,4 +41,9 @@ ShellRoot {
     LockHost {}
     NotificationHost {}
     WallpaperHost {}
+    // Last on purpose, for the same creation-order reason: the screenshot
+    // editor must sit above every overlay sheet. Created before the wallpaper
+    // picker, its Save/Copy toolbar was hidden behind the picker (and behind
+    // the dashboard's sheet).
+    ScreenshotHost {}
 }

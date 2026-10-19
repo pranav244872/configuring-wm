@@ -47,8 +47,20 @@ Back to [notes index](README.md) - [docs index](../README.md)
   render in the current pen colour.
 - Export grabs exactly the crop body (`grabToImage` works on QML-created
   items, never on a layer-shell `contentItem`). Save stamps
-  `screenshot-YYYY-MM-DD-HHMMSS.png` into `~/Pictures/Screenshots`; Copy
-  pipes through `wl-copy --type image/png`.
+  `screenshot-YYYY-MM-DD-HHMMSS.png` into `xdg-user-dir PICTURES` + `/Screenshots`;
+  Copy pipes through `wl-copy --type image/png`.
+- **That directory is not `~/Pictures/Screenshots` on this machine.** There is no
+  `~/.config/user-dirs.dirs`, so `xdg-user-dir PICTURES` answers `$HOME` and saves
+  land in **`~/Screenshots`** (verified 2026-10-19 with three test saves). mpv's
+  own config writes to `~/Pictures/Screenshots`, so the two disagree until
+  `XDG_PICTURES_DIR="$HOME/Pictures"` is set.
+- **The editor must be created last of the overlay windows.** Everything on
+  `WlrLayer.Overlay` is stacked by creation order, so `ScreenshotHost` sits at the
+  *end* of `shell.qml`. Created before the wallpaper picker instead, its toolbar
+  was drawn **under** the picker's sheet — and the sheet's full-screen dismiss
+  mask swallowed the clicks, so Save/Copy were unreachable ("I cannot copy or save
+  screenshot", 2026-10-19). Prove that fix by **clicking** the real button, not by
+  looking: `wl-paste --list-types` must answer `image/png`.
 
 ## Canvas image loading (do it this way)
 
