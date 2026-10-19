@@ -95,9 +95,11 @@ Not installed on purpose: `python-pip` (mason builds its own venv). Bootstrap + 
 | `matugen` | 4.2.0-1 | wallpaper → Material-3 palette for the shell, Hyprland, kitty, nvim, GTK and qt6ct |
 | `adw-gtk-theme` | 6.5-1 | `adw-gtk3-dark` — the GTK3 theme that consumes the named colours matugen writes |
 | `qt6ct` | 0.11-9 | Qt6 platform theme, selected with `QT_QPA_PLATFORMTHEME=qt6ct` |
+| `btop` | 1.4.7-1 | system monitor, themed with `color_theme = "matugen"` |
+| `starship` | 1.27.0-1 | shell prompt; colours generated into `~/.config/starship.toml` |
 
 ```bash
-sudo pacman -S --needed matugen adw-gtk-theme qt6ct
+sudo pacman -S --needed matugen adw-gtk-theme qt6ct btop starship
 gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-dark
 gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 ```

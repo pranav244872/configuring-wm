@@ -24,8 +24,11 @@ function lt --wraps 'eza --tree' --description 'two-level tree with git status'
     eza --tree --level=2 -la --icons=auto --git $target
 end
 
-# Not ported from the old config yet (tools not installed):
-#   starship init fish | source      -> starship (rice step)
+# Starship prompt. Colours come from ~/.config/starship.toml, which matugen
+# regenerates on every wallpaper change.
+starship init fish | source
+
+# Not ported from the old config yet:
 #   mise activate fish | source      -> mise (not installed)
 #   bat/fzf aliases                  -> bat, fzf (rice step)
 #   vssh/vpush/vpull functions       -> need cloudflared setup

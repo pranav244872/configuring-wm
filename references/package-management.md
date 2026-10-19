@@ -34,6 +34,8 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `matugen` | wallpaper-derived Material 3 palette for the shell, Hyprland, kitty, nvim, GTK and qt6ct — see [notes/matugen.md](notes/matugen.md) | 2026-10-19 |
 | `adw-gtk-theme` | `adw-gtk3-dark`: the GTK3 theme that consumes the named colours matugen writes | 2026-10-19 |
 | `qt6ct` | Qt6 platform theme (`QT_QPA_PLATFORMTHEME=qt6ct`) applying the dark matugen palette | 2026-10-19 |
+| `btop` | system monitor, `color_theme = "matugen"` | 2026-10-19 |
+| `starship` | shell prompt; its palette is generated into `~/.config/starship.toml` | 2026-10-19 |
 
 ```bash
 # quickshell UI fonts and application icons

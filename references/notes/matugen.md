@@ -12,18 +12,18 @@ Verified live 2026-10-19 (shell restart, wallpaper switch, per-consumer checks).
 
 ```
 wallpaper chosen (picker / bottom-right hot zone / SUPER+SHIFT+W / IPC)
-  W> WallpaperService.current changes
-     W> WallpaperHost.followWallpaper()          (skipped while WallpaperService.mock)
-        W> Scheme.sync(path)                     modules/Scheme.qml
-           W> matugen image <path> --mode dark --type scheme-content --prefer darkness
-              |-> ~/.config/quickshell/colors.json   (no hook; Scheme re-reads it)
-              |-> ~/.config/hypr/modules/colors.lua  (hook: hyprctl reload)
-              |-> ~/.config/kitty/colors.conf        (hook: SIGUSR1 kitty)
-              |-> nvim / gtk / qt6ct / btop / starship / opencode outputs
-           W> Scheme re-reads colors.json
-              W> Theme.palette re-evaluates (every role is a binding to Scheme)
-                 W> Theme.colors (semantic layer) re-evaluates
-                    W> every component using Theme.colors repaints
+  -> WallpaperService.current changes
+     -> WallpaperHost.followWallpaper()      (skipped while WallpaperService.mock)
+        -> Scheme.sync(path)                 modules/Scheme.qml
+           -> matugen image <path> --mode dark --type scheme-content --prefer darkness
+              |-- ~/.config/quickshell/colors.json   (no hook; Scheme re-reads it)
+              |-- ~/.config/hypr/modules/colors.lua  (hook: hyprctl reload)
+              |-- ~/.config/kitty/colors.conf        (hook: SIGUSR1 kitty)
+              |-- nvim / gtk / qt6ct / btop / starship / opencode outputs
+           -> Scheme re-reads colors.json
+              -> Theme.palette re-evaluates (every role is a binding to Scheme)
+                 -> Theme.colors (semantic layer) re-evaluates
+                    -> every component using Theme.colors repaints
 ```
 
 - `Scheme.qml` is state only (a 0.3.2 singleton roots on a bare `QtObject`): one
@@ -57,9 +57,9 @@ live in `~/.config/matugen/config.toml`, so a manual run behaves identically.
 | `quickshell-colors.json` | `~/.config/quickshell/colors.json` | `Scheme.qml` → `Theme.palette` |
 | `gtk-colors.css` | `~/.config/gtk/gtk.css` | symlinked from `gtk-3.0/gtk.css` and `gtk-4.0/gtk.css` |
 | `qtct-colors.conf` | `~/.config/qt6ct/colors/matugen.conf` | `qt6ct.conf` (`color_scheme_path`, `custom_palette=true`) |
-| `btop-colors.theme` | `~/.config/btop/themes/matugen.theme` | inert — btop not installed |
-| `starship-colors.toml` | `~/.config/starship.toml` | inert — starship not installed |
-| `opencode-colors.json` | `~/.config/opencode/themes/matugen.json` | inert until `"theme": "matugen"` is set in opencode's config |
+| `btop-colors.theme` | `~/.config/btop/themes/matugen.theme` | `~/.config/btop/btop.conf`: `color_theme = "matugen"` (transparent `main_bg`); next btop start |
+| `starship-colors.toml` | `~/.config/starship.toml` | fish: `starship init fish \| source`; read on every prompt |
+| `opencode-colors.json` | `~/.config/opencode/themes/matugen.json` | `~/.config/opencode/tui.json`: `"theme": "matugen"` — v2 reads **tui.json**, not opencode.json; next start |
 
 `quickshell-colors.json` is our own template: it emits every role matugen knows
 plus `image`, e.g. `{"background": "#1d100f", …, "image": "…"}`.
@@ -99,7 +99,9 @@ all components are unchanged.
 | nvim | immediately | the plugin `watch = true` sees the file change (proved by writing #ff00ff into the JSON: `Normal` bg became #fa53ff) |
 | GTK | next app start / gsettings nudge | see below |
 | qt6ct | next app start | `QT_QPA_PLATFORMTHEME=qt6ct` picks the palette up; verified with the qt6ct GUI |
-| btop / starship / opencode | next start | files are written; the apps are not installed / not enabled yet |
+| btop | next start | `color_theme = "matugen"`; the theme is read at launch |
+| starship | every prompt | reads `starship.toml` per render |
+| opencode | next start | `tui.json` → `"theme": "matugen"` |
 
 ## GTK (adw-gtk3-dark + prefer-dark)
 
@@ -135,6 +137,30 @@ already names `colors/matugen.conf` with `custom_palette=true`, so no manual
 "select matugen" step is needed (the old repo left that as a manual post-install
 step). Verified by launching `qt6ct` itself: window, title bar and preview are
 dark with the wallpaper's rust palette.
+
+## btop, starship, opencode (2026-10-19)
+
+All three read a generated file directly — none needs a matugen hook.
+
+- **btop** — `~/.config/btop/btop.conf` pins `color_theme = "matugen"`
+  (`theme_background = True`; the theme's `main_bg` is empty, so btop stays
+  transparent over the terminal). Verified by launching `kitty -e btop` and
+  screenshotting it: meters and borders in the wallpaper's palette.
+- **starship** — `starship init fish | source` in `~/.config/fish/config.fish`
+  (previously a line in the "not ported yet" comment block). Verified with
+  `starship prompt`: the escape emitted was `38;2;180;197;251`, i.e. the
+  generated palette's primary.
+- **opencode** — `~/.config/opencode/tui.json` holds `{"theme": "matugen"}`.
+
+  **Trap:** opencode v2 selects the theme in `tui.json` — `theme` is *not* a key
+  in `opencode.json` (`https://opencode.ai/config.json` has no such property,
+  while `https://opencode.ai/tui.json` types `theme` as a string). Themes are
+  loaded from `~/.config/opencode/themes/*.json`; ours defines `defs` plus 50
+  `theme` groups with `{dark, light}` refs, which is the documented format.
+  Verified by launching a throwaway TUI (`kitty -e opencode`) and screenshotting
+  it: logo, prompt strip and model line render in the palette.
+
+
 
 ## What was pruned from the old setup
 
