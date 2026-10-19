@@ -132,6 +132,11 @@ QtObject {
         // fixed share of the monitor height, so the sections scroll.
         readonly property int  dashboardWidth:       720
         readonly property real dashboardHeightRatio: 0.40
+        // Tab row: numbered equal-width slots with a solid block behind the
+        // active one (the bar's workspace treatment). `dashboardTabInset` is
+        // the block's breathing room inside its cell.
+        readonly property int  dashboardTabHeight: 34
+        readonly property int  dashboardTabInset:  3
         readonly property int elevation:     10
         readonly property int iconSize:      30
         readonly property int barThickness:  4

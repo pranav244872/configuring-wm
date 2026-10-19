@@ -1,19 +1,21 @@
-// Dashboard bench: the bottom sheet over a mock desktop, with a mocked network
-// list so no radio is involved. The secured + unsaved row is expanded to show
-// the passphrase prompt. Saves preview_dashboard.
+// Dashboard bench: both tabs of the sheet over a mock desktop -- the network
+// tab with a mocked list (no radio involved) and the unsaved row expanded to
+// show the passphrase prompt, and the notifications tab with a mocked history
+// (timestamps included). Saves preview_dashboard.
 import QtQuick
 import Quickshell
 import Quickshell.Networking
 import qs.modules
 import qs.modules.dashboard
+import qs.modules.notifications
 
 ShellRoot {
     PanelWindow {
         id: win
 
         visible: true
-        color: "#ffffff"
-        implicitWidth: 960
+        color: "#39434a"
+        implicitWidth: 820
         implicitHeight: 900
 
         readonly property var mockNetworks: [
@@ -59,16 +61,6 @@ ShellRoot {
                 address: ""
             },
             {
-                name: "VINOD C",
-                signalStrength: 0.22,
-                security: WifiSecurityType.Wpa2Psk,
-                connected: false,
-                known: false,
-                state: ConnectionState.Disconnected,
-                stateChanging: false,
-                address: ""
-            },
-            {
                 name: "Cafe_Guest",
                 signalStrength: 0.30,
                 security: WifiSecurityType.Open,
@@ -77,52 +69,110 @@ ShellRoot {
                 state: ConnectionState.Disconnected,
                 stateChanging: false,
                 address: ""
-            },
-       ]
+            }
+        ]
 
-        Item {
-            id: scene
-            anchors.fill: parent
+        component Sheet: Item {
+            id: sheet
 
-            // Mock desktop so the sheet's surface reads
-            Rectangle {
+            required property int tab
+
+            // The bench reaches in to mock the sections.
+            property alias content: dashboardContent
+
+            width: Theme.sizes.dashboardWidth
+            height: Math.round(win.height * 0.36)
+
+            DashboardSurface {
                 anchors.fill: parent
-                color: "#39434a"
             }
 
-            Item {
-                id: sheet
-
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.bottom: parent.bottom
-                width: Theme.sizes.dashboardWidth
-                height: Math.round(parent.height * Theme.sizes.dashboardHeightRatio)
-
-                DashboardSurface {
-                    anchors.fill: parent
-                }
-
-                DashboardContent {
-                    id: content
-                    anchors.fill: parent
-                    anchors.margins: Theme.frame.margins
-                }
+            DashboardContent {
+                id: dashboardContent
+                anchors.fill: parent
+                anchors.margins: Theme.frame.margins
+                currentTab: sheet.tab
             }
         }
 
-        // Feed the mocked list into the section (overrides its live binding).
+        Column {
+            id: scene
+            anchors.centerIn: parent
+            spacing: 18
+
+            Sheet {
+                id: networkSheet
+                tab: 0
+            }
+
+            Sheet {
+                id: notifSheet
+                tab: 1
+            }
+        }
+
+        // Feed the mocked data into the sections (overrides their live bindings).
         Component.onCompleted: {
-            content.network.mock = true;
-            content.network.networks = mockNetworks;
-            content.network.wifiEnabled = true;
-            content.network.connectivity = NetworkConnectivity.Full;
-            content.network.expandedSsid = "AirFiber-Prateek_EXT";
+            const net = networkSheet.content;
+            net.network.mock = true;
+            net.network.networks = win.mockNetworks;
+            net.network.wifiEnabled = true;
+            net.network.connectivity = NetworkConnectivity.Full;
+            net.network.expandedSsid = "AirFiber-Prateek_EXT";
             // Show the scan sweep in the preview (does not touch the radio).
-            content.activate();
+            net.activate();
+
+            const now = Date.now();
+            NotificationService.history = [
+                {
+                    notifId: 4,
+                    app: "Firefox",
+                    appIcon: "firefox",
+                    summary: "Download complete",
+                    body: "ubuntu-24.04-desktop-amd64.iso — 5.9 GB",
+                    image: "",
+                    urgency: 1,
+                    expireTimeout: 0,
+                    timestamp: now - 60000
+                },
+                {
+                    notifId: 3,
+                    app: "systemd",
+                    appIcon: "",
+                    summary: "Battery critically low",
+                    body: "3% remaining. Plug in now — the session suspends at 2% unless a charger appears.",
+                    image: "",
+                    urgency: 2,
+                    expireTimeout: 0,
+                    timestamp: now - 900000
+                },
+                {
+                    notifId: 2,
+                    app: "Spotify",
+                    appIcon: "",
+                    summary: "Now playing",
+                    body: "Aphex Twin — Xtal",
+                    image: Quickshell.iconPath("audio-x-generic", true),
+                    urgency: 0,
+                    expireTimeout: 0,
+                    timestamp: now - 1800000
+                },
+                {
+                    notifId: 1,
+                    app: "Slack",
+                    appIcon: "",
+                    summary: "Standup in 5",
+                    body: "",
+                    image: "",
+                    urgency: 1,
+                    expireTimeout: 0,
+                    timestamp: now - 5400000
+                }
+            ];
         }
 
         Timer {
-            interval: 600
+            interval: 700
             running: true
             onTriggered: scene.grabToImage(function (r) {
                 console.log("preview_dashboard saved:", r.saveToFile("/tmp/opencode/preview_dashboard.png"));

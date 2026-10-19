@@ -14,7 +14,7 @@ Back to [notes index](README.md) - [docs index](../README.md)
 | `modules/notifications/NotificationService.qml` | singleton: the server, the toast model, durations, DND, history. Logic only — a 0.3.2 singleton roots on a bare `QtObject` and cannot hold windows or an `IpcHandler` |
 | `modules/notifications/NotificationHost.qml` | `PanelWindow` overlay: the toast stack, the per-toast countdown, IPC target `notifications` |
 | `modules/notifications/NotificationCard.qml` | presentation only — reused by the toast stack **and** the dashboard history list |
-| `modules/dashboard/NotificationsSection.qml` | DND switch + history, right column of the dashboard sheet (the sheet is two columns: network left, notifications right) |
+| `modules/dashboard/NotificationsSection.qml` | DND switch + history, its own tab in the dashboard sheet (the sheet is tabbed: network / notifications) |
 | `modules/bar/BarDnd.qml` | bell-off glyph in the bar's right cluster, visible **only** while DND is on; click toggles |
 
 ## Flow
@@ -53,6 +53,14 @@ top-right, clear of the bar: `topOffset 50` (30 bar + 12 `gaps_out` + 8),
 `sideOffset 20`, width 340 (`Theme.notifications`). Cards fade in; nothing
 animates out, because a dismissal must not leave a gap in the column.
 
+In the dashboard the same card is reused for history, **full width** and with the
+arrival time at the right of the app line (`showTime`, `HH:MM`) — a one-line
+notification in a 684px row looks half-empty without a right-hand anchor — and no
+countdown. There the ✕ removes the row from the list (`removeHistory`, matching
+`notifId` + `timestamp` — history is plain data with no server object behind it, and
+a `ListView` hands the delegate a *copy*, so the match can never be on the object),
+while on a toast the same ✕ dismisses and a body click runs the default action.
+
 ## IPC
 
 `qs ipc call notifications <toggleDnd|setDnd <bool>|dndState|dismissAll|dismissOne|invokeLast|clearHistory|count|historyCount>`
@@ -80,6 +88,16 @@ animates out, because a dismissal must not leave a gap in the column.
   history list, where a clock is meaningless. Slots survive model changes because
   a `ListModel` insert only creates one delegate — a JS-array model would rebuild
   every delegate and reset every countdown and hover pause.
+- **The card-wide click catcher must be declared before the content column**
+  (sibling order = input priority). Declared after it, it swallowed the ✕: the
+  button emitted `cardClicked` instead of `closeRequested`, which looked fine in
+  the toast stack (invoke-then-dismiss) and was simply dead in the dashboard.
+- **The ✕ then still did nothing, for a second, unrelated reason**: a `ListView`
+  hands a JS-array model's delegates a converted copy of each element, so
+  `history.filter(e => e !== entry)` matched no row at all. Removal matches
+  `notifId` + `timestamp` now. Both fixes were needed (2026-10-19; story in
+  [dashboard.md](dashboard.md), model trap in
+  [quickshell.md](quickshell.md#qml-and-api-traps-in-032)).
 
 ## Verification (2026-10-19)
 
@@ -94,9 +112,13 @@ round-tripped `{"dnd":true}` → `{"dnd":false}`, and a **real restart**
 toasts working. Dashboard rows render the archived text (screenshot). Card states
 + both bar states are in `preview_notifications`.
 
-Not scriptable: **hover pauses the countdown** — `hyprctl dispatch movecursor`
-produces no motion/enter event for Qt (see [shell-ui.md](shell-ui.md)), so that
-one needs a real pointer; it uses the same `containsMouse` the bar tooltip does.
+With a real pointer (`tools/uclick.py`, recipe in
+[ui-verification.md](ui-verification.md)): clicking a toast's ✕ dismissed it with
+**no** `ActionInvoked`, clicking its body emitted `ActionInvoked(id, "default")` and
+closed it, and the dashboard's history ✕ removed exactly its row with the sheet still
+open on the same tab. **Hover pauses the countdown** — parked on a toast 12 s past its
+8 s expiry it was still up, and out it went within 9 s of leaving. `hyprctl dispatch
+movecursor` can do none of this: it produces no motion/enter event for Qt.
 
 ## Deferred (v2, in order of likely value)
 

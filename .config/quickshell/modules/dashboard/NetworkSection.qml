@@ -153,12 +153,21 @@ Item {
         spacing: 10
 
         // ---------------- header ----------------
+        // The tab carries the title now, so this row is the tab's controls:
+        // switch on the left, list controls on the right.
         RowLayout {
             Layout.fillWidth: true
             spacing: 10
 
+            Toggle {
+                Layout.alignment: Qt.AlignVCenter
+                checked: root.wifiEnabled
+                onToggled: Networking.wifiEnabled = !Networking.wifiEnabled
+            }
+
             StyledText {
-                text: "NETWORK"
+                Layout.alignment: Qt.AlignVCenter
+                text: "WI-FI"
                 font.pixelSize: Theme.frame.labelSize
                 font.letterSpacing: Theme.frame.tracking
                 color: Theme.colors.subtext
@@ -203,12 +212,6 @@ Item {
                     cursorShape: Qt.PointingHandCursor
                     onClicked: root.rescan()
                 }
-            }
-
-            Toggle {
-                Layout.alignment: Qt.AlignVCenter
-                checked: root.wifiEnabled
-                onToggled: Networking.wifiEnabled = !Networking.wifiEnabled
             }
         }
 

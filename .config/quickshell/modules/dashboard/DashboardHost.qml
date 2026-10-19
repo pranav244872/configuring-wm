@@ -61,7 +61,15 @@ PanelWindow {
             if (event.key === Qt.Key_Escape) {
                 host.close();
                 event.accepted = true;
+            } else if (event.key === Qt.Key_Right) {
+                content.stepTab(1);
+                event.accepted = true;
+            } else if (event.key === Qt.Key_Left) {
+                content.stepTab(-1);
+                event.accepted = true;
             }
+            // Left/right only arrive here when no inner item wants them (the
+            // passphrase field consumes them as cursor movement).
         }
 
         MouseArea {
@@ -128,6 +136,23 @@ PanelWindow {
 
         function isOpen(): bool {
             return host.open;
+        }
+
+        // A tab by name (network / notifications) or next / prev. The selected
+        // tab is held in the content, so it survives closing and reopening the
+        // sheet -- only a shell restart resets it to the first tab.
+        function tab(name: string): void {
+            const wanted = name.toLowerCase();
+            if (wanted === "next")
+                content.stepTab(1);
+            else if (wanted === "prev")
+                content.stepTab(-1);
+            else
+                content.setTabByName(wanted);
+        }
+
+        function tabName(): string {
+            return content.tabName();
         }
     }
 }

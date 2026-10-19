@@ -1,6 +1,7 @@
 # quickshell 0.3.2 Notes
 
-QML/API traps we hit building our shell, and how to verify UI without guessing. Read before writing any QML.
+QML/API traps we hit building our shell. Read before writing any QML; how to verify
+the result (real clicks, probes) is in [ui-verification.md](ui-verification.md).
 
 Back to [notes index](README.md) - [docs index](../README.md)
 
@@ -26,6 +27,16 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
 - `QsMenuOpener` + `QsMenuEntry` (core) drive app tray menus: `menu`, `children`, `triggered()` — no platform menu needed.
 - Built-in `drag.target` + `filterChildren` + `threshold` + `smoothed` + min/max beats hand-rolled deltas (they jitter). Anchored items can't drag; dragging breaks `x`/`y` bindings, so position imperatively and mirror for save.
 - Never redeclare `clicked`/`pressed`/`onX` signals — `MouseArea` already has them (`Duplicate signal name`).
+- **Sibling order is input priority**: a later sibling stacks above an earlier one
+  and receives the event first, so a full-item `MouseArea` declared *after* a child
+  swallows that child's clicks. The notification card's card-wide catcher sat after
+  the column and ate every click meant for the ✕ (fixed 2026-10-19 — it fired
+  `cardClicked`, which looked like success in the toast stack and was dead in the
+  dashboard). Declare the background catcher **first**, interactive children after
+  it (or give the child `z: 1`).
+- `MouseArea.onWheel: (event) => …` exists and does not steal clicks; a wheel event
+  the topmost item does not handle propagates down the stack, so a catcher *under*
+  a row of cells can own the wheel for the whole row.
 - Inner properties shadow outer ids: `LockSurface { lock: lock }` self-binds when the surface
   declares its own `lock` (binding loop, null value). Name host ids distinctly (`sessionLock`).
 - **A destroyed QObject held in a `var` property is a dead wrapper, not `null`.**
@@ -43,6 +54,13 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
   role reads back `undefined` afterwards, so a copy taken too late writes empty
   records. Copy the row into plain data *before* `remove()` (this is what wrote `[{}]`
   history entries, fixed 2026-10-19).
+- **A JS-array model hands each delegate a converted copy of its element**, so
+  `modelData` is not the object that went into the array (`modelData === arr[0]` is
+  false, probed 2026-10-19). Matching a row back to its source by identity then
+  silently matches nothing: the dashboard's history ✕ ran
+  `history.filter(e => e !== entry)` and removed no row at all, which read as "the
+  button is dead". Match on the element's own fields (`notifId` + `timestamp`) or
+  on its index.
 - `Text` is `AutoText`: it renders markup (and `<img>`) from any string it is given,
   even when the source does not advertise markup. Force `textFormat: Text.PlainText`
   for text you did not write (a notification body is attacker-controlled).

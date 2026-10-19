@@ -127,24 +127,12 @@ different family and won't match). No rounding, no pills, no shadows.
 - **The IP is the one non-native bit**: quickshell exposes only the *hardware* address
   (`NetworkDevice.address` is the MAC), so the tooltip runs
   `ip -4 -o addr show dev <if>` once per hover — a `Process`, never a poll.
-- **Verification traps worth remembering**:
-  - `hyprctl dispatch movecursor` does **not** drive hover: no motion/enter event reaches
-    the layer surface (a debug MouseArea in the window stayed silent), so hover paths
-    need a real pointer. `qs ipc call` + `grim` prove position and content, not hovering.
-  - A bench that reproduces the bar on the **overlay** layer draws *above fullscreen
-    windows* (the real bar is level `top`, which the compositor hides), so it looks like
-    "the bar doesn't hide in fullscreen"; and it carries no `TrayMenuHost`, so tray
-    right-click looks dead there. Both were reported as bugs while such a probe was live
-    — keep probes temporary and delete them.
-  - `TrayMenu`'s title row used to log `Binding loop detected for property "height"`
-    on every menu open (baseline: 1 warning per open, still in the live log as late as
-    2026-10-18). Cause: `height: visible ? implicitHeight : 0`, a self-referencing
-    binding. Fixed 2026-10-18 — a Column does not position invisible items, so
-    `visible` alone collapses the row (verified with an empty appTitle: no gap), and
-    the title + rule now use the delegates' fixed 214px width instead of `parent.width`.
-    Re-verified against a live Steam menu: 8 opens, 0 warnings, layout unchanged.
-    To reproduce at all you need a tray item: `steam -silent` provides one
-    (`busctl --user get-property org.kde.StatusNotifierWatcher
-    /StatusNotifierWatcher org.kde.StatusNotifierWatcher RegisteredStatusNotifierItems`),
-    and a bench only receives it once the running shell's watcher has notified it —
-    with no tray app running there is nothing to test.
+- **Verification**: hover and clicks can not be scripted with `hyprctl`, `childAt` is
+  not an input test, and a live probe can mislead — recipes, the real-click injector
+  (`tools/uclick.py`) and the proofs it recorded are in
+  [ui-verification.md](ui-verification.md). One fix that came out of those probes:
+  `TrayMenu`'s title row used to log `Binding loop detected for property "height"` on
+  every menu open (`height: visible ? implicitHeight : 0`, self-referencing); fixed
+  2026-10-18 — a `Column` does not position invisible items, so `visible` alone
+  collapses the row — and re-verified against a live Steam menu (`steam -silent`
+  provides a tray item), 8 opens, 0 warnings, layout unchanged.

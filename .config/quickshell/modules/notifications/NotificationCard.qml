@@ -33,6 +33,15 @@ Rectangle {
     // clock to run down).
     property real progress: -1
 
+    // Arrival time, drawn at the right end of the app line when `showTime` is
+    // set. Off for toasts (a toast is happening now), on for history rows,
+    // where the timestamp anchors an otherwise very wide line.
+    property real timestamp: 0
+    property bool showTime: false
+
+    readonly property string timeText: root.showTime && root.timestamp > 0
+                                       ? Qt.formatTime(new Date(root.timestamp), "HH:mm") : ""
+
     property bool closable: true
 
     // Pointer feedback only; the consumer decides what a click does.
@@ -58,6 +67,24 @@ Rectangle {
     color: Theme.colors.layer0
     border.width: Theme.frame.line
     border.color: Theme.colors.outline
+
+    // The card-wide click catcher is declared BEFORE the content on purpose:
+    // later siblings stack above earlier ones and get input first, so an
+    // area declared after the column would swallow every click meant for the
+    // close button (the ✕ did nothing in the dashboard until 2026-10-19).
+    MouseArea {
+        id: area
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: root.clickable ? Qt.PointingHandCursor : Qt.ArrowCursor
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: (mouse) => {
+            if (mouse.button === Qt.RightButton)
+                root.closeRequested();
+            else
+                root.cardClicked();
+        }
+    }
 
     ColumnLayout {
         id: column
@@ -145,6 +172,17 @@ Rectangle {
             }
 
             StyledText {
+                id: timeLabel
+
+                Layout.alignment: Qt.AlignTop
+                visible: root.timeText.length > 0
+                text: root.timeText
+                color: Theme.colors.subtext
+                font.pixelSize: Theme.font.size.xs
+                font.letterSpacing: Theme.frame.tracking
+            }
+
+            StyledText {
                 id: closeGlyph
 
                 Layout.alignment: Qt.AlignTop
@@ -201,21 +239,6 @@ Rectangle {
         width: 2
         color: root.accent
         opacity: root.low ? 0.5 : 1
-    }
-
-    // Declared before the close glyph so the glyph stays on top of it.
-    MouseArea {
-        id: area
-        anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: root.clickable ? Qt.PointingHandCursor : Qt.ArrowCursor
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
-        onClicked: (mouse) => {
-            if (mouse.button === Qt.RightButton)
-                root.closeRequested();
-            else
-                root.cardClicked();
-        }
     }
 
     CornerTicks {

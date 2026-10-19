@@ -418,7 +418,11 @@ QtObject {
         root.history = [];
     }
 
-    function removeHistory(entry) {
-        root.history = root.history.filter(e => e !== entry);
+    // History rows are plain data, and a ListView hands the delegates of a
+    // JS-array model a *converted copy* of each element -- object identity is
+    // lost (probed 2026-10-19: `modelData === history[0]` is false). So removal
+    // matches on the notification's own identity fields, never on the object.
+    function removeHistory(notifId, timestamp) {
+        root.history = root.history.filter(e => e.notifId !== notifId || e.timestamp !== timestamp);
     }
 }

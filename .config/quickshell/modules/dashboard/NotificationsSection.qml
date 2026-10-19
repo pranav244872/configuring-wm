@@ -21,15 +21,32 @@ Item {
         spacing: 10
 
         // ---------------- header ----------------
+        // The tab carries the title now, so this row is the tab's controls:
+        // switch on the left, list controls on the right.
         RowLayout {
             Layout.fillWidth: true
             spacing: 10
 
+            Toggle {
+                Layout.alignment: Qt.AlignVCenter
+                checked: NotificationService.doNotDisturb
+                onToggled: NotificationService.toggleDnd()
+            }
+
             StyledText {
-                text: "NOTIFICATIONS"
+                Layout.alignment: Qt.AlignVCenter
+                text: "DO NOT DISTURB"
                 font.pixelSize: Theme.frame.labelSize
                 font.letterSpacing: Theme.frame.tracking
-                color: Theme.colors.subtext
+                color: NotificationService.doNotDisturb ? Theme.colors.primary : Theme.colors.subtext
+
+                Behavior on color {
+                    ColorAnimation {
+                        duration: Theme.animation.valueDuration
+                        easing.type: Easing.BezierSpline
+                        easing.bezierCurve: Theme.animation.curveOut
+                    }
+                }
             }
 
             Item {
@@ -71,12 +88,6 @@ Item {
                     onClicked: NotificationService.clearHistory()
                 }
             }
-
-            Toggle {
-                Layout.alignment: Qt.AlignVCenter
-                checked: NotificationService.doNotDisturb
-                onToggled: NotificationService.toggleDnd()
-            }
         }
 
         // ---------------- rule ----------------
@@ -112,8 +123,12 @@ Item {
                     body: modelData.body
                     image: modelData.image
                     urgency: modelData.urgency
+                    // A wide row reads as a list when it has a right-hand
+                    // anchor; the toasts themselves stay untimed.
+                    showTime: true
+                    timestamp: modelData.timestamp
 
-                    onCloseRequested: NotificationService.removeHistory(modelData)
+                    onCloseRequested: NotificationService.removeHistory(modelData.notifId, modelData.timestamp)
                 }
             }
 

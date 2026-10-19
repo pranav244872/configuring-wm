@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (network + notifications), bar network status (hover tooltip) and the **notification daemon + toasts** **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip) and the **notification daemon + toasts** **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending).
 
 ## What exists today
 
@@ -48,7 +48,9 @@
 | `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hot zone or `qs ipc call powermenu toggle`; Escape / click-away closes |
 | `modules/powermenu/PowerMenuContent.qml` + `PowerMenuItem.qml` | entries Lock / Log out / Suspend / Reboot / Shut down; Chaldea rows with the accent fill sliding in on hover (shared with the bench) |
 | `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
-| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height, centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes |
+| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height, centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes; `←`/`→` change tab |
+| `modules/dashboard/DashboardTabs.qml` | the tab row: equal-width numbered cells, solid accent block on the active one (slides on the move curve), wheel to step; each section is one tab |
+| `modules/dashboard/DashboardContent.qml` | tab host: the tab row over a `StackLayout` of the sections, and the one place that decides which section is allowed to work (the network list scans only while its tab is visible) |
 | `modules/dashboard/NetworkSection.qml` | wifi switch, scanning list, inline passphrase, connect / disconnect / forget, portal + off states; scans only while the sheet is open |
 | `modules/dashboard/NetworkRow.qml` | one network: signal + SSID + security/state; expands in place for the passphrase, or for Disconnect / Forget + IP when connected |
 | `modules/dashboard/network_list.js` | sort rank (connected → connecting → saved → signal), signal level, PSK validation rules |
@@ -79,15 +81,25 @@ are a fork feature: config keys, geometry and the runtime API are in
 
 **Dashboard** — the bottom screen edge is a hot zone
 (`bottom = "exec, qs ipc call dashboard toggle"`) that slides a 720×40 % sheet
-up. Two columns: **network** on the left (wifi on/off, a scanning list, and an
+up. It is **tabbed** (`modules/dashboard/DashboardTabs.qml`): numbered
+equal-width slots with a solid accent block on the active one, sliding like the
+workspace pill. Two tabs: **network** (wifi switch, a scanning list, and an
 inline passphrase prompt whose Connect stays disabled until the input validates
-for the security type (WEP: 5/13 chars or 10/26 hex; otherwise 8–64 — rules
-ported from plasma-nm's applet)) and **notifications** on the right (DND switch,
-count, `CLEAR`, and the session's toast history). Bluetooth, audio (input/output)
-and night light are next.
+for the security type — WEP: 5/13 chars or 10/26 hex; otherwise 8–64 — rules
+ported from plasma-nm's applet) and **notifications** (DND switch, count,
+`CLEAR`, and the session's toast history, full width with arrival times). The
+section titles live in the tabs; each tab's controls row is switch + label on the
+left, list controls on the right. Switch tabs by clicking a cell, wheeling over
+the row, `←`/`→` while the sheet is open, or
+`qs ipc call dashboard tab <network|notifications|next|prev>` (`tabName` reads it
+back); the choice survives closing the sheet. Bluetooth, audio (input/output) and
+night light are the next tabs.
 Networking uses quickshell's native `Quickshell.Networking` (NetworkManager over
 DBus) — no `nmcli` spawning, unlike caelestia/end-4. Note the scan takes a few
-seconds to fill the list after opening.
+seconds to fill the list after opening, and scanning runs **only** while the sheet
+is open *and* the network tab is showing (proven with NM's `LastScan`: it advances
+every ~10s on the network tab and never on the notifications tab). Design and
+traps: [notes/dashboard.md](notes/dashboard.md).
 
 The list is deliberately a **stable snapshot**, not a live binding: a binding over
 the model re-sorts on every signal-strength tick during a scan, which reorders
@@ -130,8 +142,10 @@ CLI sender is the one thing that still gets through. History is a session ring o
 <bool>|dndState|dismissAll|dismissOne|invokeLast|clearHistory|count|historyCount>`.
 Verified live 2026-10-19 with `gdbus` sends and `dbus-monitor` (capabilities,
 8 s/5 s expiry, sticky critical, DND silence + critical bypass, `replaces_id`
-rewrite, burst trim, `ActionInvoked`). Policy rationale, the `ListModel` traps we
-hit and the one check that needs a real pointer are in
+rewrite, burst trim, `ActionInvoked`), then with **real pointer clicks**
+(`tools/uclick.py`): a toast ✕ dismisses without firing its action, a body click
+fires it, the dashboard ✕ removes exactly its row, and hovering a toast pauses its
+countdown. Policy rationale and the `ListModel` traps we hit are in
 [notes/notifications.md](notes/notifications.md).
 
 ## Preview benches (use them, don't guess)
@@ -157,11 +171,20 @@ qs -p ~/.config/quickshell/preview_notifications.qml # → /tmp/opencode/preview
 | `preview_calendar.qml` | desktop calendar card on dark bg | grid math, today pill, chrome |
 | `preview_lock.qml` | formation card in typing + failed states (no session lock) | card visuals, auth states |
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
-| `preview_dashboard.qml` | dashboard sheet on a mock desktop with a **mocked** network list (connected / saved / secured / open) and the passphrase prompt pinned open | section layout, row states, inline PSK, list scrolling |
+| `preview_dashboard.qml` | both dashboard tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
 | `preview_notifications.qml` | every card state (normal with countdown, sticky critical, low with avatar, icon fallback), the bar island, and the dashboard section with a mocked history — saved twice, DND off then on | card layout, urgency accents, DND bell |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
+
+## Clicking for real (`tools/uclick.py`)
+
+A bench PNG and `qs ipc call` still cannot prove a click or a hover. `tools/uclick.py`
+creates a virtual mouse on `/dev/uinput` and drives the real pointer at a screen
+coordinate (`python3 ~/.config/quickshell/tools/uclick.py X Y`, add `--move` for
+hover only, and it refuses to click unless it is on target). Coordinate maths, the
+state assertions to read back, and the proofs it recorded (the notification ✕ paths
+and the hover pause) are in [notes/ui-verification.md](notes/ui-verification.md).
 
 **The Top Bar**: 30px square island, 1px hairline + corner ticks.
 `exclusiveZone: 30` reserves exactly the bar height, so the bar gap always equals `gaps_out` (12px, same as edges).
