@@ -1,7 +1,7 @@
 # Hyprland Setup — Reference & Memory
 
 Machine: pranav @ Arch Linux — Intel i3-10110U, Intel UHD 620, 7.5 GiB RAM, 60 Hz panel
-Started: 2026-10-15 · Last updated: 2026-10-17
+Started: 2026-10-15 · Last updated: 2026-10-19
 
 **This directory is the persistent memory of this setup** — for future sessions
 and for other models. A reference to rebuild the machine from scratch, not a
@@ -74,6 +74,11 @@ references/
 - **Media player**: `mpv` with **uosc** as the UI (`~/.config/mpv`, vendored
   script; right-click = menu). Bare config — see
   [apps.md](apps.md).
+- **Editor**: `neovim` 0.12.6 with the `configuring-wm` config deployed
+  verbatim (`vim.pack` + pinned revs, LSP via mason, locally compiled
+  treesitter, fzf-lua pickers). Theme is a committed matugen JSON, so colours
+  are static and the `matugen` binary is not installed — see
+  [notes/neovim.md](notes/neovim.md).
 - **Desktop shell**: our own **quickshell** UI — **OSD** (volume + brightness
   draggable pill) and **Top bar** (centered floating pill island with dynamic
   1..10 workspace indicator and 24h clock, `~/.config/quickshell/`). Autostarted

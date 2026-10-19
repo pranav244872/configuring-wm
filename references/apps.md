@@ -23,6 +23,41 @@ Back to [preferences.md](preferences.md) - [docs index](README.md)
   `vo=gpu-next` + `gpu-api=opengl`, anime-first audio/subtitle language.
 - uosc's subtitle-search binaries (ziggy) were deleted — not wanted.
 
+## Text editor (Neovim)
+
+- `neovim` **0.12.6** plus `fzf`, `tree-sitter-cli`, `unzip`, `fd` (2026-10-19,
+  see [package-management.md](package-management.md)). The config is the
+  `configuring-wm` one, deployed **verbatim** — `diff -rq
+  ~/del/configuring-wm/.config/nvim ~/.config/nvim` prints nothing, the same
+  rule the rest of this repo follows.
+- Built on **`vim.pack`** (0.12's built-in manager): `nvim-pack-lock.json` pins
+  every plugin rev. No lazy.nvim. The config needs 0.12 — `vim.pack` and
+  `vim.lsp.config`/`enable` don't exist in 0.11.
+- **LSP through mason**: `lua_ls`, `clangd`, `pyrefly` ensured on start, living
+  in `~/.local/share/nvim/mason/bin` (mason builds its own venv for the pypi
+  one, so `python-pip` is not needed).
+- **Treesitter** uses the `main` branch API and **compiles** c/cpp/markdown/
+  markdown_inline locally — that is what `tree-sitter-cli` + gcc are for, and
+  why there is no prebuilt download to quietly fail.
+- **Theme** is read from `~/.config/nvim/matugen-colors.json`, which the
+  matugen template `.config/matugen/templates/nvim-colors.json` generates. The
+  JSON is committed, so colours are static and the `matugen` **binary is not
+  installed** — install `extra/matugen` only to make the editor follow the
+  wallpaper.
+- **`Space` is the leader**: `ff` files · `fg` live grep · `fb` buffers · `fh`
+  help · `fk` keymaps · `en` nvim config · `p` package UI · `rd`/`cw` oil
+  floats · `z{j,k,a,A,R,M,f}` folds · `ca` code actions. LSP: `grn` rename,
+  `grd`/`grD`/`grt` definitions, `grr` references, `gri` implementations,
+  `gO`/`gW` symbols, `K` pretty hover, `th` inlay hints. `C-h/j/k/l` move
+  splits (creating one at the edge), `A-h/j/k/l` resize.
+- **Mouse on** (`mouse=a`) and clipboard `unnamedplus`, so `wl-clipboard` is
+  load-bearing for yank/paste parity with the rest of the rice.
+- Dead weight found in the config and deliberately left alone:
+  `lua/plugins/mini-pairs.lua` (its plugin is missing from `vim.pack.add`, so
+  the `pcall` skips it — harmless, `autoclose.nvim` does the same job) and
+  `matugen.lua` (a generated base16 colourscheme nothing requires). Details,
+  bootstrap commands and the verification method: [notes/neovim.md](notes/neovim.md).
+
 ## Notifications
 
 - **Our shell is the notification daemon** (built 2026-10-19) — see

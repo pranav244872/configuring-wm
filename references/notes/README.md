@@ -22,6 +22,7 @@ Back to [docs index](../README.md)
 | [wallpaper.md](wallpaper.md) | the wallpaper drawn by the shell (background layer, decode-then-flip crossfade) and the picker carousel: `StrictlyEnforceRange` strip, wrap, click-to-apply, the `contentX` dimming bug, the `FolderListModel` adopt gate, why the lock screen draws its own copy |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |
+| [neovim.md](neovim.md) | editor bootstrap and traps: `vim.pack` lockfile vs `vim.pack.add` (installed-but-inert plugins), `pcall(require,…)` hiding a missing plugin, treesitter `main` needing the CLI + a compiler, mason pypi needing no `python-pip`, why the `matugen` binary isn't needed, and driving a live nvim over its socket to verify the UI |
 | [packages.md](packages.md) | Arch merging `cargo` into `rust`, paru's stale PKGBUILD, makepkg without a TTY, and how git pushes were finally authenticated (`gh`, 2026-10-19) |
 | [system.md](system.md) | aborted pacman runs (`db.lck`, `download-*`), `/tmp` being wiped, rebuild workflow, Docker, measuring boot speed |
 | [launch-performance.md](launch-performance.md) | why Firefox/kitty launched slowly on the spinning disk, what was changed, and why zswap must stay off |

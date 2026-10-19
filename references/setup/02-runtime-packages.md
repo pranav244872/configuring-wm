@@ -71,6 +71,25 @@ gh auth setup-git --hostname github.com
 
 Details and the traps are in [notes/packages.md](../notes/packages.md#pushing-to-github).
 
+## Added for the editor (2026-10-19)
+
+| Package | Version | What it's for |
+|---|---|---|
+| `neovim` | 0.12.6-1 | The editor; the `configuring-wm` config uses `vim.pack` + `vim.lsp.*`, so it needs 0.12+ |
+| `fzf` | 0.74.5-1 | `fzf-lua`'s picker binary — all finder/LSP pickers run through it |
+| `tree-sitter-cli` | 0.26.9-1 | `nvim-treesitter` **main** compiles parsers with it (>= 0.26.1) |
+| `unzip` | 6.0-23 | mason requirement (clangd is a `.zip`) |
+| `fd` | 10.5.0-3 | the config's `fd_opts` file picker |
+
+```bash
+sudo pacman -S --needed neovim fzf tree-sitter-cli unzip fd
+```
+
+Not installed on purpose: `matugen` (the config *watches* a committed JSON, so
+the binary is only needed to regenerate colours from a wallpaper) and
+`python-pip` (mason builds its own venv). Bootstrap + traps:
+[notes/neovim.md](../notes/neovim.md).
+
 ## Notes for a fresh install
 
 - Audio (pipewire + wireplumber), polkit, mesa (GL/Vulkan), glib2 and fontconfig
