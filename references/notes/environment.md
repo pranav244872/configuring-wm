@@ -71,7 +71,8 @@ unread on this machine or actively harmful.
   logind/systemd; setting the two XDG values in `env.lua` is for the portal/TTY
   case, not a duplicate of a DM.
 
-Related but *not* env: `xdg-user-dir PICTURES` returns `$HOME` (no
-`~/.config/user-dirs.dirs`), while our screenshot UI saves to `~/Screenshots` and
-mpv to `~/Pictures/Screenshots` — see [wallpaper.md](wallpaper.md)/[screenshot.md](screenshot.md)
-if that ever needs unifying.
+Related but *not* env: `xdg-user-dir PICTURES` used to answer `$HOME` because
+there was no `~/.config/user-dirs.dirs`, so the screenshot UI saved to
+`~/Screenshots` while mpv used `~/Pictures/Screenshots`. Fixed 2026-10-19 with
+`xdg-user-dirs-update --set PICTURES ~/Pictures`; both now write to
+`~/Pictures/Screenshots` — see [screenshot.md](screenshot.md).

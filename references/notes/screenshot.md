@@ -49,11 +49,19 @@ Back to [notes index](README.md) - [docs index](../README.md)
   items, never on a layer-shell `contentItem`). Save stamps
   `screenshot-YYYY-MM-DD-HHMMSS.png` into `xdg-user-dir PICTURES` + `/Screenshots`;
   Copy pipes through `wl-copy --type image/png`.
-- **That directory is not `~/Pictures/Screenshots` on this machine.** There is no
-  `~/.config/user-dirs.dirs`, so `xdg-user-dir PICTURES` answers `$HOME` and saves
-  land in **`~/Screenshots`** (verified 2026-10-19 with three test saves). mpv's
-  own config writes to `~/Pictures/Screenshots`, so the two disagree until
-  `XDG_PICTURES_DIR="$HOME/Pictures"` is set.
+- **Where saves land (fixed 2026-10-19).** `XDG_PICTURES_DIR="$HOME/Pictures"` now
+  lives in `~/.config/user-dirs.dirs` (written by
+  `xdg-user-dirs-update --set PICTURES ~/Pictures`), so `xdg-user-dir PICTURES`
+  answers `~/Pictures` and Save writes to **`~/Pictures/Screenshots`** — the same
+  place mpv's `screenshot-directory` writes. Before that file existed the answer
+  was `$HOME` and saves landed in `~/Screenshots` (verified 2026-10-19 with three
+  test saves); that empty directory is now stale and safe to delete.
+- **The directory is resolved once**, by `ScreenshotHost`'s `picturesProbe` in
+  `Component.onCompleted` (probe `mkdir -p`s it, so a missing folder is fine; it
+  falls back to `$HOME/Pictures/Screenshots` if `xdg-user-dir` is absent or empty).
+  After changing the XDG dir, restart the shell — the running instance keeps the
+  old path until the next login. Check with
+  `d=$(xdg-user-dir PICTURES); echo "$d/Screenshots"`.
 - **The editor must be created last of the overlay windows.** Everything on
   `WlrLayer.Overlay` is stacked by creation order, so `ScreenshotHost` sits at the
   *end* of `shell.qml`. Created before the wallpaper picker instead, its toolbar

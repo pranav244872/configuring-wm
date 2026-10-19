@@ -37,7 +37,7 @@
 | `modules/launcher/LauncherContent.qml` | tracked header + rule, square search, ranked list, footer hint (shared) |
 | `modules/launcher/LauncherItem.qml` | square rows, uppercase names, solid primary selection + ripple |
 | `modules/launcher/LauncherWindow.qml` | full-height left drawer on Super+F / `qs ipc call launcher toggle` |
-| `modules/screenshot/ScreenshotHost.qml` | Print captures output → select (region/window/full) → annotate in a floating window; Print+Esc always close (`qs ipc call screenshot toggle`). Created **last** in `shell.qml`: on one layer, creation order decides stacking, and behind the wallpaper picker's sheet its Save/Copy toolbar was unreachable |
+| `modules/screenshot/ScreenshotHost.qml` | Print captures output → select (region/window/full) → annotate in a floating window; Print+Esc always close (`qs ipc call screenshot toggle`); saves land in `~/Pictures/Screenshots` (`xdg-user-dir PICTURES` + `/Screenshots`, probed once at shell start). Created **last** in `shell.qml`: on one layer, creation order decides stacking, and behind the wallpaper picker's sheet its Save/Copy toolbar was unreachable |
 | `modules/screenshot/ScreenshotStore.qml` | crop view, strokes, movable/resizable text labels, undo/redo stacks, tool state |
 | `modules/screenshot/ScreenshotSelector.qml` | dimmed capture + region drag (aim lines, clamped) + window hover-pick (active workspace only) |
 | `modules/screenshot/AnnotationStage.qml` | canvas: checkerboard, cropped capture, pen strokes, text labels; the export target |

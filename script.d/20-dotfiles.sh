@@ -23,6 +23,11 @@ setup_rofi() {
 deploy_configs() {
   section "Configs & wallpapers"
   mkdir -p ~/Pictures/{Wallpapers,Screenshots}
+  # Screenshots + wallpapers live under ~/Pictures; the shell asks xdg-user-dir,
+  # which answers $HOME when no user-dirs.dirs exists, so set it explicitly.
+  if command -v xdg-user-dirs-update >/dev/null; then
+    xdg-user-dirs-update --set PICTURES "$HOME/Pictures"
+  fi
   cp "$SCRIPT_DIR/Wallpapers/"* ~/Pictures/Wallpapers/
   cp -r "$SCRIPT_DIR/.config/nvim" "$SCRIPT_DIR/.config/mpv" ~/.config/
   cp -r "$SCRIPT_DIR/.config/waybar" ~/.config/
