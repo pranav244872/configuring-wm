@@ -197,9 +197,16 @@ hl.bind(
     hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call screenshot toggle'")
 )
 
+-- Wallpaper picker (own quickshell UI): the sheet the bottom-right corner
+-- opens. The dashboard is closed first: two bottom sheets stacked is a bug.
+hl.bind(
+    mainMod .. " + SHIFT + W",
+    hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call dashboard close; qs ipc call wallpaper toggle'")
+)
+
 -- Deferred to the rice step (old binds that need tools we are not installing yet):
 --   SUPER + ESCAPE          -> rofi powermenu
 --   SUPER + K               -> keybinds menu
 --   SUPER + E               -> dolphin file manager
 --   SUPER + XF86AudioMute   -> audio output switch script
---   SUPER + SHIFT + W / R   -> wallpaper picker / screen recording
+--   SUPER + SHIFT + R       -> screen recording

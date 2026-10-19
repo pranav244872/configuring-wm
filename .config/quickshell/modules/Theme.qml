@@ -223,6 +223,32 @@ QtObject {
         readonly property int bodyLines:        3   // body is elided past this
     }
 
+    // ============================================================== wallpaper
+    // Carousel picker (a bottom sheet, like the dashboard) and the background
+    // surface. The sheet is wider than the dashboard because a filmstrip needs
+    // room: slides are 16:9, ~4 of them visible, and the centred one carries
+    // the accent border and grows a little. Side slides dim, no rotation --
+    // our language is flat (see notes/wallpaper.md).
+    readonly property QtObject wallpaper: QtObject {
+        // 18 margins + 16 label row + 10 + 1 rule + 12 + strip (see below)
+        readonly property int  sheetWidth:        960
+        // strip = 126 slide + 2*6 scale pad + 10 gap + 16 label = 164, plus the
+        // 18px frame margins top and bottom: 36 + 16 + 10 + 1 + 12 + 164.
+        readonly property int  sheetHeight:       240
+        readonly property int  slideWidth:        224
+        readonly property int  slideHeight:       126   // 16:9 of slideWidth
+        readonly property int  slideGap:          10
+        readonly property int  labelHeight:       16    // header row + slide label row
+        readonly property real neighbourAlpha:    0.5   // side slides
+        // The centred slide grows by this much (the strip reserves the room, so
+        // nothing is clipped). ~8% reads as "picked" without moving the labels.
+        readonly property real slideFocusScale:   1.08
+        readonly property int  labelGap:          10
+        // The slide is a hairline frame; the centred one doubles the border to
+        // read like a focused Hyprland window (2px, our border_size).
+        readonly property int  focusBorder:       2
+    }
+
     // ============================================================== animation
     // Our own values: fast, matching the Hyprland feel (see gotchas.md ->
     // animation speed units). end-4's 350-650ms "expressive" curves feel slow here.
@@ -317,5 +343,6 @@ QtObject {
         readonly property string notifBell:  "notifications"
         readonly property string notifDnd:   "notifications_off"
         readonly property string notifClose: "close"
+        readonly property string wallpaperApplied: "check"
     }
 }

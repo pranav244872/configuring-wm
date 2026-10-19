@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip) and the **notification daemon + toasts** **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending).
 
 ## What exists today
 
@@ -59,6 +59,12 @@
 | `modules/notifications/NotificationCard.qml` | one notification: avatar/app/summary/body, urgency strip, countdown drain, hover ✕ — shared with the dashboard history |
 | `modules/dashboard/NotificationsSection.qml` | DND switch + toast history; rows reuse `NotificationCard` |
 | `modules/bar/BarDnd.qml` | bell-off button, shown only while DND is on; click toggles |
+| `modules/wallpaper/WallpaperService.qml` | the wallpaper singleton: library (`FolderListModel` over `~/Pictures/Wallpapers`), `current`, state file (`~/.cache/quickshell/wallpaper.json`), `apply`/`indexOf`/`adopt` |
+| `modules/wallpaper/WallpaperBackground.qml` | background-layer surface: two fixed image slots, decode-then-flip crossfade; `exclusionMode: Ignore` so it spans the whole output behind the bar |
+| `modules/wallpaper/WallpaperHost.qml` | picker sheet: bottom sheet, slides up from the edge, Escape / click-away, IPC target `wallpaper` |
+| `modules/wallpaper/WallpaperContent.qml` | the sheet's header + rule + strip; owns the centre slot, the wrap and applying |
+| `modules/wallpaper/WallpaperCarousel.qml` | the filmstrip: `ListView` + `StrictlyEnforceRange`, index-driven, click-to-apply, wheel catcher |
+| `modules/wallpaper/WallpaperSurface.qml` | sheet body: hairline frame + corner ticks (shared with the bench) |
 | `modules/widgets/Toggle.qml` | square hairline toggle, shared by dashboard sections |
 | `modules/widgets/Spinner.qml` | loading spinner: eight square dots chasing, snapped to whole pixels (rotating a glyph pixelates — `StyledText` uses `Text.NativeRendering`) |
 | `modules/widgets/SignalBars.qml` | four-bar signal meter (rectangles, crisp at 16-20px) used by the network rows |
@@ -148,6 +154,8 @@ fires it, the dashboard ✕ removes exactly its row, and hovering a toast pauses
 countdown. Policy rationale and the `ListModel` traps we hit are in
 [notes/notifications.md](notes/notifications.md).
 
+**Wallpaper** — the shell **draws the wallpaper itself** (`WallpaperBackground.qml`, a background-layer surface) instead of running swww/hyprpaper/awww: one toolkit, no daemon. The picker is a bottom sheet with a **filmstrip** — `ListView` + `StrictlyEnforceRange`, so the index drives the strip and the pointer never drags it. The centred slide carries a 2px accent border and grows 8%, neighbours dim to 50%, a **click applies** it (the sheet stays open so you watch it land behind the sheet) and the applied slide wears an accent check; wheel and `←`/`→` step and **wrap** both ways, `Enter` applies, Escape / click-away closes. The library is `~/Pictures/Wallpapers` listed with `FolderListModel` (0.3.2 has no `FileSystemModel`), and the choice persists to `~/.cache/quickshell/wallpaper.json`. Opened by the **bottom-right corner hot zone**, `SUPER + SHIFT + W`, or `qs ipc call wallpaper toggle`. A change is a crossfade between two fixed image slots, and the incoming PNG is decoded *before* the slots flip — a 4 MB PNG takes 142–308 ms and flipping early showed the bare compositor colour. Design rules, the `contentX` dimming bug and the corner trap are in [notes/wallpaper.md](notes/wallpaper.md); verified live 2026-10-19.
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
@@ -161,6 +169,7 @@ qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_pow
 qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_dashboard.png
 qs -p ~/.config/quickshell/preview_network.qml # → /tmp/opencode/preview_network.png
 qs -p ~/.config/quickshell/preview_notifications.qml # → /tmp/opencode/preview_notifications.png (+ _dnd)
+qs -p ~/.config/quickshell/preview_wallpaper.qml # → /tmp/opencode/preview_wallpaper.png
 ```
 
 | Bench | What it renders | Uses |
@@ -174,6 +183,7 @@ qs -p ~/.config/quickshell/preview_notifications.qml # → /tmp/opencode/preview
 | `preview_dashboard.qml` | both dashboard tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
 | `preview_notifications.qml` | every card state (normal with countdown, sticky critical, low with avatar, icon fallback), the bar island, and the dashboard section with a mocked history — saved twice, DND off then on | card layout, urgency accents, DND bell |
+| `preview_wallpaper.qml` | the picker sheet over the **real** library on a mock desktop, centre slot on the 4th image, applied badge on the 2nd | slide frame + focus growth, neighbour dimming, label row, header counter |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
 
@@ -182,9 +192,12 @@ Open the PNG (or hand it to an image-reading agent) and critique what is rendere
 A bench PNG and `qs ipc call` still cannot prove a click or a hover. `tools/uclick.py`
 creates a virtual mouse on `/dev/uinput` and drives the real pointer at a screen
 coordinate (`python3 ~/.config/quickshell/tools/uclick.py X Y`, add `--move` for
-hover only, and it refuses to click unless it is on target). Coordinate maths, the
-state assertions to read back, and the proofs it recorded (the notification ✕ paths
-and the hover pause) are in [notes/ui-verification.md](notes/ui-verification.md).
+hover only, `--wheel`/`--key`/`--combo` to step a carousel or fire a keybind, and
+it refuses to click unless it is on target). Coordinate maths, the
+state assertions to read back, and the proofs it recorded (the notification ✕ paths,
+the hover pause, all three hot zones, `SUPER + SHIFT + W`) are in
+[notes/ui-verification.md](notes/ui-verification.md) — including the uinput trap
+that silently degraded every combo to a bare key.
 
 **The Top Bar**: 30px square island, 1px hairline + corner ticks.
 `exclusiveZone: 30` reserves exactly the bar height, so the bar gap always equals `gaps_out` (12px, same as edges).

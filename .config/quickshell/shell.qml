@@ -7,6 +7,7 @@
 //   shot - screenshot utility: capture, annotate, save/copy
 //   cal  - desktop month calendar (background layer, click-through)
 //   notif - notification daemon + toasts (our shell owns the bus name)
+//   wall - the wallpaper itself (background layer) + the carousel picker
 //
 //   run:  qs -n (single instance; autostarted at login, see hypr autostart)
 //   stop: qs -k
@@ -24,6 +25,7 @@ import qs.modules.screenshot
 import qs.modules.calendar
 import qs.modules.lock
 import qs.modules.notifications
+import qs.modules.wallpaper
 
 ShellRoot {
     TopBar {}
@@ -32,8 +34,12 @@ ShellRoot {
     PowerMenuHost {}
     DashboardHost {}
     ScreenshotHost {}
+    // Before the calendar on purpose: the wallpaper is the lowest of the two
+    // background-layer surfaces, and creation order decides their stacking.
+    WallpaperBackground {}
     CalendarWidget {}
     TrayMenuHost {}
     LockHost {}
     NotificationHost {}
+    WallpaperHost {}
 }

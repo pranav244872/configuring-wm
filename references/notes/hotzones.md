@@ -73,11 +73,55 @@ right = { action = "exec, qs ipc call powermenu toggle" },
 bottom = { action = "exec, qs ipc call dashboard toggle" },
 ```
 
+## Our use: bottom-right corner opens the wallpaper picker
+
+```lua
+bottomright = { action = "exec, qs ipc call dashboard close; qs ipc call wallpaper toggle" },
+```
+
+Corners win over the edges they sit in (`zoneAt` tests the four corners first),
+so this does not steal the `right` (session menu) or `bottom` (dashboard) zones.
+Both are bottom sheets, so the dashboard is closed first — two stacked reads as a
+bug.
+
+## Trap: the dwell counts *residence*, not rest
+
+The config prose says "rest the cursor against a bezel", but the implementation
+arms the timer on **zone entry** and fires while the cursor is still moving:
+`onCursorMoved` early-returns once `ZONE == m_activeZone`, so continued motion
+inside a zone neither restarts nor cancels the countdown.
+
+Consequence for a corner that shares an edge: a cursor sliding **along** the
+bottom edge toward the bottom-right corner spends its 300 ms in the `bottom`
+zone first → the dashboard opens → and because `isSuppressed()` is checked
+*before* `zoneAt()`, the sheet's exclusive keyboard layer surface now suppresses
+**every** zone, so the corner can never fire at all. Measured 2026-10-19: the
+dashboard opened between x=600→1000 at y=1075, the cursor then sat at (1917,1075)
+— inside the corner's 12 px square — and `wallpaper isOpen` stayed false.
+
+- **Not fixable from config**: a per-zone `dwell_ms = 0` on the corner fires
+  instantly but still loses once the edge's timer has already fired (the
+  suppression check comes first). Enlarging `corner_margin_px` only shifts where
+  the edge zone *ends*, and the timer starts at entry.
+- **Workaround**: approach the corner **directly** (diagonally). A diagonal
+  reaches the bottom strip only in its last few px, so the edge's 300 ms never
+  elapses. Verified live for all three zones.
+- **The real fix** (not taken, user's call 2026-10-19) is in the fork: re-arm the
+  dwell on every motion event inside the zone, i.e. make it measure a *rest*.
+  That needs a rebuild + a Hyprland restart, so it was left alone.
+
 ## Verifying / rolling back
 
 - After arming: `hyprctl configerrors` must be empty (the *running* binary must
-  know the keys — an older binary logs "unknown config key").
-- Push the cursor into the zone; the action fires. Integration is easy to
-  confirm with a logging action (`exec, sh -c 'echo hit >> /tmp/hz.log'`).
+  know the keys — an older binary logs "unknown config key"). A per-zone key that
+  does *not* exist answers "no such option" to `hyprctl getoption`, which is how
+  to tell a live key from a stale binary.
+- Push the cursor into the zone with real injected motion
+  (`python3 ~/.config/quickshell/tools/uclick.py --move X Y`); the action fires.
+  `hyprctl dispatch movecursor` does **not** drive them. Integration is easy to
+  confirm with a logging action (`exec, sh -c 'echo hit >> /tmp/hz.log'`), and
+  watch *both* sheets — a fired zone can suppress the one you are testing for.
+- Getting to a corner: park just *outside* every zone first (e.g.
+  `(1895, 1060)` for the bottom-right), then move straight in.
 - Disarm: `enabled = false` (reloads live). Roll the compositor back:
   `sudo cp -a /usr/bin/Hyprland.bak /usr/bin/Hyprland` then restart Hyprland.

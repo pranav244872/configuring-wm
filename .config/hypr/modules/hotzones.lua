@@ -35,5 +35,17 @@ hl.config({
         -- Bottom edge opens the dashboard (network first; bluetooth/audio/night
         -- light follow). Closes on Escape / click-away.
         bottom = { action = "exec, qs ipc call dashboard toggle" },
+
+        -- Bottom-right corner opens the wallpaper carousel. Corners win over
+        -- the right/bottom edges, so the power menu and the dashboard keep
+        -- their own zones. The dashboard is closed first: both are bottom
+        -- sheets, and two of them stacked reads as a bug.
+        --
+        -- Come at the corner directly (diagonally). The dwell counts residence,
+        -- not rest: a slow slide *along* the bottom edge spends its 300ms in the
+        -- dashboard's zone first, and once that sheet is up its exclusive focus
+        -- suppresses every zone, so the corner never fires. Verified
+        -- 2026-10-19 -- deliberate, not a bug we can fix from config.
+        bottomright = { action = "exec, qs ipc call dashboard close; qs ipc call wallpaper toggle" },
     },
 })

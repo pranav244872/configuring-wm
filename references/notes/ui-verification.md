@@ -27,6 +27,9 @@ Back to [notes index](README.md) - [docs index](../README.md)
 ```bash
 python3 ~/.config/quickshell/tools/uclick.py 1288 764         # move there and left-click
 python3 ~/.config/quickshell/tools/uclick.py --move 1650 103  # move only (drives hover)
+python3 ~/.config/quickshell/tools/uclick.py --wheel up       # one wheel notch in place
+python3 ~/.config/quickshell/tools/uclick.py --key escape     # press a key
+python3 ~/.config/quickshell/tools/uclick.py --combo meta+shift+w   # modifiers held
 ```
 
 - A virtual mouse on `/dev/uinput` (our user has uaccess there, from Sunshine's
@@ -41,6 +44,29 @@ python3 ~/.config/quickshell/tools/uclick.py --move 1650 103  # move only (drive
   anyway that press landed past the sheet, on the desktop. It now **refuses to
   click** unless it is within 3 px of the target.
 - `--move` is the hover test on its own: injected motion is real motion.
+- `--wheel up|down` sends one `REL_WHEEL` notch at the current position (for a
+  carousel's wrap) and pairs with `--move`; `--key <name>` and `--combo
+  <mod+mod+key>` press keys (e.g. `meta+shift+w` for a real keybind test).
+
+### Keys and combos: declare the modifier bits or they vanish
+
+uinput **silently drops** an event whose key was never declared with
+`UI_SET_KEYBIT` before `UI_DEV_CREATE`. The device originally declared only the
+`KEYS` codes, so every `--combo` degraded to a bare key — `meta+shift+w` arrived
+as `w`, hit no bind, and the keybind was written off as broken (2026-10-19).
+`MODS` values must be declared too.
+
+- The `KEYS`/`MODS` maps hold only what verification needed
+  (`escape`/`enter`/`←`/`→`/`↑`/`↓`/`tab`/`w`, and the left-hand modifiers), and
+  an unknown name fails **loudly** (`unknown key in combo: meta+s`). Do not pipe
+  the injector's stderr to `/dev/null` while using it — that is how a bad combo
+  reads as "the bind does not work".
+- Prove the *modifier* path separately from the bind: a multi-key combo on a
+  bind you have already seen work, or an idle 1:1 check like
+  `super + s` (toggles the `magic` scratchpad), before blaming the new bind in
+  `keybinds.lua`.
+- Verified this way on 2026-10-19: `SUPER + SHIFT + W` opens the wallpaper
+  picker, and `Escape` closes it.
 
 ## Finding the coordinate
 
@@ -84,6 +110,8 @@ probe was live.
 | dashboard history ✕ | row gone, sheet open, same tab | `historyCount` 1→0, `isOpen` true, `tabName` notifications |
 | hover a toast | countdown pauses | parked 12 s past an 8 s expiry: still 1 |
 | leave the toast | countdown resumes | expired within 9 s: 0 |
+| hot zones (`--move` only) | each zone fires its own surface | bottom→dashboard, right→session menu, bottom-right→wallpaper |
+| `--combo meta+shift+w` | the picker opens | `wallpaper isOpen` true |
 
 The ✕ needed two fixes to get there (sibling order, then model identity) — see
 [dashboard.md](dashboard.md) and [notifications.md](notifications.md).

@@ -7,8 +7,10 @@ there is no ydotool/dotool on this machine). Sunshine's udev rule already grants
 our user uaccess on /dev/uinput.
 
 Usage:
-    uclick.py X Y            move the pointer to (X, Y) and left-click
-    uclick.py --move X Y     move only (dry run)
+    uclick.py X Y                 move the pointer to (X, Y) and left-click
+    uclick.py --move X Y          move only (dry run, drives hover)
+    uclick.py --wheel up|down     one wheel notch at the current position
+    uclick.py --key <name>        press a key (escape/enter/left/right/up/down/tab)
 
 Movement is closed-loop: relative deltas are emitted, then hyprctl cursorpos is
 read back and corrected, because a relative mouse goes through the compositor's
@@ -30,8 +32,31 @@ UI_DEV_DESTROY = 0x5502
 
 EV_SYN, EV_KEY, EV_REL = 0x00, 0x01, 0x02
 REL_X, REL_Y = 0x00, 0x01
+REL_WHEEL = 0x08
 BTN_LEFT = 0x110
 SYN_REPORT = 0
+
+# Raw evdev keycodes (the compositor maps them through XKB), the same way
+# ydotool sends keys. Only what our UI verification needs.
+KEYS = {
+    "escape": 1,
+    "enter": 28,
+    "left": 105,
+    "right": 106,
+    "up": 103,
+    "down": 108,
+    "tab": 15,
+    "w": 17,
+}
+
+# Modifiers for --combo (LEFT variants: our keybinds use SUPER == left meta).
+MODS = {
+    "super": 125,
+    "meta": 125,
+    "shift": 42,
+    "ctrl": 29,
+    "alt": 56,
+}
 
 
 def cursor():
@@ -41,11 +66,19 @@ def cursor():
 
 
 class Mouse:
-    def __init__(self):
+    def __init__(self, keys=False):
         self.fd = os.open("/dev/uinput", os.O_WRONLY | os.O_NONBLOCK)
-        for req, arg in ((UI_SET_EVBIT, EV_KEY), (UI_SET_EVBIT, EV_REL),
-                         (UI_SET_KEYBIT, BTN_LEFT), (UI_SET_RELBIT, REL_X),
-                         (UI_SET_RELBIT, REL_Y)):
+        caps = [(UI_SET_EVBIT, EV_KEY), (UI_SET_EVBIT, EV_REL),
+                (UI_SET_KEYBIT, BTN_LEFT), (UI_SET_RELBIT, REL_X),
+                (UI_SET_RELBIT, REL_Y)]
+        if keys:
+            caps.append((UI_SET_RELBIT, REL_WHEEL))
+            # Modifiers must be declared too: uinput silently drops events for
+            # key bits the device never registered, so combos arrived as bare
+            # keys (meta+shift+w landed as "w" and fired nothing).
+            for code in list(KEYS.values()) + list(MODS.values()):
+                caps.append((UI_SET_KEYBIT, code))
+        for req, arg in caps:
             fcntl.ioctl(self.fd, req, arg)
         # Legacy uinput_user_dev: 80-byte name, input_id HHHH, ff_effects_max I,
         # then 4 x ABS_CNT ints. Some kernels refuse UI_DEV_CREATE without it.
@@ -85,6 +118,38 @@ class Mouse:
         self.syn()
         time.sleep(0.06)
 
+    def wheel(self, direction):
+        """One notch; direction +1 scrolls up (previously-listed item)."""
+        self.emit(EV_REL, REL_WHEEL, 1 if direction > 0 else -1)
+        self.syn()
+        time.sleep(0.08)
+
+    def key(self, name):
+        code = KEYS[name.lower()]
+        self.emit(EV_KEY, code, 1)
+        self.syn()
+        time.sleep(0.05)
+        self.emit(EV_KEY, code, 0)
+        self.syn()
+        time.sleep(0.1)
+
+    def combo(self, spec):
+        """e.g. "meta+shift+w": hold the modifiers, tap the key, release."""
+        parts = [p.strip().lower() for p in spec.split("+")]
+        codes = [MODS.get(p, KEYS.get(p)) for p in parts]
+        if any(c is None for c in codes):
+            raise SystemExit(f"unknown key in combo: {spec}")
+        for code in codes:                       # press in order
+            self.emit(EV_KEY, code, 1)
+            self.syn()
+            time.sleep(0.03)
+        time.sleep(0.05)
+        for code in reversed(codes):             # release in reverse
+            self.emit(EV_KEY, code, 0)
+            self.syn()
+            time.sleep(0.03)
+        time.sleep(0.12)
+
     def close(self):
         try:
             fcntl.ioctl(self.fd, UI_DEV_DESTROY)
@@ -94,6 +159,33 @@ class Mouse:
 
 def main():
     args = sys.argv[1:]
+
+    # --wheel and --key act at the current pointer position, so they pair with
+    # --move: park the pointer, then step or press.
+    if args and args[0] == "--wheel":
+        m = Mouse(keys=True)
+        try:
+            m.wheel(-1 if args[1] == "down" else 1)
+        finally:
+            m.close()
+        return 0
+
+    if args and args[0] == "--key":
+        m = Mouse(keys=True)
+        try:
+            m.key(args[1])
+        finally:
+            m.close()
+        return 0
+
+    if args and args[0] == "--combo":
+        m = Mouse(keys=True)
+        try:
+            m.combo(args[1])
+        finally:
+            m.close()
+        return 0
+
     move_only = "--move" in args
     if move_only:
         args.remove("--move")
