@@ -3,6 +3,7 @@
 // and the applied badge parked on the second one. Saves preview_wallpaper.
 import QtQuick
 import Quickshell
+import Qt.labs.folderlistmodel
 import qs.modules
 import qs.modules.wallpaper
 
@@ -14,6 +15,9 @@ ShellRoot {
         color: "#39434a"
         implicitWidth: 1000
         implicitHeight: 320
+
+        // Guards the one-shot badge park below.
+        property bool parked: false
 
         Item {
             id: scene
@@ -37,10 +41,42 @@ ShellRoot {
         Component.onCompleted: {
             // No state file writes from a preview.
             WallpaperService.mock = true;
-            // The badge marks what is applied; the highlight sits elsewhere so
-            // both states are visible in one shot.
-            WallpaperService.current = WallpaperService.pathAt(1);
             content.currentIndex = 3;
+            Qt.callLater(win.park);
+        }
+
+        // Park the badge only once the service has settled. The listing arrives
+        // asynchronously (`pathAt(1)` is empty this early, so adopt() would take
+        // the *first* image) and the state file arrives later still; either one
+        // can overwrite `current`, which is how the badge ended up on a slide
+        // outside this shot (2026-10-19).
+        function park() {
+            if (win.parked || !WallpaperService.hydrated
+                || WallpaperService.folder.status !== FolderListModel.Ready
+                || WallpaperService.folder.count < 2)
+                return;
+            win.parked = true;
+            WallpaperService.current = WallpaperService.pathAt(1);
+        }
+
+        Connections {
+            target: WallpaperService.folder
+
+            function onStatusChanged() {
+                win.park();
+            }
+
+            function onCountChanged() {
+                win.park();
+            }
+        }
+
+        Connections {
+            target: WallpaperService
+
+            function onHydratedChanged() {
+                win.park();
+            }
         }
 
         Timer {

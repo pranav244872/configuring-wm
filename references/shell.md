@@ -183,7 +183,7 @@ qs -p ~/.config/quickshell/preview_wallpaper.qml # → /tmp/opencode/preview_wal
 | `preview_dashboard.qml` | both dashboard tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
 | `preview_notifications.qml` | every card state (normal with countdown, sticky critical, low with avatar, icon fallback), the bar island, and the dashboard section with a mocked history — saved twice, DND off then on | card layout, urgency accents, DND bell |
-| `preview_wallpaper.qml` | the picker sheet over the **real** library on a mock desktop, centre slot on the 4th image, applied badge on the 2nd | slide frame + focus growth, neighbour dimming, label row, header counter |
+| `preview_wallpaper.qml` | the picker sheet over the **real** library on a mock desktop, centre slot on the 4th image, applied badge on the 2nd (dimmed — a non-centred slide carries its own dimming) | slide frame + focus growth, neighbour dimming, the applied badge, label row, header counter |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
 

@@ -98,6 +98,14 @@ Wired in `shell.qml` (`WallpaperBackground` is created before the bar/calendar,
   a `ListView` is a `Flickable`.)
 - The sheet has **no backdrop image** behind the strip: a dimmed copy of the
   centred slide made it read as noisy (rejected 2026-10-19).
+- A **bench** that wants to park the applied badge must wait for the service to
+  settle: the library lists asynchronously *and* the state file arrives later
+  still, and either one overwrites `current` (gate on `hydrated` **and**
+  `FolderListModel.Ready`). Setting it too early left the badge on a slide
+  outside the shot, so the preview silently disagreed with the live picker.
+- The badge belongs to its slide, so a non-centred applied slide shows it
+  **dimmed** with the rest of the slide. Only the centred slide renders it at
+  full accent (verified: a 16×16 `#80d4dc` block).
 - An empty library says so in the frame's own voice
   (`NO WALLPAPERS IN ~/PICTURES/WALLPAPERS`) instead of a blank sheet.
 
