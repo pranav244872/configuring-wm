@@ -6,6 +6,7 @@
 //   osd  - a bottom-centre pill reporting volume and brightness
 //   shot - screenshot utility: capture, annotate, save/copy
 //   cal  - desktop month calendar (background layer, click-through)
+//   notif - notification daemon + toasts (our shell owns the bus name)
 //
 //   run:  qs -n (single instance; autostarted at login, see hypr autostart)
 //   stop: qs -k
@@ -22,6 +23,7 @@ import qs.modules.dashboard
 import qs.modules.screenshot
 import qs.modules.calendar
 import qs.modules.lock
+import qs.modules.notifications
 
 ShellRoot {
     TopBar {}
@@ -33,4 +35,5 @@ ShellRoot {
     CalendarWidget {}
     TrayMenuHost {}
     LockHost {}
+    NotificationHost {}
 }

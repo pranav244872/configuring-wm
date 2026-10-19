@@ -198,6 +198,26 @@ QtObject {
         readonly property var checker: ["#283132", "#202829"]
     }
 
+    // ============================================================== notifications
+    // Toast stack + history. Durations are omarchy's policy: a minimum per
+    // urgency, stretched up to `maxDuration` when the sender asks for longer,
+    // and no timer at all for critical (lifetime 0 == sticky). The card
+    // countdown ticks at `tick` ms and pauses while the pointer is over it.
+    readonly property QtObject notifications: QtObject {
+        readonly property int width:        340     // toast card width
+        readonly property int gap:          8       // between stacked cards
+        readonly property int topOffset:    50      // 30 bar + 12 gaps_out + 8 breathing
+        readonly property int sideOffset:   20      // 12 gaps_out + 8
+        readonly property int maxVisible:   4       // overflow goes straight to history
+        readonly property int historyLimit: 20
+        readonly property int lowDuration:    5000
+        readonly property int normalDuration: 8000
+        readonly property int maxDuration:   30000  // sender-stretched cap
+        readonly property int tick:            50   // countdown resolution
+        readonly property int avatar:          34   // icon slot edge
+        readonly property int bodyLines:        3   // body is elided past this
+    }
+
     // ============================================================== animation
     // Our own values: fast, matching the Hyprland feel (see gotchas.md ->
     // animation speed units). end-4's 350-650ms "expressive" curves feel slow here.
@@ -287,5 +307,10 @@ QtObject {
         readonly property string revealOn:   "visibility"
         readonly property string revealOff:  "visibility_off"
         readonly property string wifiForget: "delete"
+
+        // Notifications
+        readonly property string notifBell:  "notifications"
+        readonly property string notifDnd:   "notifications_off"
+        readonly property string notifClose: "close"
     }
 }

@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (network), bar network status (hover tooltip) **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending); notifications next.
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (network + notifications), bar network status (hover tooltip) and the **notification daemon + toasts** **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending).
 
 ## What exists today
 
@@ -18,7 +18,7 @@
 | `modules/osd/` (`OsdHost`, `OsdIndicator`) | volume/brightness pill: reactive PipeWire, IPC brightness, drag-to-set, 1.4s hide |
 | `modules/bar/TopBar.qml` | top bar window: 30px square island, exclusiveZone 30 (12px gap = gaps_out) |
 | `modules/bar/BarSurface.qml` | square island: 1px hairline border + corner ticks (shared) |
-| `modules/bar/BarIsland.qml` | surface + content row: tray, clock, workspaces, network meter, battery, caffeine (1px optical lift) |
+| `modules/bar/BarIsland.qml` | surface + content row: tray, clock, workspaces, DND bell, network meter, battery, caffeine (1px optical lift) |
 | `modules/bar/BarTray.qml` | tray icons left of clock, hidden when empty; left = activate, right = menu (hangs 6px under the bar, flips up at the bottom edge), wheel = scroll |
 | `modules/bar/TrayMenu.qml` + `TrayMenuHost.qml` | app context menu (QsMenuOpener stack) in an overlay; `TrayState` singleton shares open state |
 | `modules/bar/BarClock.qml` + `BarBattery.qml` | weekday/date/time clock + UPower battery, tracked mono |
@@ -52,6 +52,11 @@
 | `modules/dashboard/NetworkSection.qml` | wifi switch, scanning list, inline passphrase, connect / disconnect / forget, portal + off states; scans only while the sheet is open |
 | `modules/dashboard/NetworkRow.qml` | one network: signal + SSID + security/state; expands in place for the passphrase, or for Disconnect / Forget + IP when connected |
 | `modules/dashboard/network_list.js` | sort rank (connected → connecting → saved → signal), signal level, PSK validation rules |
+| `modules/notifications/NotificationService.qml` | the daemon: `NotificationServer` singleton (bus name `org.freedesktop.Notifications`), toast model, lifetimes, DND (persisted), session history |
+| `modules/notifications/NotificationHost.qml` | toast stack overlay (top-right, clear of the bar), per-toast countdown, IPC target `notifications` |
+| `modules/notifications/NotificationCard.qml` | one notification: avatar/app/summary/body, urgency strip, countdown drain, hover ✕ — shared with the dashboard history |
+| `modules/dashboard/NotificationsSection.qml` | DND switch + toast history; rows reuse `NotificationCard` |
+| `modules/bar/BarDnd.qml` | bell-off button, shown only while DND is on; click toggles |
 | `modules/widgets/Toggle.qml` | square hairline toggle, shared by dashboard sections |
 | `modules/widgets/Spinner.qml` | loading spinner: eight square dots chasing, snapped to whole pixels (rotating a glyph pixelates — `StyledText` uses `Text.NativeRendering`) |
 | `modules/widgets/SignalBars.qml` | four-bar signal meter (rectangles, crisp at 16-20px) used by the network rows |
@@ -74,10 +79,12 @@ are a fork feature: config keys, geometry and the runtime API are in
 
 **Dashboard** — the bottom screen edge is a hot zone
 (`bottom = "exec, qs ipc call dashboard toggle"`) that slides a 720×40 % sheet
-up. Phase 1 is the network section: wifi on/off, a scanning list, and an inline
-passphrase prompt whose Connect stays disabled until the input validates for the
-security type (WEP: 5/13 chars or 10/26 hex; otherwise 8–64 — rules ported from
-plasma-nm's applet). Bluetooth, audio (input/output) and night light are next.
+up. Two columns: **network** on the left (wifi on/off, a scanning list, and an
+inline passphrase prompt whose Connect stays disabled until the input validates
+for the security type (WEP: 5/13 chars or 10/26 hex; otherwise 8–64 — rules
+ported from plasma-nm's applet)) and **notifications** on the right (DND switch,
+count, `CLEAR`, and the session's toast history). Bluetooth, audio (input/output)
+and night light are next.
 Networking uses quickshell's native `Quickshell.Networking` (NetworkManager over
 DBus) — no `nmcli` spawning, unlike caelestia/end-4. Note the scan takes a few
 seconds to fill the list after opening.
@@ -106,6 +113,27 @@ only subprocess (one shot per hover — the toolkit exposes just the MAC). Verif
 2026-10-18 with the user's mouse. Rules, anchoring lessons and the click-through
 mask are in [notes/shell-ui.md](notes/shell-ui.md).
 
+**Notifications** — our shell *is* the daemon: `NotificationServer` in
+`NotificationService.qml` owns `org.freedesktop.Notifications` (no mako/dunst/
+swaync installed), and `NotificationHost.qml` draws the toasts — top-right, clear
+of the bar, on an overlay surface whose click mask is the toast column itself.
+Lifetime follows omarchy: ≥5 s low, ≥8 s normal, sticky for critical, stretched up
+to 30 s if the sender asks for longer; hovering pauses the countdown and a
+content update restarts it; past four on screen the oldest leaves early, straight
+to history. Bodies are drawn **plain text** (the toolkit renders markup even when
+the server does not advertise it — an `<img>` body would be a remote GET beacon).
+DND lives in the bar as a bell-off glyph that only appears while it is on, and in
+the dashboard with the history; it is persisted to
+`~/.cache/quickshell/notifications.json`, and a critical notification from a bare
+CLI sender is the one thing that still gets through. History is a session ring of
+20 (a shell restart clears it). IPC: `qs ipc call notifications <toggleDnd|setDnd
+<bool>|dndState|dismissAll|dismissOne|invokeLast|clearHistory|count|historyCount>`.
+Verified live 2026-10-19 with `gdbus` sends and `dbus-monitor` (capabilities,
+8 s/5 s expiry, sticky critical, DND silence + critical bypass, `replaces_id`
+rewrite, burst trim, `ActionInvoked`). Policy rationale, the `ListModel` traps we
+hit and the one check that needs a real pointer are in
+[notes/notifications.md](notes/notifications.md).
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
@@ -118,6 +146,7 @@ qs -p ~/.config/quickshell/preview_calendar.qml # → /tmp/opencode/preview_cale
 qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_powermenu.png
 qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_dashboard.png
 qs -p ~/.config/quickshell/preview_network.qml # → /tmp/opencode/preview_network.png
+qs -p ~/.config/quickshell/preview_notifications.qml # → /tmp/opencode/preview_notifications.png (+ _dnd)
 ```
 
 | Bench | What it renders | Uses |
@@ -130,6 +159,7 @@ qs -p ~/.config/quickshell/preview_network.qml # → /tmp/opencode/preview_netwo
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
 | `preview_dashboard.qml` | dashboard sheet on a mock desktop with a **mocked** network list (connected / saved / secured / open) and the passphrase prompt pinned open | section layout, row states, inline PSK, list scrolling |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
+| `preview_notifications.qml` | every card state (normal with countdown, sticky critical, low with avatar, icon fallback), the bar island, and the dashboard section with a mocked history — saved twice, DND off then on | card layout, urgency accents, DND bell |
 
 Open the PNG (or hand it to an image-reading agent) and critique what is rendered — that is how the bar/launcher curve mismatch was caught.
 
@@ -177,6 +207,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 |---|---|---|---|
 | `swayosd` (was AUR) | volume/brightness OSD panel | built 2026-10-15: volume reactive off PipeWire, brightness via IPC | ✅ done |
 | `waybar` | status bar | built 2026-10-15, restyled 2026-10-16: floating island bar, sliding workspace pill, HH:mm clock, battery | ✅ done |
+| `mako` | notification daemon + toasts | built 2026-10-19: our `NotificationServer` owns the bus name; top-right toast stack, DND + history in the dashboard, plain-text bodies | ✅ done |
 | `rofi` (launcher) | app launcher drawer | built 2026-10-15, restyled 2026-10-16: Papirus icons, frequency ranking, flare drawer, ripple rows, SUPER+F | ✅ done |
 | `rofi` (powermenu, keybinds) | power menu, clipboard history | powermenu & cliphist next | ⬜ |
 | `hyprsunset` | night-light overlay (ramped tint) | colour overlay via `WlrLayerShell` | ⬜ |
@@ -197,7 +228,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 
 1. **OSD** (replaces swayosd) — small, makes the volume/brightness keys visible
 2. **Bar** (replaces waybar) — the centrepiece
-3. **Notifications** (replaces mako) — also unlocks the battery reminder
+3. ✅ **Notifications** (replaces mako) — done 2026-10-19; the same machinery unlocks our own battery/script toasts
 4. **App launcher + power menu** (replaces rofi usage)
 5. **Night light** (replaces hyprsunset)
 6. **Idle + lock** (replaces hypridle/hyprlock) — security-sensitive, do late

@@ -35,6 +35,20 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
   function and catch (`try { void obj.name; return obj } catch (e) { return fallback }`),
   and **call it at each use**: a one-shot `property var x: …` binding evaluates once
   and keeps the dead wrapper, because nothing changes when the object dies.
+- **Never store a live QObject in a `ListModel` role.** Once the owner destroys the
+  object the role is a dangling C++ pointer and the next read segfaults inside
+  `QQmlListModel::data`. Keep the model rows plain data and the live objects in a JS
+  map keyed by id (the notification service does exactly this).
+- **A row from `ListModel.get()` stops answering once its row is removed** — every
+  role reads back `undefined` afterwards, so a copy taken too late writes empty
+  records. Copy the row into plain data *before* `remove()` (this is what wrote `[{}]`
+  history entries, fixed 2026-10-19).
+- `Text` is `AutoText`: it renders markup (and `<img>`) from any string it is given,
+  even when the source does not advertise markup. Force `textFormat: Text.PlainText`
+  for text you did not write (a notification body is attacker-controlled).
+- A `ListModel` delegate with `required property <type> <roleName>` works: each
+  declared role arrives as a change-notifying property, so `onSummaryChanged:` on the
+  delegate fires when the service rewrites that role.
 - `height: visible ? implicitHeight : 0` is a **self-referencing binding** and trips
   QML's loop detector on every re-layout (`TrayMenu` title row, fixed 2026-10-18).
   A `Column`/`Row` does not position invisible items, so `visible` alone is enough.

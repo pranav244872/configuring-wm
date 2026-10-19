@@ -1,10 +1,11 @@
 # Step 4 — Rice Layer
 
-**Status: 🔄 partially done** — the shell, OSD, lock screen and screenshots were
-replaced by our own quickshell work (see [../shell.md](../shell.md)), so this
-table now tracks the *remaining* rice packages. Off it, **`eza`** is done
-(2026-10-18, fish `ls`/`lt` — see [../preferences.md](../preferences.md)); the
-rest of the extras are not installed.
+**Status: 🔄 partially done** — the shell, OSD, lock screen, screenshots and the
+notification daemon were all replaced by our own quickshell work (see
+[../shell.md](../shell.md)), so this table now tracks the *remaining* rice
+packages. Off it, **`eza`** is done (2026-10-18, fish `ls`/`lt` — see
+[../preferences.md](../preferences.md)); the rest of the extras are not
+installed.
 
 Everything deferred on purpose so the WM could be usable and fast first. All of
 it is in official repos. Install order is up to taste, but each item needs the
@@ -20,7 +21,7 @@ previous layer's pieces (e.g. a bar wants a font + theme colours).
 | Screenshots | own quickshell utility (`PRINT`: capture → annotate → Save/Copy/Discard) + `grim`/`slurp` plumbing | `PRINT` (mode buttons inside for output/window/region) |
 | Screen recording | `wf-recorder` | `SUPER+SHIFT+R` |
 | Night light | `hyprsunset` | autostart |
-| Notifications | *(none — mako was removed; build one with quickshell if ever wanted)* | — |
+| Notifications | **no package needed** — our own quickshell daemon owns `org.freedesktop.Notifications` (built 2026-10-19, [../shell.md](../shell.md)) | notifications appear as toasts; DND + history in the dashboard |
 | Theme / extras | `qt6ct`, `matugen`, `adw-gtk-theme`, `eza`, `bat`, `fzf`, `starship` | fish prompt + aliases |
 | Audio helper | `pavucontrol`, `bluez-utils` | `SUPER+XF86AudioMute` output switch script |
 

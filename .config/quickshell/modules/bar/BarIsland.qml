@@ -57,6 +57,10 @@ Item {
             color: ColorUtils.transparentize(Theme.colors.outline, 0.4)
         }
 
+        BarDnd {
+            Layout.alignment: Qt.AlignVCenter
+        }
+
         BarNetwork {
             id: networkItem
             Layout.alignment: Qt.AlignVCenter

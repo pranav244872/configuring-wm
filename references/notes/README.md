@@ -16,6 +16,7 @@ Back to [docs index](../README.md)
 | [keyboard-fn-keys.md](keyboard-fn-keys.md) | the F-row vs Fn: hotkey mode, the `fn_lock` sysfs switch, why plain F9 is unbindable, and how to identify unknown keys |
 | [hotzones.md](hotzones.md) | fork-native edge/corner hot zones: config keys, geometry/slam/re-arm, runtime API, the right-edge → session-menu wiring, rollback |
 | [screenshot.md](screenshot.md) | screenshot utility: grim-before-overlay capture, workspace-scoped window pick, native annotation, Print/Esc close rules |
+| [notifications.md](notifications.md) | our notification daemon: server capabilities, lifetime/DND/history policy, toast placement, the `ListModel`/`tracked` traps, live verification |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |
 | [packages.md](packages.md) | Arch merging `cargo` into `rust`, paru's stale PKGBUILD, makepkg without a TTY |
@@ -27,4 +28,4 @@ Back to [docs index](../README.md)
 | [free-llm-access.md](free-llm-access.md) | getting free LLM access: which providers are genuinely free/keyless, which are dead, Groq's measured limits, and the freellmapi verdict |
 | [hermes.md](hermes.md) | hermes' native `opencode-go` provider, and the verified opencode free-tier `FreeTierError` gate |
 
-Last verified: 2026-10-17
+Last verified: 2026-10-19
