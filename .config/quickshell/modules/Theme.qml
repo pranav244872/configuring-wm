@@ -249,6 +249,23 @@ QtObject {
         readonly property int  focusBorder:       2
     }
 
+    // =================================================================== lock
+    // The lock surface paints the wallpaper itself: the compositor hides every
+    // other surface while the session is locked (verified 2026-10-19 -- a
+    // transparent lock surface shows black, not the desktop), so the
+    // background-layer WallpaperBackground is not visible there.
+    //
+    // Blurred under a scrim, the treatment caelestia's lock and DMS's
+    // LockScreenBackground both use. Values follow DMS: a moderate blur (our GPU
+    // is an Intel UHD 620, and nothing else is drawing while locked) and a 40%
+    // black scrim, which is what keeps the card legible over a bright wallpaper.
+    readonly property QtObject lock: QtObject {
+        readonly property color backdrop:   "#080808" // no wallpaper, and while decoding
+        readonly property real blur:        0.8       // MultiEffect amount (0..1)
+        readonly property int  blurMax:     32        // radius in px
+        readonly property real scrimAlpha:  0.4
+    }
+
     // ============================================================== animation
     // Our own values: fast, matching the Hyprland feel (see gotchas.md ->
     // animation speed units). end-4's 350-650ms "expressive" curves feel slow here.

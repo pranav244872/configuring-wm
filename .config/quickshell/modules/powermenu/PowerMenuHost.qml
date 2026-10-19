@@ -6,6 +6,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import qs.modules
+import qs.modules.lock
 import qs.modules.powermenu
 
 PanelWindow {
@@ -33,6 +34,8 @@ PanelWindow {
     }
 
     function show() {
+        if (LockState.locked)
+            return; // never open a surface behind the lock (see LockState.qml)
         host.open = true;
     }
 
@@ -41,7 +44,20 @@ PanelWindow {
     }
 
     function toggleVisible() {
+        if (LockState.locked)
+            return;
         host.open = !host.open;
+    }
+
+    // A lock started while the menu was up: the hot zones cannot be trusted to
+    // keep it closed, so close it here and unlock to a clean desktop.
+    Connections {
+        target: LockState
+
+        function onLockedChanged() {
+            if (LockState.locked)
+                host.close();
+        }
     }
 
     function run(command) {

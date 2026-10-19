@@ -110,6 +110,35 @@ dashboard opened between x=600→1000 at y=1075, the cursor then sat at (1917,10
   dwell on every motion event inside the zone, i.e. make it measure a *rest*.
   That needs a rebuild + a Hyprland restart, so it was left alone.
 
+## Trap: a locked session does **not** suppress the zones
+
+`isSuppressed()` tests `g_pInputManager->isLocked()` for the "session is locked"
+case, but in this codebase that function means **"a pointer constraint is
+active"** — a game or window locking the cursor:
+
+```cpp
+bool CInputManager::isLocked() {
+    if (!isConstrained()) return false;   // isConstrained() == a constraint owns the focused surface
+    ...
+    return CONSTRAINT && CONSTRAINT->isLocked();
+}
+```
+
+So a session lock suppresses nothing, and resting on an edge while locked still
+runs its action. Verified 2026-10-19: with the login card up, pushing into the
+bottom-right corner opened the wallpaper picker *behind* the lock, and it was
+still open after unlocking. Keybinds are a non-issue — Hyprland blocks them
+while a session lock is up — so the hot zones are the only leak.
+
+- The one-line fork fix is to test the protocol state instead:
+  `g_pSessionLockManager->isSessionLocked()` (`SessionLockManager.cpp:143` →
+  `PROTO::sessionLock->isLocked()`). Needs a rebuild + a Hyprland restart.
+- What we do instead (no rebuild): `modules/lock/LockState.qml` is set by the
+  lock host's `engage()`/`disengage()`, and the three hosts refuse to open while
+  it is set, and close themselves when a lock starts.
+- Either way, test it by locking and then driving each zone with injected
+  motion; watch for a sheet that opens behind the card.
+
 ## Verifying / rolling back
 
 - After arming: `hyprctl configerrors` must be empty (the *running* binary must

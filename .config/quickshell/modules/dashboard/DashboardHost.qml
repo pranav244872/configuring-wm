@@ -7,6 +7,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import qs.modules
 import qs.modules.dashboard
+import qs.modules.lock
 
 PanelWindow {
     id: host
@@ -41,6 +42,8 @@ PanelWindow {
     }
 
     function show() {
+        if (LockState.locked)
+            return; // never open a surface behind the lock (see LockState.qml)
         host.open = true;
     }
 
@@ -49,7 +52,20 @@ PanelWindow {
     }
 
     function toggleVisible() {
+        if (LockState.locked)
+            return;
         host.open = !host.open;
+    }
+
+    // A lock started while the sheet was up: the hot zones cannot be trusted to
+    // keep it closed, so close it here and unlock to a clean desktop.
+    Connections {
+        target: LockState
+
+        function onLockedChanged() {
+            if (LockState.locked)
+                host.close();
+        }
     }
 
     FocusScope {

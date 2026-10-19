@@ -53,13 +53,21 @@ Scope {
         }
     }
 
+    // Every lock/unlock path in the shell goes through these two (idle, the
+    // Fn+F9 bind via IPC, `qs ipc call lock`), so they are the source of truth
+    // for LockState. It is set here rather than from a `lockedChanged` signal:
+    // 0.3.2's WlSessionLock does not notify `locked` on the way back to false
+    // (verified 2026-10-19 -- the flag then stuck, and the guards below refused
+    // to open anything for the rest of the session).
     function engage() {
         authState.reset();
         sessionLock.locked = true;
+        LockState.locked = true;
     }
 
     function disengage() {
         authState.reset();
         sessionLock.locked = false;
+        LockState.locked = false;
     }
 }

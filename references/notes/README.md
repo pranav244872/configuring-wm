@@ -10,16 +10,16 @@ Back to [docs index](../README.md)
 |---|---|
 | [hyprland.md](hyprland.md) | animation speed units, `debug.vfr`, fullscreen enum, `no_screen_share`, Lua `require` behaviour |
 | [validation.md](validation.md) | how to validate Hyprland Lua, kitty, mpv and quickshell before restarting anything |
-| [quickshell.md](quickshell.md) | QML/API traps in 0.3.2 (singletons, `on*` names, `Behavior`, `PanelWindow`, `IpcHandler`, `Process`, PipeWire), the `opacity: 0` input trap and the `mask` fix |
+| [quickshell.md](quickshell.md) | QML/API traps in 0.3.2 (singletons, `on*` names, `Behavior`, `PanelWindow`, `IpcHandler`, `Process`, PipeWire, `WlSessionLock.locked` notifying only on lock), the `opacity: 0` input trap and the `mask` fix |
 | [shell-ui.md](shell-ui.md) | building our own UI: bar/launcher flares and stroke insets, the Chaldea frame language, motion + selection rows, escape/focus grabbing, bar tooltips |
 | [ui-verification.md](ui-verification.md) | proving a shell surface really behaves: real clicks, hover, wheel and keybinds via `tools/uclick.py` on `/dev/uinput`, coordinate maths from `grim`, asserting on state instead of pixels — and why every combo silently degraded to a bare key |
 | [idle-inhibit.md](idle-inhibit.md) | keep-awake: `IdleInhibitor` + `respectInhibitors`, why a barrier on a layer surface works, the probe test |
 | [keyboard-fn-keys.md](keyboard-fn-keys.md) | the F-row vs Fn: hotkey mode, the `fn_lock` sysfs switch, why plain F9 is unbindable, and how to identify unknown keys |
-| [hotzones.md](hotzones.md) | fork-native edge/corner hot zones: config keys, geometry/slam/re-arm, runtime API, the right-edge → session-menu and bottom-right → wallpaper wiring, the residence-not-rest dwell trap, rollback |
+| [hotzones.md](hotzones.md) | fork-native edge/corner hot zones: config keys, geometry/slam/re-arm, runtime API, the right-edge → session-menu and bottom-right → wallpaper wiring, the residence-not-rest dwell trap, the locked-session suppression bug, rollback |
 | [screenshot.md](screenshot.md) | screenshot utility: grim-before-overlay capture, workspace-scoped window pick, native annotation, Print/Esc close rules |
 | [notifications.md](notifications.md) | our notification daemon: server capabilities, lifetime/DND/history policy, toast placement, the `ListModel`/`tracked` traps, live verification |
 | [dashboard.md](dashboard.md) | the bottom sheet: tab row design, tab-gated wifi scanning (proved with NM's `LastScan`), tab movement (mouse/keyboard/IPC), full-width history rows, and the ✕ bug that had two independent causes |
-| [wallpaper.md](wallpaper.md) | the wallpaper drawn by the shell (background layer, decode-then-flip crossfade) and the picker carousel: `StrictlyEnforceRange` strip, wrap, click-to-apply, the `contentX` dimming bug, the `FolderListModel` adopt gate |
+| [wallpaper.md](wallpaper.md) | the wallpaper drawn by the shell (background layer, decode-then-flip crossfade) and the picker carousel: `StrictlyEnforceRange` strip, wrap, click-to-apply, the `contentX` dimming bug, the `FolderListModel` adopt gate, why the lock screen draws its own copy |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |
 | [packages.md](packages.md) | Arch merging `cargo` into `rust`, paru's stale PKGBUILD, makepkg without a TTY, and how git pushes were finally authenticated (`gh`, 2026-10-19) |

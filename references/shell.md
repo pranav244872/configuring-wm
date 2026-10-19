@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** **done**; lock screen built (lock/unlock verified 2026-10-17, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
 
 ## What exists today
 
@@ -25,8 +25,10 @@
 | `modules/bar/WorkspaceIndicator.qml` | workspaces 1..5 + active/occupied >5; sliding block, pill-tracked digits, occupied tick markers, dim empties (center module) |
 | `modules/bar/BarBattery.qml` | UPower battery indicator with dynamic charge icons and percentage (right module) |
 | `modules/launcher/LauncherWindow.qml` + `AppTracker.qml` | full-height left drawer on Super+F / IPC; frequencies persist to cache |
-| `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; locks on idle (3m) or `Fn+F9` |
-| `modules/lock/LockSurface.qml` | per-output lock surface: near-black backdrop, centered card |
+| `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; locks on idle (3m) or `Fn+F9`; keeps `LockState` in step |
+| `modules/lock/LockSurface.qml` | per-output lock surface: the wallpaper (blurred, scrimmed) with the centred formation card over it |
+| `modules/lock/LockBackdrop.qml` | the lock's background: current wallpaper, blurred under a 40% scrim (shared with the bench) |
+| `modules/lock/LockState.qml` | singleton: is the session locked? Surfaces refuse to open (and close) while it is — the compositor does not suppress our hot zones for a session lock |
 | `modules/lock/LockCard.qml` | formation card: user chip, big clock+date, password field + submit |
 | `modules/lock/LockAuth.qml` | password-only PAM machine (`login` stack); buffer cleared every path |
 | `modules/lock/IdleService.qml` | staged IdleMonitors: lock 3m, screen-off 5m (floor 1%), suspend 10m; fullscreen holds all three, MPRIS playback holds blank+suspend |
@@ -156,6 +158,12 @@ countdown. Policy rationale and the `ListModel` traps we hit are in
 
 **Wallpaper** — the shell **draws the wallpaper itself** (`WallpaperBackground.qml`, a background-layer surface) instead of running swww/hyprpaper/awww: one toolkit, no daemon. The picker is a bottom sheet with a **filmstrip** — `ListView` + `StrictlyEnforceRange`, so the index drives the strip and the pointer never drags it. The centred slide carries a 2px accent border and grows 8%, neighbours dim to 50%, a **click applies** it (the sheet stays open so you watch it land behind the sheet) and the applied slide wears an accent check; wheel and `←`/`→` step and **wrap** both ways, `Enter` applies, Escape / click-away closes. The library is `~/Pictures/Wallpapers` listed with `FolderListModel` (0.3.2 has no `FileSystemModel`), and the choice persists to `~/.cache/quickshell/wallpaper.json`. Opened by the **bottom-right corner hot zone**, `SUPER + SHIFT + W`, or `qs ipc call wallpaper toggle`. A change is a crossfade between two fixed image slots, and the incoming PNG is decoded *before* the slots flip — a 4 MB PNG takes 142–308 ms and flipping early showed the bare compositor colour. Design rules, the `contentX` dimming bug and the corner trap are in [notes/wallpaper.md](notes/wallpaper.md); verified live 2026-10-19.
 
+**Lock** — a real `WlSessionLock`, not a fake overlay, and it draws the **wallpaper** itself: the compositor hides every other surface while locked, so the background-layer `WallpaperBackground` is not on screen there (proved 2026-10-19 — with the lock surface transparent the locked screen is black, not the desktop). `LockBackdrop` paints the current wallpaper blurred under a 40% black scrim (the treatment caelestia's lock and DMS's `LockScreenBackground` use; values follow DMS, since the GPU here is an Intel UHD 620) and follows a wallpaper change. It is a shared component, so `preview_lock.qml` reviews that look without locking the session.
+
+Two lock traps, both proved live and both logged in [notes/hotzones.md](notes/hotzones.md) and [notes/quickshell.md](notes/quickshell.md):
+- the compositor's hot zones keep firing **while locked** (Hyprland's `InputManager::isLocked()` means "a pointer constraint is active", not "the session is locked"), so the corner opened the picker behind the lock — the hosts now consult `LockState` and refuse, and close when a lock starts;
+- 0.3.2's `WlSessionLock` does not notify `locked` on the way back to `false`, so `LockState` is driven from the shell's own `engage()`/`disengage()`.
+
 ## Preview benches (use them, don't guess)
 
 Each `/preview*.qml` is a standalone bench: renders real components, saves a PNG, quits; safe while the main `qs` instance is up.
@@ -170,6 +178,7 @@ qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_das
 qs -p ~/.config/quickshell/preview_network.qml # → /tmp/opencode/preview_network.png
 qs -p ~/.config/quickshell/preview_notifications.qml # → /tmp/opencode/preview_notifications.png (+ _dnd)
 qs -p ~/.config/quickshell/preview_wallpaper.qml # → /tmp/opencode/preview_wallpaper.png
+qs -p ~/.config/quickshell/preview_lock.qml # → /tmp/opencode/preview_lock.png
 ```
 
 | Bench | What it renders | Uses |
@@ -178,7 +187,7 @@ qs -p ~/.config/quickshell/preview_wallpaper.qml # → /tmp/opencode/preview_wal
 | `preview_white.qml` | 960×560 mock screen: bar, launcher drawer (real Papirus icons, frequency-sorted), OSD — with marked screen boundary | frame language check, overall trip |
 | `preview_screenshot.qml` | floating editor + toolbar with mock strokes/texts (no capture) | pen rendering, toolbar layout |
 | `preview_calendar.qml` | desktop calendar card on dark bg | grid math, today pill, chrome |
-| `preview_lock.qml` | formation card in typing + failed states (no session lock) | card visuals, auth states |
+| `preview_lock.qml` | the formation card in typing + failed states over the real lock backdrop (wallpaper, blurred + scrimmed) | card visuals, auth states, the lock's background |
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
 | `preview_dashboard.qml` | both dashboard tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |

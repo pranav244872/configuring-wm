@@ -35,10 +35,9 @@ Wired in `shell.qml` (`WallpaperBackground` is created before the bar/calendar,
   change settles on an arbitrary image (it picked `5.png`, index 2, on
   2026-10-19).
 - State: `~/.cache/quickshell/wallpaper.json` (`{"path": "…"}`), read with one
-  `sh` `cat` through `Process` + `StdioCollector` (same shape as the
-  notification DND file). `hydrated` gates every write, so the startup fallback
-  cannot clobber the saved choice; `mock` stops writes, so the bench never edits
-  the real file.
+  `sh` `cat` via `Process` + `StdioCollector` (like the notification DND file).
+  `hydrated` gates every write so the startup fallback cannot clobber the saved
+  choice, and `mock` stops the bench from editing the real file.
 - A first run, or a library that moved, falls back to the first image (a saved
   path that is still in the library is never touched).
 
@@ -51,15 +50,16 @@ Wired in `shell.qml` (`WallpaperBackground` is created before the bar/calendar,
   it.
 - An empty `Region` mask: a full-screen layer surface that accepted input would
   eat the hot zones and the desktop calendar.
-- **Decode first, then flip.** Two fixed slots each hold one texture; a change
-  loads the new source into the *hidden* slot and only swaps `front` once it is
+- **Decode first, then flip.** Two fixed slots hold one texture each; a change
+  loads the new source into the *hidden* slot and swaps `front` only once it is
   `Image.Ready`. Flipping immediately fades the old wallpaper out into an empty
-  slot, which shows the bare compositor colour for as long as the 4 MB PNG takes
-  to decode — **measured 142–308 ms on 2026-10-19: a visible black flash**.
-- `sourceSize` keeps the decode to the drawn size, but **PNG decode does not get
-  cheaper with `sourceSize`** (PNG is not size-scalable) — that is why the fix
-  is the flip-on-ready dance, not a thumbnail size. A pre-generated `ffmpeg`
-  thumbnail cache is the deferred, proper fix (see Debts).
+  slot, showing the bare compositor colour for as long as the 4 MB PNG takes to
+  decode — **measured 142–308 ms on 2026-10-19: a visible black flash**.
+- `sourceSize` keeps the decode to the drawn size, and the same value in the
+  lock backdrop makes that load a cache hit. **PNG decode does not get cheaper
+  with `sourceSize`** (PNG is not size-scalable), which is why the fix is the
+  flip-on-ready dance; a pre-generated `ffmpeg` thumbnail cache is the real one
+  (see Debts).
 
 ## The carousel
 
@@ -98,16 +98,22 @@ Wired in `shell.qml` (`WallpaperBackground` is created before the bar/calendar,
   a `ListView` is a `Flickable`.)
 - The sheet has **no backdrop image** behind the strip: a dimmed copy of the
   centred slide made it read as noisy (rejected 2026-10-19).
-- A **bench** that wants to park the applied badge must wait for the service to
-  settle: the library lists asynchronously *and* the state file arrives later
-  still, and either one overwrites `current` (gate on `hydrated` **and**
-  `FolderListModel.Ready`). Setting it too early left the badge on a slide
-  outside the shot, so the preview silently disagreed with the live picker.
-- The badge belongs to its slide, so a non-centred applied slide shows it
-  **dimmed** with the rest of the slide. Only the centred slide renders it at
-  full accent (verified: a 16×16 `#80d4dc` block).
+- **The lock screen draws its own copy of the wallpaper.** The compositor hides
+  every other surface while the session is locked, so the background-layer
+  `WallpaperBackground` is not on screen there (verified 2026-10-19: with the
+  lock surface transparent the locked screen is black, not the desktop). The
+  lock paints the wallpaper, blurred under a scrim — see
+  [shell.md](../shell.md) and `modules/lock/LockBackdrop.qml`.
 - An empty library says so in the frame's own voice
   (`NO WALLPAPERS IN ~/PICTURES/WALLPAPERS`) instead of a blank sheet.
+- A **bench** that parks the applied badge must wait for the service to settle:
+  the library lists asynchronously *and* the state file arrives later still, and
+  either overwrites `current` (gate on `hydrated` **and** `FolderListModel.Ready`).
+  Setting it too early left the badge on a slide outside the shot, so the preview
+  silently disagreed with the live picker.
+- The badge belongs to its slide, so a non-centred applied slide shows it
+  **dimmed** with the rest of the slide; only the centred slide renders it at
+  full accent (verified: a 16×16 `#80d4dc` block).
 
 ## Trigger
 

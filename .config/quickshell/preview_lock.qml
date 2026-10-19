@@ -1,10 +1,12 @@
-// Lock bench: formation card in typing + failed states on dark. The real
-// lock surface can't bench (needs a locked session); this covers visuals.
+// Lock bench: the formation card in typing + failed states, over the real lock
+// backdrop (the wallpaper, blurred under its scrim) -- the real lock surface
+// needs a locked session, so this is how the lock's look gets reviewed.
 // Saves preview_lock.png and quits.
 import QtQuick
 import Quickshell
 import qs.modules
 import qs.modules.lock
+import qs.modules.wallpaper
 
 ShellRoot {
     PanelWindow {
@@ -24,6 +26,8 @@ ShellRoot {
         }
 
         Component.onCompleted: {
+            // A preview never edits the real state file.
+            WallpaperService.mock = true;
             authTyping.buffer = "hunter2";
             authFailed.buffer = "wrong";
             authFailed.state = LockAuth.State.Failed;
@@ -32,6 +36,10 @@ ShellRoot {
         Item {
             id: scene
             anchors.fill: parent
+
+            LockBackdrop {
+                anchors.fill: parent
+            }
 
             LockCard {
                 x: 40

@@ -1,5 +1,7 @@
-// Per-output lock surface: near-black backdrop, centered formation card.
-// Clicking the backdrop refocuses the password field.
+// Per-output lock surface: the wallpaper (blurred, scrimmed) with the centred
+// formation card over it. Clicking anywhere refocuses the password field.
+//
+// The backdrop is a shared component, so the lock bench shows the same thing.
 import QtQuick
 import Quickshell.Wayland
 import qs.modules
@@ -11,14 +13,17 @@ WlSessionLockSurface {
     required property var lock
     required property LockAuth auth
 
-    Rectangle {
-        anchors.fill: parent
-        color: "#080808"
+    // The surface's own colour must be transparent: the toolkit default is
+    // white, and the backdrop below paints the whole output.
+    color: "transparent"
 
-        MouseArea {
-            anchors.fill: parent
-            onPressed: card.forceInputFocus()
-        }
+    LockBackdrop {
+        anchors.fill: parent
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onPressed: card.forceInputFocus()
     }
 
     LockCard {

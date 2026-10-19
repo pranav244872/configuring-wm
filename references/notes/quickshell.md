@@ -72,6 +72,15 @@ Checked against installed quickshell 0.3.2 + source ([../references.md](../refer
   A `Column`/`Row` does not position invisible items, so `visible` alone is enough.
 - `WlSessionLock.unlock()` is a private slot in 0.3.2 (verified in source) — unlock via
   `lock.locked = false`; `PamContext` does have `onPamMessage` (emitted after each message update).
+- **`WlSessionLock.locked` notifies only on the way *up*** (verified 2026-10-19): setting
+  `locked = false` does unlock and `isLocked()`/`locked` then *reads* false, but no
+  `lockedChanged` is emitted, so an `onLockedChanged` handler never sees the unlock. Drive
+  lock state from your own lock/unlock functions instead — a flag set in that handler
+  otherwise stays stuck `true` for the rest of the session.
+- A **`WlSessionLockSurface` (and `PanelWindow`) defaults to an opaque white
+  fill** (`color`). Anything meant to be see-through or covered needs its own
+  `color: "transparent"` — found 2026-10-19 when the transparent lock experiment
+  rendered pure white instead of the desktop.
 - `Item.mapToGlobal()` returns window-local coords on layer-shell (the client never
   learns the compositor-assigned window pos). Add the known window origin yourself;
   `mapToScene()` is pure client math and safe (see tray menu anchor).
