@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + bluetooth + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
 
 ## What exists today
 
@@ -54,9 +54,10 @@
 | `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
 | `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height, centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes; `←`/`→` change tab |
 | `modules/dashboard/DashboardTabs.qml` | the tab row: equal-width numbered cells, solid accent block on the active one (slides on the move curve), wheel to step; each section is one tab |
-| `modules/dashboard/DashboardContent.qml` | tab host: the tab row over a `StackLayout` of the sections, and the one place that decides which section is allowed to work (the network list scans only while its tab is visible) |
+| `modules/dashboard/DashboardContent.qml` | tab host: the tab row over a `StackLayout` of the sections, and the one place that decides which section is allowed to work (`syncActive()`: the network list scans and the bluetooth list discovers only while their own tab is visible) |
 | `modules/dashboard/NetworkSection.qml` | wifi switch, scanning list, inline passphrase, connect / disconnect / forget, portal + off states; scans only while the sheet is open |
 | `modules/dashboard/NetworkRow.qml` | one network: signal + SSID + security/state; expands in place for the passphrase, or for Disconnect / Forget + IP when connected |
+| `modules/bluetooth/` (`BluetoothSection`, `BluetoothRow`, `bluetooth_model.js`) | dashboard Bluetooth tab: toggle, no-adapter / rfkill-blocked / off states, `MY DEVICES` + `AVAILABLE` lists with inline detail (address, type, battery, connect / pair / forget), adapter alias + discoverable footer; pairing uses a short-lived `bluetoothctl --agent NoInputNoOutput` — see [notes/bluetooth.md](notes/bluetooth.md) |
 | `modules/dashboard/network_list.js` | sort rank (connected → connecting → saved → signal), signal level, PSK validation rules |
 | `modules/notifications/NotificationService.qml` | the daemon: `NotificationServer` singleton (bus name `org.freedesktop.Notifications`), toast model, lifetimes, DND (persisted), session history |
 | `modules/notifications/NotificationHost.qml` | toast stack overlay (top-right, clear of the bar), per-toast countdown, IPC target `notifications` |
@@ -192,7 +193,8 @@ qs -p ~/.config/quickshell/preview_lock.qml # → /tmp/opencode/preview_lock.png
 | `preview_cp_tracker.qml` | CP tracker card on a dark plate (third-party widget) | ratings blocks, featured countdown, schedule list |
 | `preview_lock.qml` | the formation card in typing + failed states over the real lock backdrop (wallpaper, blurred + scrimmed) | card visuals, auth states, the lock's background |
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
-| `preview_dashboard.qml` | both dashboard tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
+| `preview_dashboard.qml` | the network and notifications tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
+| `preview_bluetooth.qml` | the Bluetooth tab in six mock states: saved devices with one expanded, a discovered device expanded (PAIR / FORGET), powered off, rfkill-blocked, empty, no adapter | all tab states, section headers, row + detail layout, footer |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
 | `preview_notifications.qml` | every card state (normal with countdown, sticky critical, low with avatar, icon fallback), the bar island, and the dashboard section with a mocked history — saved twice, DND off then on | card layout, urgency accents, DND bell |
 | `preview_wallpaper.qml` | the picker sheet over the **real** library on a mock desktop, centre slot on the 4th image, applied badge on the 2nd (dimmed — a non-centred slide carries its own dimming) | slide frame + focus growth, neighbour dimming, the applied badge, label row, header counter |

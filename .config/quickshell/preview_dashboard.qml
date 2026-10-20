@@ -107,7 +107,7 @@ ShellRoot {
 
             Sheet {
                 id: notifSheet
-                tab: 1
+                tab: 2
             }
         }
 

@@ -20,6 +20,7 @@ updated in the same change.
 | Runtime toggles | [runtime-toggles.md](runtime-toggles.md) | ⬜ | one-key switches for animations, opacity, gaps, night light |
 | Keyboard | [keyboard-takeover.md](keyboard-takeover.md) | ⬜ | kitty grabs `ctrl+shift+<letter>`, so those WM binds never fire |
 | Audio helpers | [audio-helpers.md](audio-helpers.md) | ⬜ | output/input switching, speaker tuning, volume handling |
+| Bluetooth | [notes/bluetooth.md](../notes/bluetooth.md) | 🔄 | dashboard tab: adapter states (rfkill/off/absent), saved + available devices, inline connect/pair/forget, alias + discoverable — pairing untested (no device yet) |
 | Capture tooling | [capture-tooling.md](capture-tooling.md) | ⬜ | screenshot, region, screen recording, OCR, webcam |
 | Menus & keybinding cheatsheet | [menus-and-keybindings.md](menus-and-keybindings.md) | ⬜ | searchable menus + auto-generated keybinding reference |
 | Robustness & session | [robustness-and-session.md](robustness-and-session.md) | ⬜ | crash recovery, stranded-lock detection, sleep-lock, systemd tuning |

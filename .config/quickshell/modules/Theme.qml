@@ -364,6 +364,12 @@ QtObject {
         readonly property string revealOff:  "visibility_off"
         readonly property string wifiForget: "delete"
 
+        // Bluetooth. Adapter states + the discovery affordance; device-type
+        // glyphs are picked from the BlueZ icon name in bluetooth_model.js.
+        readonly property string btScan:      "refresh"
+        readonly property string btOff:       "bluetooth_disabled"
+        readonly property string btSearching: "bluetooth_searching"
+
         // Notifications
         readonly property string notifBell:  "notifications"
         readonly property string notifDnd:   "notifications_off"

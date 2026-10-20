@@ -1,20 +1,23 @@
 // Dashboard body: a tab row over the control sections, one section per tab.
-// Both sections stay instantiated (they are light), and the network list only
-// scans while its own tab is the visible one, so a background tab does no work.
+// Every section stays instantiated (they are light), and each one only does
+// work while its own tab is the visible one -- the network list scans, the
+// bluetooth list discovers, a background tab is idle.
 // Shared with the preview bench.
 import QtQuick
 import QtQuick.Layouts
 import qs.modules
 import qs.modules.dashboard
+import qs.modules.bluetooth
 
 Item {
     id: root
 
     // Sections are reachable by id: the bench injects mocks.
     property alias network: networkSection
+    property alias bluetooth: bluetoothSection
 
     // One source for both the visible labels and the IPC names.
-    readonly property var tabLabels: ["NETWORK", "NOTIFICATIONS"]
+    readonly property var tabLabels: ["NETWORK", "BLUETOOTH", "NOTIFICATIONS"]
     readonly property var tabNames: root.tabLabels.map(label => label.toLowerCase())
 
     property int currentTab: 0
@@ -42,24 +45,29 @@ Item {
 
     function activate() {
         root.active = true;
-        root.syncScanning();
+        root.syncActive();
     }
 
     function deactivate() {
         root.active = false;
-        root.syncScanning();
+        root.syncActive();
     }
 
-    onCurrentTabChanged: root.syncScanning()
+    onCurrentTabChanged: root.syncActive()
 
-    // The list scans only while the sheet is open AND the network tab is the
-    // visible one. activate() rebuilds the snapshot and starts the scan, so
-    // switching back to the tab is instantly current.
-    function syncScanning() {
+    // Only the visible tab does work: the network list scans/rebuilds and the
+    // bluetooth list discovers/probes while active. activate() rebuilds each
+    // snapshot, so switching back is instantly current.
+    function syncActive() {
         if (root.active && root.currentTab === 0)
             networkSection.activate();
         else
             networkSection.deactivate();
+
+        if (root.active && root.currentTab === 1)
+            bluetoothSection.activate();
+        else
+            bluetoothSection.deactivate();
     }
 
     ColumnLayout {
@@ -80,6 +88,10 @@ Item {
 
             NetworkSection {
                 id: networkSection
+            }
+
+            BluetoothSection {
+                id: bluetoothSection
             }
 
             NotificationsSection {
