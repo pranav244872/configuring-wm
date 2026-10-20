@@ -37,7 +37,10 @@ Decode, same 1920×1080 source (`ffmpeg -benchmark … -f null -`):
   `source: "file://" + (WallpaperThumbs.pathFor(filePath) || filePath)` — the
   **full image is the fallback**, so a first open (or a library change) shows
   real slides while the pass catches up, never blanks.
-- The pass re-runs when `FolderListModel.count` changes; a request while one is
+- The pass re-runs when `FolderListModel.count` changes **and every time the
+  picker opens** (`WallpaperHost.onOpenChanged`): the pass is stat-only when
+  nothing changed, and a source newer than its thumb is rebuilt — so an image
+  replaced in place is fresh without a shell restart. A request while one is
   running sets `pending` and runs once more, so a library that lists in two
   chunks is not left half-cached.
 - **The background and the lock do not use thumbs.** They need full resolution;
@@ -62,6 +65,7 @@ Decode, same 1920×1080 source (`ffmpeg -benchmark … -f null -`):
 Cache built for all 20 library entries · probe printed `thumbs=20 library=20`
 and resolved three sources to their thumbs · live picker renders the strip
 from the cache · bench PNG inspected · first pass 2.7 s, 436 KB · decode
-51 ms (full 1080p PNG) vs 2 ms (thumb).
+51 ms (full 1080p PNG) vs 2 ms (thumb) · `touch` on a source then opening the
+picker rebuilt exactly that thumb (mtime followed the source).
 
 Last verified: 2026-10-20

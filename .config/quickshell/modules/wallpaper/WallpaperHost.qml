@@ -38,8 +38,12 @@ PanelWindow {
     }
 
     onOpenChanged: {
-        if (host.open)
+        if (host.open) {
             content.activate();
+            // Cheap when nothing changed: the pass only stats and md5s, and
+            // ffmpeg runs for a source newer than its thumb.
+            WallpaperThumbs.refresh();
+        }
         // Hold the cycling countdown while the sheet is up.
         WallpaperCycler.suspended = host.open;
     }
