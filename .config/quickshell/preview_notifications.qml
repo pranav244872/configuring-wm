@@ -11,6 +11,7 @@ import qs.modules.widgets
 import qs.modules.bar
 import qs.modules.dashboard
 import qs.modules.notifications
+import qs.modules.power
 
 ShellRoot {
     PanelWindow {
@@ -19,7 +20,7 @@ ShellRoot {
         visible: true
         color: "#2b3134"
         implicitWidth: 780
-        implicitHeight: 1000
+        implicitHeight: 1120
 
         // The bench paints the DND bar state by flipping the singleton. This
         // guards the write-back so a screenshot never edits the real setting.
@@ -49,11 +50,24 @@ ShellRoot {
                 progress: 0.66
             }
 
-            // Critical: alarm colour, long body, no clock (sticky).
+            // The shell's own low-battery warnings, exactly as BatteryWatch
+            // posts them (copy comes from its helpers so the bench cannot drift).
             NotificationCard {
-                app: "systemd"
-                summary: "Battery critically low"
-                body: "3% remaining. Plug in now — the session suspends at 2% unless a charger appears."
+                app: "BATTERY"
+                appIcon: "battery-caution"
+                summary: BatteryWatch.summaryFor(20)
+                body: BatteryWatch.bodyFor(20, 4320)
+                urgency: 1
+                progress: 0.8
+            }
+
+            // Critical: alarm colour and no clock (sticky until dismissed or the
+            // charger appears).
+            NotificationCard {
+                app: "BATTERY"
+                appIcon: "battery-caution"
+                summary: BatteryWatch.summaryFor(10)
+                body: BatteryWatch.bodyFor(10)
                 urgency: 2
                 progress: -1
             }
