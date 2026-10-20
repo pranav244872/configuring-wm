@@ -103,6 +103,12 @@ Last updated: 2026-10-16
   falls back to real paths. `cdi` = interactive picker (needs fzf).
 - `kitty` config ported verbatim from the old setup: JetBrainsMono Nerd Font
   Mono 12, 90 % opacity, teal palette, `ctrl+shift+t` new tab with cwd.
+- **GTK apps use Rubik 11** (AUR `ttf-rubik-vf`, installed 2026-10-20):
+  `gtk-font-name=Rubik 11` in `~/.config/gtk-{3,4}.0/settings.ini`, which is the
+  live path because no XSETTINGS daemon runs; gsettings is set to match for the
+  installer. The terminal stays on JetBrainsMono Nerd Font — see
+  [notes/packages.md](notes/packages.md#gtk-font-rubik-aur) for the package
+  choice and the `/proc/<pid>/maps` check.
 - **`eza` replaces `ls`** (installed 2026-10-18, `extra/eza` 0.23.5):
   `ls` = `eza -la --group-directories-first --icons=auto` and `lt` = a two-level
   tree with git status — the old setup's flags, restored in `config.fish`. `lt`

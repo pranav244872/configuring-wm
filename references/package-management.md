@@ -4,7 +4,7 @@ How this machine gets and keeps its packages: pacman settings and the AUR
 helper. The `paccache` trim timer is documented separately in
 [notes/cache.md](notes/cache.md).
 
-Last updated: 2026-10-19
+Last updated: 2026-10-20
 
 ## Packages installed for this setup (explicit `pacman -S` args only)
 
@@ -97,6 +97,7 @@ not as a `pacman -S` argument:
 |---|---|---|
 | `paru` | 2.1.0-2 | AUR helper; the user wanted one (2026-10-15). Built with makepkg from the AUR repo, owned by pacman afterwards (`paru v2.1.0 - libalpm v16.0.1`) |
 | `hermes-agent-bin` | 0.22.2-1 | Nous Research's locally-run AI agent (TUI + tool use), asked for by the user (2026-10-15). Installed as the **prebuilt `-bin` variant** — it bundles its own Python venv under `/opt`, so unlike `hermes-agent` it does **not** need the Rust toolchain or `agent-browser` at build time |
+| `ttf-rubik-vf` | 2.3.0-3 | GTK UI font `Rubik 11` (2026-10-20). Rubik has no official package; the variable build replaces the installer's old `otf-rubik` entry. Built with `makepkg -f` and installed with `sudo pacman -U`, no paru needed — see [notes/packages.md](notes/packages.md#gtk-font-rubik-aur) |
 
 ```bash
 # AUR helper (see "Building it" below)

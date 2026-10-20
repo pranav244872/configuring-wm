@@ -41,6 +41,6 @@ setup_paru() {
 
 install_aur_packages() {
   section "AUR packages"
-  paru -S --needed --noconfirm vscodium antigravity-cli opencode git-credential-manager otf-rubik nmrs blueberry swayosd 2>&1 | tail -1
+  paru -S --needed --noconfirm vscodium antigravity-cli opencode git-credential-manager ttf-rubik-vf nmrs blueberry swayosd 2>&1 | tail -1
   ok "AUR packages installed"
 }

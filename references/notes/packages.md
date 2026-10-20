@@ -24,6 +24,29 @@ Back to [notes index](README.md) - [docs index](../README.md)
   `archlinux.org/packages/search/json/?name=cargo` is the authority for "does
   this package exist upstream at all".
 
+## GTK font: Rubik (AUR)
+
+- **Rubik is not in the official repos** — `pacman -Ss rubik` only finds
+  unrelated KDE/game packages. The AUR has three builds: `ttf-rubik-vf` (2.3.0,
+  variable, 21 votes), `otf-rubik` (2.2.0, static) and `ttf-rubik` (1.0, old
+  files). We use **`ttf-rubik-vf`**; never install a second one — all of them
+  expose the family name `Rubik`, so fontconfig would pick between duplicates.
+- The PKGBUILD has no build deps, so `makepkg -f` then `sudo -S pacman -U` works
+  without paru. It installs the files literally as `Rubik%5Bwght%5D.ttf` (the
+  URL-encoded name survives packaging); fontconfig and GTK read the name table,
+  so this is cosmetic only.
+- **`settings.ini` is the live path for GTK here, not gsettings**: nothing
+  exports XSETTINGS (no `xsettingsd`/`gsd-xsettings`), so GTK3/4 read
+  `gtk-font-name` from `~/.config/gtk-{3,4}.0/settings.ini`.
+  `20-dotfiles.sh` also sets `gsettings font-name "Rubik 11"`; it only matters
+  if an XSETTINGS daemon ever appears, so keep the two in sync.
+- **Verify with `/proc/<pid>/maps`, not `fc-match`**: `fc-match Rubik` proves
+  fontconfig knows the family, while only the mapped file proves the app loaded
+  it. After the change a fresh `zenity` maps exactly one font,
+  `/usr/share/fonts/TTF/Rubik%5Bwght%5D.ttf`; before it, the gsettings value said
+  `Rubik 11` (in the installer) and the live value `Adwaita Sans 11`, with
+  `fc-list | grep -ci rubik` = 0 — a silent fallback.
+
 ## Pushing to GitHub
 
 The dotfiles repo (`~/del/configuring-wm` → `github.com/pranav244872/configuring-wm`)
