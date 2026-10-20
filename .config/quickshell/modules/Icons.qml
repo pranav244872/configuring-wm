@@ -12,6 +12,26 @@ QtObject {
         return value >= 0.35 ? Theme.glyphs.volumeUp : Theme.glyphs.volumeDown;
     }
 
+    // Audio tab: mute wins, then the device kind (headset/HDMI/Bluetooth), then
+    // the level ladder. `kind` is a Material ligature name from audio_model.js.
+    function output(value: real, muted: bool, kind: string): string {
+        if (muted)
+            return Theme.glyphs.volumeMute;
+        if (kind === Theme.glyphs.audioHeadset
+                || kind === Theme.glyphs.audioHdmi
+                || kind === Theme.glyphs.audioBluetooth)
+            return kind;
+        return value >= 0.35 ? Theme.glyphs.volumeUp : Theme.glyphs.volumeDown;
+    }
+
+    function input(muted: bool, kind: string): string {
+        if (muted)
+            return Theme.glyphs.audioMicOff;
+        if (kind === Theme.glyphs.audioCamera)
+            return kind;
+        return Theme.glyphs.audioMic;
+    }
+
     // Seven bins for brightness.
     function brightness(value: real): string {
         const bins = [

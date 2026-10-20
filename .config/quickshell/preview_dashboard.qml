@@ -1,4 +1,4 @@
-// Dashboard bench: both tabs of the sheet over a mock desktop -- the network
+// Dashboard bench: two of the four tabs over a mock desktop -- the network
 // tab with a mocked list (no radio involved) and the unsaved row expanded to
 // show the passphrase prompt, and the notifications tab with a mocked history
 // (timestamps included). Saves preview_dashboard.

@@ -18,6 +18,7 @@ Back to [docs index](../README.md)
 | [keyboard-fn-keys.md](keyboard-fn-keys.md) | the F-row vs Fn: hotkey mode, the `fn_lock` sysfs switch, why plain F9 is unbindable, and how to identify unknown keys |
 | [hotzones.md](hotzones.md) | fork-native edge/corner hot zones: config keys, geometry/slam/re-arm, runtime API, the right-edge → session-menu and bottom-right → wallpaper wiring, the residence-not-rest dwell trap, the locked-session suppression bug, rollback |
 | [screenshot.md](screenshot.md) | screenshot utility: grim-before-overlay capture, workspace-scoped window pick, native annotation, Print/Esc close rules |
+| [audio.md](audio.md) | the dashboard's Audio tab (pavucontrol study): PipeWire typing facts (playback streams are `isStream && isSink`, volume 0..1, `preferred*` is only a hint), why the master slider writes through `wpctl` on hardware-volume devices, `{id,name}` snapshots against the node-removal segfault, the mic peak meter, and the WirePlumber-teardown test |
 | [bluetooth.md](bluetooth.md) | the dashboard's Bluetooth tab: Blueberry/gnome-bluetooth study, `Quickshell.Bluetooth` API facts (battery is 0–1, no native pairing agent), the `bluetoothctl --agent NoInputNoOutput` workaround, rfkill detail + unblock flow, failure inference, verified states and the restart race |
 | [notifications.md](notifications.md) | our notification daemon: server capabilities, lifetime/DND/history policy, toast placement, the `ListModel`/`tracked` traps, live verification |
 | [cp-tracker.md](cp-tracker.md) | the desktop CP tracker card (Codeforces/AtCoder ratings, next target contest, schedule) — **built by another agent**; files, data flow, cache paths, live verification, and the background-layer/restart traps |
@@ -36,4 +37,4 @@ Back to [docs index](../README.md)
 | [free-llm-access.md](free-llm-access.md) | getting free LLM access: which providers are genuinely free/keyless, which are dead, Groq's measured limits, and the freellmapi verdict |
 | [hermes.md](hermes.md) | hermes' native `opencode-go` provider, and the verified opencode free-tier `FreeTierError` gate |
 
-Last verified: 2026-10-19
+Last verified: 2026-10-20

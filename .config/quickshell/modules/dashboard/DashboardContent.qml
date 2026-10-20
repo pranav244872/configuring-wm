@@ -8,6 +8,7 @@ import QtQuick.Layouts
 import qs.modules
 import qs.modules.dashboard
 import qs.modules.bluetooth
+import qs.modules.audio
 
 Item {
     id: root
@@ -15,9 +16,11 @@ Item {
     // Sections are reachable by id: the bench injects mocks.
     property alias network: networkSection
     property alias bluetooth: bluetoothSection
+    property alias audio: audioSection
 
     // One source for both the visible labels and the IPC names.
-    readonly property var tabLabels: ["NETWORK", "BLUETOOTH", "NOTIFICATIONS"]
+    readonly property var tabLabels: ["NETWORK", "BLUETOOTH", "NOTIFICATIONS", "AUDIO"]
+    readonly property int audioTabIndex: 3
     readonly property var tabNames: root.tabLabels.map(label => label.toLowerCase())
 
     property int currentTab: 0
@@ -68,6 +71,11 @@ Item {
             bluetoothSection.activate();
         else
             bluetoothSection.deactivate();
+
+        if (root.active && root.currentTab === root.audioTabIndex)
+            audioSection.activate();
+        else
+            audioSection.deactivate();
     }
 
     ColumnLayout {
@@ -95,6 +103,10 @@ Item {
             }
 
             NotificationsSection {
+            }
+
+            AudioSection {
+                id: audioSection
             }
         }
     }

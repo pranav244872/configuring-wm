@@ -140,6 +140,9 @@ QtObject {
         // fixed share of the monitor height, so the sections scroll.
         readonly property int  dashboardWidth:       720
         readonly property real dashboardHeightRatio: 0.40
+        // The audio tab is a mixer: three stacked sections need more than 40 %.
+        // The host animates between the two ratios when the tab changes.
+        readonly property real dashboardAudioHeightRatio: 0.52
         // Tab row: numbered equal-width slots with a solid block behind the
         // active one (the bar's workspace treatment). `dashboardTabInset` is
         // the block's breathing room inside its cell.
@@ -369,6 +372,16 @@ QtObject {
         readonly property string btScan:      "refresh"
         readonly property string btOff:       "bluetooth_disabled"
         readonly property string btSearching: "bluetooth_searching"
+
+        // Audio. Device kinds are picked from node name/description in
+        // audio_model.js; the shell's own level ladder stays in Icons.volume.
+        readonly property string audioSpeaker:   "speaker"
+        readonly property string audioHeadset:   "headphones"
+        readonly property string audioHdmi:      "tv"
+        readonly property string audioBluetooth: "bluetooth_audio"
+        readonly property string audioMic:       "mic"
+        readonly property string audioMicOff:    "mic_off"
+        readonly property string audioCamera:    "videocam"
 
         // Notifications
         readonly property string notifBell:  "notifications"

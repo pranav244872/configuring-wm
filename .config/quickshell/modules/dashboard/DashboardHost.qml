@@ -15,7 +15,12 @@ PanelWindow {
     property bool open: false
 
     readonly property int sheetWidth: Theme.sizes.dashboardWidth
-    readonly property int sheetHeight: Math.round(host.screen.height * Theme.sizes.dashboardHeightRatio)
+    // The audio tab is a mixer (three sections), so the sheet grows while it is
+    // the visible tab. The tab name comes from the content, which owns the list.
+    readonly property bool tallTab: host.open && content.tabName() === "audio"
+    readonly property int sheetHeight: Math.round(host.screen.height
+        * (host.tallTab ? Theme.sizes.dashboardAudioHeightRatio
+                        : Theme.sizes.dashboardHeightRatio))
 
     // Full-screen overlay so a click outside dismisses.
     anchors {
@@ -112,6 +117,16 @@ PanelWindow {
                     duration: host.open ? Theme.animation.enterDuration : Theme.animation.exitDuration
                     easing.type: Easing.BezierSpline
                     easing.bezierCurve: host.open ? Theme.animation.curveOut : Theme.animation.curveIn
+                }
+            }
+
+            // Tab switch between the 40 % and 52 % heights: the sheet is bottom
+            // anchored, so it grows upward (y follows height above).
+            Behavior on height {
+                NumberAnimation {
+                    duration: Theme.animation.enterDuration
+                    easing.type: Easing.BezierSpline
+                    easing.bezierCurve: Theme.animation.curveOut
                 }
             }
 

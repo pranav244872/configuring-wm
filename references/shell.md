@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + bluetooth + notifications), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + bluetooth + notifications + audio), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
 
 ## What exists today
 
@@ -52,12 +52,13 @@
 | `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hot zone or `qs ipc call powermenu toggle`; Escape / click-away closes |
 | `modules/powermenu/PowerMenuContent.qml` + `PowerMenuItem.qml` | entries Lock / Log out / Suspend / Reboot / Shut down; Chaldea rows with the accent fill sliding in on hover (shared with the bench) |
 | `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
-| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height, centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes; `←`/`→` change tab |
+| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height (52% on the audio tab, animated), centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes; `←`/`→` change tab |
 | `modules/dashboard/DashboardTabs.qml` | the tab row: equal-width numbered cells, solid accent block on the active one (slides on the move curve), wheel to step; each section is one tab |
-| `modules/dashboard/DashboardContent.qml` | tab host: the tab row over a `StackLayout` of the sections, and the one place that decides which section is allowed to work (`syncActive()`: the network list scans and the bluetooth list discovers only while their own tab is visible) |
+| `modules/dashboard/DashboardContent.qml` | tab host: the tab row over a `StackLayout` of the sections, and the one place that decides which section is allowed to work (`syncActive()`: the network list scans, the bluetooth list discovers, the audio tab tracks nodes and runs its meter — each only while its own tab is visible) |
 | `modules/dashboard/NetworkSection.qml` | wifi switch, scanning list, inline passphrase, connect / disconnect / forget, portal + off states; scans only while the sheet is open |
 | `modules/dashboard/NetworkRow.qml` | one network: signal + SSID + security/state; expands in place for the passphrase, or for Disconnect / Forget + IP when connected |
 | `modules/bluetooth/` (`BluetoothSection`, `BluetoothRow`, `bluetooth_model.js`) | dashboard Bluetooth tab: toggle, no-adapter / rfkill-blocked / off states, `MY DEVICES` + `AVAILABLE` lists with inline detail (address, type, battery, connect / pair / forget), adapter alias + discoverable footer; pairing uses a short-lived `bluetoothctl --agent NoInputNoOutput` — see [notes/bluetooth.md](notes/bluetooth.md) |
+| `modules/audio/` (`AudioSection`, `AudioRow`, `audio_model.js`) | dashboard Audio tab: output/input device pickers with master volume + mute, a live mic peak meter, and per-app volume/mute with the sink each app plays on; master writes go through `wpctl` (hardware-volume devices), rows are `{id,name}` snapshots — see [notes/audio.md](notes/audio.md) |
 | `modules/dashboard/network_list.js` | sort rank (connected → connecting → saved → signal), signal level, PSK validation rules |
 | `modules/notifications/NotificationService.qml` | the daemon: `NotificationServer` singleton (bus name `org.freedesktop.Notifications`), toast model, lifetimes, DND (persisted), session history |
 | `modules/notifications/NotificationHost.qml` | toast stack overlay (top-right, clear of the bar), per-toast countdown, IPC target `notifications` |
@@ -94,17 +95,19 @@ are a fork feature: config keys, geometry and the runtime API are in
 (`bottom = "exec, qs ipc call dashboard toggle"`) that slides a 720×40 % sheet
 up. It is **tabbed** (`modules/dashboard/DashboardTabs.qml`): numbered
 equal-width slots with a solid accent block on the active one, sliding like the
-workspace pill. Two tabs: **network** (wifi switch, a scanning list, and an
+workspace pill. Four tabs: **network** (wifi switch, a scanning list, and an
 inline passphrase prompt whose Connect stays disabled until the input validates
 for the security type — WEP: 5/13 chars or 10/26 hex; otherwise 8–64 — rules
-ported from plasma-nm's applet) and **notifications** (DND switch, count,
-`CLEAR`, and the session's toast history, full width with arrival times). The
-section titles live in the tabs; each tab's controls row is switch + label on the
-left, list controls on the right. Switch tabs by clicking a cell, wheeling over
-the row, `←`/`→` while the sheet is open, or
-`qs ipc call dashboard tab <network|notifications|next|prev>` (`tabName` reads it
-back); the choice survives closing the sheet. Bluetooth, audio (input/output) and
-night light are the next tabs.
+ported from plasma-nm's applet), **bluetooth** (adapter states, saved + available
+devices) and **audio** (output/input pickers, mic meter, per-app volume), plus
+**notifications** (DND switch, count, `CLEAR`, and the session's toast history,
+full width with arrival times). The section titles live in the tabs; each tab's
+controls row is switch + label on the left, list controls on the right. Switch
+tabs by clicking a cell, wheeling over the row, `←`/`→` while the sheet is open,
+or `qs ipc call dashboard tab <network|bluetooth|notifications|audio|next|prev>`
+(`tabName` reads it back); the choice survives closing the sheet. The audio tab
+needs a mixer's room, so the sheet grows to 52 % while it is showing and shrinks
+back on the next tab. Night light is the next tab.
 Networking uses quickshell's native `Quickshell.Networking` (NetworkManager over
 DBus) — no `nmcli` spawning, unlike caelestia/end-4. Note the scan takes a few
 seconds to fill the list after opening, and scanning runs **only** while the sheet
@@ -178,6 +181,7 @@ qs -p ~/.config/quickshell/preview_screenshot.qml # → /tmp/opencode/preview_sc
 qs -p ~/.config/quickshell/preview_calendar.qml # → /tmp/opencode/preview_calendar.png
 qs -p ~/.config/quickshell/preview_powermenu.qml # → /tmp/opencode/preview_powermenu.png
 qs -p ~/.config/quickshell/preview_dashboard.qml # → /tmp/opencode/preview_dashboard.png
+qs -p ~/.config/quickshell/preview_audio.qml # → /tmp/opencode/preview_audio.png
 qs -p ~/.config/quickshell/preview_network.qml # → /tmp/opencode/preview_network.png
 qs -p ~/.config/quickshell/preview_notifications.qml # → /tmp/opencode/preview_notifications.png (+ _dnd)
 qs -p ~/.config/quickshell/preview_wallpaper.qml # → /tmp/opencode/preview_wallpaper.png
@@ -195,6 +199,7 @@ qs -p ~/.config/quickshell/preview_lock.qml # → /tmp/opencode/preview_lock.png
 | `preview_powermenu.qml` | session menu panel on the right over a mock desktop, hover fill pinned on a row | frame language, row fill/hover, panel sizing |
 | `preview_dashboard.qml` | the network and notifications tabs on a mock desktop: the network tab with a **mocked** list (connected / saved / secured / open) and the passphrase prompt pinned open, the notifications tab with a mocked history (timestamps) | tab row + active block, section layout, row states, inline PSK |
 | `preview_bluetooth.qml` | the Bluetooth tab in six mock states: saved devices with one expanded, a discovered device expanded (PAIR / FORGET), powered off, rfkill-blocked, empty, no adapter | all tab states, section headers, row + detail layout, footer |
+| `preview_audio.qml` | the Audio tab twice side by side: populated (headset default, built-in alternative, mic with a pinned meter level, two apps) and muted/empty (no apps, no input devices) | device/app rows, master writes layout, `DEFAULT`/`USE` tags, meter, empty notes, 52 % sheet |
 | `preview_network.qml` | the live bar network item plus every state mocked (strong / weak / portal / offline / radio off) and the tooltip content | meter states, tooltip copy, elide |
 | `preview_notifications.qml` | every card state (normal with countdown, sticky critical, low with avatar, icon fallback), the bar island, and the dashboard section with a mocked history — saved twice, DND off then on | card layout, urgency accents, DND bell |
 | `preview_wallpaper.qml` | the picker sheet over the **real** library on a mock desktop, centre slot on the 4th image, applied badge on the 2nd (dimmed — a non-centred slide carries its own dimming) | slide frame + focus growth, neighbour dimming, the applied badge, label row, header counter |
