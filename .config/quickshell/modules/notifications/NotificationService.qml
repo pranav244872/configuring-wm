@@ -414,6 +414,49 @@ QtObject {
         root.invokeDefault(0);
     }
 
+    // ------------------------------------------------- shell-originated toasts
+    // The shell's own warnings (low battery) share the stack and history without
+    // a D-Bus client. There is no libnotify on this machine, and spawning
+    // notify-send would need one; ids are negative so they cannot collide with
+    // the server's, and there is no live Notification to track -- dismiss/expire
+    // already handle a null ref.
+    //
+    // Deliberately ignores DND: a warning the shell raises itself is intentional.
+    property int localSeq: 0
+
+    function post(opts) {
+        const row = {
+            notifId: -(++root.localSeq),
+            app: opts.app || "quickshell",
+            appIcon: opts.appIcon || "",
+            summary: opts.summary || "",
+            body: opts.body || "",
+            image: opts.image || "",
+            urgency: opts.urgency !== undefined ? opts.urgency : NotificationUrgency.Normal,
+            expireTimeout: Number(opts.expireTimeout || 0),
+            timestamp: Date.now()
+        };
+        // Same incubation rule as handle(): the model must not change while the
+        // Repeater is still creating delegates.
+        Qt.callLater(() => {
+            root.trimToMax();
+            root.popups.insert(0, row);
+        });
+        return row.notifId;
+    }
+
+    // Take a shell-originated toast down (the battery warning once the charger
+    // is in). Server toasts keep their own lifetimes.
+    function dismissLocal(notifId) {
+        for (let i = 0; i < root.popups.count; i++) {
+            const row = root.popups.get(i);
+            if (row && row.notifId === notifId) {
+                root.removePopup(i, false);
+                return;
+            }
+        }
+    }
+
     function clearHistory() {
         root.history = [];
     }

@@ -16,7 +16,7 @@ updated in the same change.
 
 | Area | File | Status | One-line summary |
 |---|---|---|---|
-| Battery & power | [battery-and-power.md](battery-and-power.md) | ⬜ | low-battery warning + automatic AC/battery power profiles |
+| Battery & power | [battery-and-power.md](battery-and-power.md) | 🔄 | low-battery toasts (20% / 10%) + hook done; power profiles and sleep-lock pending |
 | Runtime toggles | [runtime-toggles.md](runtime-toggles.md) | ⬜ | one-key switches for animations, opacity, gaps, night light |
 | Keyboard | [keyboard-takeover.md](keyboard-takeover.md) | ⬜ | kitty grabs `ctrl+shift+<letter>`, so those WM binds never fire |
 | Audio helpers | [audio-helpers.md](audio-helpers.md) | ✅ | dashboard `AUDIO` tab: output/input pickers, mic meter, per-app volume — tuning skipped |

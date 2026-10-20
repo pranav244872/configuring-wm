@@ -1,6 +1,6 @@
 # Our Shell (quickshell)
 
-**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + bluetooth + notifications + audio), bar network status (hover tooltip), the **notification daemon + toasts** and the **wallpaper (drawn in-shell + picker carousel with a thumbnail cache and a cycling footer)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
+**Status: 🔄 in progress** — OSD, bar, launcher, screenshots, calendar, tray icons, keep-awake toggle, session menu, dashboard (tabbed: network + bluetooth + notifications + audio), bar network status (hover tooltip), the **notification daemon + toasts**, the **wallpaper (drawn in-shell + picker carousel with a thumbnail cache and a cycling footer)**, the **low-battery warning (toast + hook)** and the **CP tracker card** (third-party, [notes/cp-tracker.md](notes/cp-tracker.md)) **done**; lock screen built — it draws the wallpaper behind the card (lock/unlock verified 2026-10-17 and 2026-10-19, PAM auth test pending).
 
 ## What exists today
 
@@ -24,7 +24,8 @@
 | `modules/bar/TrayMenu.qml` + `TrayMenuHost.qml` | app context menu (QsMenuOpener stack) in an overlay; `TrayState` singleton shares open state |
 | `modules/bar/BarClock.qml` + `BarBattery.qml` | weekday/date/time clock + UPower battery, tracked mono |
 | `modules/bar/WorkspaceIndicator.qml` | workspaces 1..5 + active/occupied >5; sliding block, pill-tracked digits, occupied tick markers, dim empties (center module) |
-| `modules/bar/BarBattery.qml` | UPower battery indicator with dynamic charge icons and percentage (right module) |
+| `modules/bar/BarBattery.qml` | battery indicator with dynamic charge icons and percentage (right module); reads `BatteryWatch` and owns the `battery` IPC |
+| `modules/power/` (`BatteryWatch`, `battery_model.js`) | the shared UPower reading + the low-battery warnings (20% / 10%, once per discharge), local toasts, the `~/.config/quickshell/hooks/battery-low` hook — see [qol/battery-and-power.md](qol/battery-and-power.md) |
 | `modules/launcher/LauncherWindow.qml` + `AppTracker.qml` | full-height left drawer on Super+F / IPC; frequencies persist to cache |
 | `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; locks on idle (3m) or `Fn+F9`; keeps `LockState` in step |
 | `modules/lock/LockSurface.qml` | per-output lock surface: the wallpaper (blurred, scrimmed) with the centred formation card over it |
@@ -246,7 +247,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 | `Quickshell.Services.SystemTray` | tray icons |
 | `Quickshell.Services.Notifications` | **notification daemon** (replaces mako) |
 | `Quickshell.Services.Mpris` | media sessions (play/pause, metadata) |
-| `Quickshell.Services.UPower` | battery + power state (event-driven) |
+| `Quickshell.Services.UPower` | battery + power state (event-driven) — read once by `BatteryWatch`, shared by the bar and the warnings |
 | `Quickshell.Services.Pipewire` | audio/pw-volume → volume control |
 | `Quickshell.Services.Bluetooth` | BT devices |
 | **`Quickshell.Services.Pam`** | **PAM authentication → a real lock screen is possible** |
@@ -285,7 +286,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 
 1. **OSD** (replaces swayosd) — small, makes the volume/brightness keys visible
 2. **Bar** (replaces waybar) — the centrepiece
-3. ✅ **Notifications** (replaces mako) — done 2026-10-19; the same machinery unlocks our own battery/script toasts
+3. ✅ **Notifications** (replaces mako) — done 2026-10-19; the same machinery unlocked our own toasts (low battery ✅ 2026-10-20)
 4. **App launcher + power menu** (replaces rofi usage)
 5. **Night light** (replaces hyprsunset)
 6. **Idle + lock** (replaces hypridle/hyprlock) — security-sensitive, do late

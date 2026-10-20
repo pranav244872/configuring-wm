@@ -1,19 +1,41 @@
-// Battery indicator: compact icon and percentage via UPower service.
+// Battery indicator: compact icon and percentage from the shared battery watch
+// (which also owns the low-battery warnings -- see modules/power/BatteryWatch).
 import QtQuick
-import Quickshell.Services.UPower
+import Quickshell
+import Quickshell.Io
 import qs.modules
+import qs.modules.power
 import qs.modules.widgets
 
 Item {
     id: root
 
-    readonly property real pct: UPower.displayDevice?.percentage ?? 1.0
-    readonly property int state: UPower.displayDevice?.state ?? UPowerDeviceState.Unknown
-    readonly property bool charging: [
-        UPowerDeviceState.Charging,
-        UPowerDeviceState.FullyCharged,
-        UPowerDeviceState.PendingCharge
-    ].includes(root.state)
+    readonly property real pct: BatteryWatch.pct
+    readonly property int state: BatteryWatch.state
+    readonly property bool charging: BatteryWatch.charging
+
+    // Shell-level IPC lives here because the bar is the always-present owner of
+    // the reading (same shape as `qs ipc call wallpaper …`).
+    IpcHandler {
+        target: "battery"
+
+        function status(): string {
+            const mode = BatteryWatch.charging ? "charging"
+                       : BatteryWatch.discharging ? "discharging" : "idle";
+            return mode + " " + BatteryWatch.level + "%"
+                + (BatteryWatch.warnedCritical ? " critical-sent"
+                   : BatteryWatch.warnedLow ? " low-sent" : "");
+        }
+
+        function check(): void {
+            BatteryWatch.check();
+        }
+
+        // Manual trigger, the analogue of `omarchy-battery-low <level>`.
+        function warn(level: int): void {
+            BatteryWatch.warn(level);
+        }
+    }
 
     readonly property color fgColor: {
         if (root.charging)

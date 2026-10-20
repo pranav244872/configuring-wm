@@ -11,7 +11,7 @@ Back to [notes index](README.md) - [docs index](../README.md)
 
 | File | Role |
 |---|---|
-| `modules/notifications/NotificationService.qml` | singleton: the server, the toast model, durations, DND, history. Logic only — a 0.3.2 singleton roots on a bare `QtObject` and cannot hold windows or an `IpcHandler` |
+| `modules/notifications/NotificationService.qml` | singleton: the server, the toast model, durations, DND, history, and `post()`/`dismissLocal()` for the shell's own toasts. Logic only — a 0.3.2 singleton roots on a bare `QtObject` and cannot hold windows or an `IpcHandler` |
 | `modules/notifications/NotificationHost.qml` | `PanelWindow` overlay: the toast stack, the per-toast countdown, IPC target `notifications` |
 | `modules/notifications/NotificationCard.qml` | presentation only — reused by the toast stack **and** the dashboard history list |
 | `modules/dashboard/NotificationsSection.qml` | DND switch + history, its own tab in the dashboard sheet (the sheet is tabbed: network / notifications) |
@@ -23,6 +23,17 @@ Back to [notes index](README.md) - [docs index](../README.md)
 object in `liveRefs[id]` → DND gate → `Qt.callLater` → drop a superseded id, drop
 a duplicate, trim to `maxVisible`, `insert(0, row)` → the delegate runs the
 countdown → dismissal/expiry archives a plain copy into `history`.
+
+## Shell-originated toasts
+
+The shell raises its own notification without a D-Bus client:
+`NotificationService.post({app, appIcon, summary, body, urgency, expireTimeout})`
+returns an id and inserts a plain row with a **negative** id (server ids are
+positive, so they cannot collide). No live `Notification` exists behind it —
+dismiss and expire already handle a null ref — and `dismissLocal(id)` takes it
+down again. It ignores DND on purpose: a warning the shell raises itself is
+intentional. Used by the low-battery toast
+([qol/battery-and-power.md](../qol/battery-and-power.md)).
 
 ## Policy
 
@@ -127,3 +138,10 @@ click command as **argv data**, omarchy-style); file-backed history so it surviv
 restarts; hyperlinks + image bodies with `<img>` stripping; click-to-focus the
 sender when there is no `default` action; per-app rules (DMS style); keybinds
 (`SUPER+,` family); `inlineReplySupported`.
+
+## Verification (2026-10-20)
+
+`qs ipc call battery warn 20/10` (local posts): the normal toast was still up at
+11.5 s and expired by 31.5 s (its 30 s `expire_timeout`) into history, critical
+stayed up past 9.5 s, DND on still showed it (bypass), and `dismissLocal`
+removed it (history +1). Card copy in the bench comes from the same helpers.
