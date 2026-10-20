@@ -368,6 +368,17 @@ Item {
     }
 
     Timer {
+        id: discoveryWatch
+        interval: 1500
+        repeat: true
+        running: root.active && root.enabled
+        onTriggered: {
+            if (!root.mock && root.available && !root.adapter.discovering)
+                root.adapter.discovering = true;
+        }
+    }
+
+    Timer {
         id: modelChangedTimer
         interval: 150
         onTriggered: root.rebuild()
@@ -468,6 +479,18 @@ Item {
             root.wantPower = false;
             unblockGuard.stop();
         }
+    }
+
+    // Activating the tab while the radio is off cannot start discovery; start it
+    // as soon as the adapter comes up (TURN ON, the toggle, or UNBLOCK+power-on).
+    // The write at that exact moment can race BlueZ's power-up and be dropped,
+    // so the watcher below re-asserts it; it also recovers if BlueZ stops
+    // discovery on its own while the tab is open.
+    onEnabledChanged: {
+        if (root.mock || !root.active || !root.enabled || !root.available)
+            return;
+        if (!root.adapter.discovering)
+            root.adapter.discovering = true;
     }
 
     // ------------------------------------------------------------ processes

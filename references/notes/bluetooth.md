@@ -87,6 +87,11 @@ starts with `hci` counts; soft = blocked in `soft`, hard = blocked in `hard`.
 
 - **Only the visible tab works**: `discovering` starts on `activate()` and stops
   on `deactivate()` (same rule as the network scan), so a background tab is idle.
+- **Discovery covers the power transition**: opening the tab while the radio is
+  off cannot start discovery, so `onEnabledChanged` starts it when the adapter
+  comes up, and a 1.5 s `discoveryWatch` timer re-asserts `discovering` while the
+  tab is active — the write at the instant of power-on is dropped by BlueZ
+  (see Traps), and the watcher also recovers if BlueZ stops discovery itself.
 - **Grouping** (`bluetooth_model.js`): connected → paired → unpaired; real names
   before bare MACs; then alphabetical. Section headers carry a count.
 - **Unpaired devices are not filtered**: they live in BlueZ memory for the boot
@@ -116,8 +121,15 @@ starts with `hci` counts; soft = blocked in `soft`, hard = blocked in `hard`.
 | Shell load | `Configuration Loaded`, 0 errors, single instance |
 | IPC | `qs ipc call dashboard tab bluetooth` → `tabName` = `bluetooth` |
 | Live OFF state | tab showed `BLUETOOTH IS OFF` while `bluetoothctl show` said `PowerState: off` |
-| rfkill copy | bench only — a live blocked screenshot was missed (the switch was unblocked between checks) |
-| Interactive (TURN ON, toggle, discoverable, alias edit, UNBLOCK) | **pending** — the session idle-locked mid-test |
+| `TURN ON` | `Powered: yes`, `Discovering: yes` |
+| Header toggle off/on | off → `Powered: no`; on → `Powered: yes`, discovery restarted |
+| Scan glyph | `rescan()` → `Discovering: yes` (sweep visible) |
+| `DISCOVERABLE` chip | `Discoverable: yes` + `DiscoverableTimeout: 180`; still on after reopening the sheet |
+| Real device rows | discovery found a Jio STB (`AVAILABLE 01`, `NOT PAIRED`) → real data, no mocks |
+| Alias edit | click opens the field, `Esc` cancels without closing the sheet |
+| Alias probe | external `bluetoothctl system-alias arch-bt` → footer shows `arch-bt` after reopening; restoring `arch` follows |
+| rfkill blocked | `rfkill block bluetooth` → `BLUETOOTH IS BLOCKED (RFKILL)` + `[UNBLOCK]` (footer/toggle correctly hidden) |
+| `UNBLOCK` flow | unblocked both `ideapad_bluetooth` + `hci0`, then powered the adapter on (`Powered: yes`) |
 | Pairing | **deferred** — no device to test with; agent registration proven by hand |
 
 ## Traps
@@ -128,6 +140,14 @@ starts with `hci` counts; soft = blocked in `soft`, hard = blocked in `hard`.
 - **`StdioCollector.text` notifies `dataChanged`, not `textChanged`** — a
   `textChanged` handler never runs, so the "Agent registered" watcher would
   silently degrade to its 1.5 s fallback. Use `onDataChanged`.
+- **A discovery write at power-on is dropped**: `enabled = true` and
+  `discovering = true` in the same instant makes BlueZ answer `StartDiscovery`
+  with `Resource Not Ready` (logged as *"Failed to start discovery on adapter"*),
+  leaving the tab with a still sweep and no devices. Retry rather than assume.
+- **Click targets in the sheet are ~35 px lower than a 0.4-height sheet implies**:
+  the sheet is bottom-anchored (`screen.height - height`) and the footer sits
+  inside the content margins. Hover (the alias turns primary, the chip tints)
+  before clicking when driving tests with `uclick.py`.
 - The lock closes the sheet (`LockState.locked` → `DashboardHost.close()`), so a
   locked session cannot be used to drive the tab.
 - An inline `component SectionHeader: Item` inside a ListView delegate needs an
