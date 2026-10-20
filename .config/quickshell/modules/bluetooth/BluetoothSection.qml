@@ -523,7 +523,8 @@ Item {
         running: root.agentWanted
         stdout: StdioCollector {
             id: agentOut
-            onTextChanged: root.agentText(agentOut.text)
+            // StdioCollector.text notifies dataChanged, not textChanged.
+            onDataChanged: root.agentText(agentOut.text)
         }
         onExited: {
             root.agentReady = false;

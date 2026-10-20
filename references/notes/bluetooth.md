@@ -125,6 +125,9 @@ starts with `hci` counts; soft = blocked in `soft`, hard = blocked in `hard`.
 - **Restart racing**: `qs kill` is asynchronous; starting `qs -n` one second later
   can print *"An instance of this configuration is already running"* and leave
   nothing running. Verify `pgrep -c -x qs` = 1, and never restart while locked.
+- **`StdioCollector.text` notifies `dataChanged`, not `textChanged`** — a
+  `textChanged` handler never runs, so the "Agent registered" watcher would
+  silently degrade to its 1.5 s fallback. Use `onDataChanged`.
 - The lock closes the sheet (`LockState.locked` → `DashboardHost.close()`), so a
   locked session cannot be used to drive the tab.
 - An inline `component SectionHeader: Item` inside a ListView delegate needs an
