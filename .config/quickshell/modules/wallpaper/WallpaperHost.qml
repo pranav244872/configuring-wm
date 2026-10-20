@@ -37,7 +37,12 @@ PanelWindow {
         item: host.open ? dismissArea : null
     }
 
-    onOpenChanged: if (host.open) content.activate()
+    onOpenChanged: {
+        if (host.open)
+            content.activate();
+        // Hold the cycling countdown while the sheet is up.
+        WallpaperCycler.suspended = host.open;
+    }
 
     function show() {
         if (LockState.locked)
@@ -191,6 +196,52 @@ PanelWindow {
 
         function apply(): void {
             content.applyCurrent();
+        }
+
+        // ---- cycling (WallpaperCycler): manual steps, mode and schedule ----
+        function cycleNext(): string {
+            return WallpaperCycler.next();
+        }
+
+        function cyclePrev(): string {
+            return WallpaperCycler.prev();
+        }
+
+        function cycling(): bool {
+            return WallpaperCycler.enabled;
+        }
+
+        function setCycling(on: bool): void {
+            WallpaperCycler.setEnabled(on);
+        }
+
+        function shuffle(): bool {
+            return WallpaperCycler.shuffle;
+        }
+
+        function setShuffle(on: bool): void {
+            WallpaperCycler.setShuffle(on);
+        }
+
+        function cycleInterval(): int {
+            return WallpaperCycler.intervalMinutes;
+        }
+
+        function nextCycleInterval(): int {
+            return WallpaperCycler.nextIntervalPreset();
+        }
+
+        function setCycleInterval(minutes: int): void {
+            WallpaperCycler.setInterval(minutes);
+        }
+
+        // Scheduling introspection: "running", "paused" (sheet/lock), "off".
+        function cycleState(): string {
+            if (!WallpaperCycler.enabled)
+                return "off";
+            if (WallpaperCycler.suspended || LockState.locked)
+                return "paused";
+            return WallpaperCycler.timer.running ? "running" : "idle";
         }
     }
 }

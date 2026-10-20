@@ -1,6 +1,7 @@
 // Wallpaper bench: the picker sheet on a mock desktop, using the real library
-// (so the slides are the actual files) with the centre slot on the fourth image
-// and the applied badge parked on the second one. Saves preview_wallpaper.
+// (so the slides are the actual cache/thumbnails) with the centre slot on the
+// fourth image, the applied badge on the second and the cycling footer forced
+// on (after it hydrates, or the defaults overwrite it). Saves preview_wallpaper.
 import QtQuick
 import Quickshell
 import Qt.labs.folderlistmodel
@@ -38,9 +39,31 @@ ShellRoot {
             }
         }
 
+        // The cycling config arrives after the sheet is built; apply the preview
+        // state once it has, or it would be overwritten by the defaults.
+        Connections {
+            target: WallpaperCycler
+
+            function onHydratedChanged() {
+                if (WallpaperCycler.hydrated) {
+                    WallpaperCycler.enabled = true;
+                    WallpaperCycler.shuffle = true;
+                }
+            }
+        }
+
         Component.onCompleted: {
             // No state file writes from a preview.
             WallpaperService.mock = true;
+            WallpaperCycler.mock = true;
+            // The cycling config loads asynchronously and would overwrite these;
+            // park the preview state after it has settled.
+            Qt.callLater(function () {
+                if (WallpaperCycler.hydrated) {
+                    WallpaperCycler.enabled = true;
+                    WallpaperCycler.shuffle = true;
+                }
+            });
             content.currentIndex = 3;
             Qt.callLater(win.park);
         }

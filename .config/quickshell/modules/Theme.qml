@@ -241,11 +241,14 @@ QtObject {
     // the accent border and grows a little. Side slides dim, no rotation --
     // our language is flat (see notes/wallpaper.md).
     readonly property QtObject wallpaper: QtObject {
-        // 18 margins + 16 label row + 10 + 1 rule + 12 + strip (see below)
+        // 18 margins + 16 label row + 10 + 1 rule + 12 + strip + 10 + footer
         readonly property int  sheetWidth:        960
         // strip = 126 slide + 2*6 scale pad + 10 gap + 16 label = 164, plus the
-        // 18px frame margins top and bottom: 36 + 16 + 10 + 1 + 12 + 164.
-        readonly property int  sheetHeight:       240
+        // 18px frame margins top and bottom, plus the cycling footer:
+        // 36 + 16 + 10 + 1 + 12 + 164 + 10 + 22 = 271 (rounded up).
+        readonly property int  sheetHeight:       272
+        readonly property int  footerHeight:      22
+        readonly property int  footerGap:         10
         readonly property int  slideWidth:        224
         readonly property int  slideHeight:       126   // 16:9 of slideWidth
         readonly property int  slideGap:          10

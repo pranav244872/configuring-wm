@@ -23,6 +23,7 @@ updated in the same change.
 | Bluetooth | [notes/bluetooth.md](../notes/bluetooth.md) | 🔄 | dashboard tab: adapter states (rfkill/off/absent), saved + available devices, inline connect/pair/forget, alias + discoverable — pairing untested (no device yet) |
 | Capture tooling | [capture-tooling.md](capture-tooling.md) | ⬜ | screenshot, region, screen recording, OCR, webcam |
 | Menus & keybinding cheatsheet | [menus-and-keybindings.md](menus-and-keybindings.md) | ⬜ | searchable menus + auto-generated keybinding reference |
+| Wallpaper library | [notes/wallpaper-thumbnails.md](../notes/wallpaper-thumbnails.md) + [notes/wallpaper-cycling.md](../notes/wallpaper-cycling.md) | ✅ | ffmpeg thumbnail cache (142–308 ms → a few ms) + interval/shuffle cycling with a picker footer |
 | Robustness & session | [robustness-and-session.md](robustness-and-session.md) | ⬜ | crash recovery, stranded-lock detection, sleep-lock, systemd tuning |
 
 ## Ground rules for adopting any of these

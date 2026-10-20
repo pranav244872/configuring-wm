@@ -23,7 +23,10 @@ Back to [docs index](../README.md)
 | [notifications.md](notifications.md) | our notification daemon: server capabilities, lifetime/DND/history policy, toast placement, the `ListModel`/`tracked` traps, live verification |
 | [cp-tracker.md](cp-tracker.md) | the desktop CP tracker card (Codeforces/AtCoder ratings, next target contest, schedule) — **built by another agent**; files, data flow, cache paths, live verification, and the background-layer/restart traps |
 | [dashboard.md](dashboard.md) | the bottom sheet: tab row design, tab-gated wifi scanning (proved with NM's `LastScan`), tab movement (mouse/keyboard/IPC), full-width history rows, and the ✕ bug that had two independent causes |
-| [wallpaper.md](wallpaper.md) | the wallpaper drawn by the shell (background layer, decode-then-flip crossfade) and the picker carousel: `StrictlyEnforceRange` strip, wrap, click-to-apply, the `contentX` dimming bug, the `FolderListModel` adopt gate, why the lock screen draws its own copy |
+| [wallpaper.md](wallpaper.md) | the picker carousel: `StrictlyEnforceRange` strip, wrap, click-to-apply, the `contentX` dimming bug, the `FolderListModel` adopt gate, the cycling footer |
+| [wallpaper-drawing.md](wallpaper-drawing.md) | the background-layer surface: `exclusionMode` coverage, empty mask, the decode-then-flip crossfade and the 142–308 ms black-flash measurement, why the lock draws its own copy |
+| [wallpaper-thumbnails.md](wallpaper-thumbnails.md) | the ffmpeg JPEG cache for the strip: 448×252 naming, the `-nt` freshness pass, the ffmpeg temp-extension trap, 51 ms → 2 ms decode |
+| [wallpaper-cycling.md](wallpaper-cycling.md) | the cycle timer: presets/shuffle, lock + picker pauses (no fullscreen state in 0.3.2), the settings file, `syncTimer` binding trap, the footer and `SUPER + ALT + W` |
 | [matugen.md](matugen.md) | wallpaper → matugen → every consumer: the trigger chain, template→output map, Theme role mapping, the live shell binding, per-consumer reloads, and what GTK/Qt actually honour |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |

@@ -204,6 +204,12 @@ hl.bind(
     hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call dashboard close; qs ipc call wallpaper toggle'")
 )
 
+-- Manual step of the wallpaper cycle: next image in the library, no sheet.
+hl.bind(
+    mainMod .. " + ALT + W",
+    hl.dsp.exec_cmd("sh -c 'pgrep -x qs >/dev/null || (setsid qs -n >/dev/null 2>&1 & sleep 1); qs ipc call wallpaper cycleNext'")
+)
+
 -- Deferred to the rice step (old binds that need tools we are not installing yet):
 --   SUPER + ESCAPE          -> rofi powermenu
 --   SUPER + K               -> keybinds menu

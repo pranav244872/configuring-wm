@@ -124,9 +124,10 @@ Item {
                     anchors.margins: frame.border.width
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
-                    source: "file://" + slide.filePath
-                    // Decode at the size we draw: thumbnails without a
-                    // thumbnailer (no ImageMagick on this machine).
+                    // The cached 448x252 JPEG when it exists (a few ms to decode
+                    // against 142-308 ms for the full PNG); the source itself on
+                    // the first run, until the generator has caught up.
+                    source: "file://" + (WallpaperThumbs.pathFor(slide.filePath) || slide.filePath)
                     sourceSize: Qt.size(width * (QsWindow.window?.devicePixelRatio ?? 1),
                                         height * (QsWindow.window?.devicePixelRatio ?? 1))
                     // Photos differ in size and brightness, and browsing fast

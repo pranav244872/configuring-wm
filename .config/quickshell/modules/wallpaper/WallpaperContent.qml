@@ -113,5 +113,97 @@ Item {
             font.pixelSize: Theme.frame.labelSize
             font.letterSpacing: Theme.frame.tracking
         }
+
+        Item {
+            width: parent.width
+            height: Theme.wallpaper.footerGap
+        }
+
+        // Cycling footer: the switch and interval on the left, shuffle on the
+        // right. The countdown is the cycler's (`WallpaperCycler`); this row only
+        // reflects and sets it.
+        Item {
+            width: parent.width
+            height: Theme.wallpaper.footerHeight
+
+            Row {
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                spacing: 8
+
+                Toggle {
+                    anchors.verticalCenter: parent.verticalCenter
+                    checked: WallpaperCycler.enabled
+                    onToggled: WallpaperCycler.setEnabled(!WallpaperCycler.enabled)
+                }
+
+                StyledText {
+                    anchors.verticalCenter: parent.verticalCenter
+                    text: "AUTO"
+                    color: Theme.colors.subtext
+                    font.pixelSize: Theme.frame.labelSize
+                    font.letterSpacing: Theme.frame.tracking
+                }
+
+                // Presets in a click cycle: 5 / 10 / 15 / 30 / 60 / 120 minutes.
+                Item {
+                    id: intervalSlot
+
+                    anchors.verticalCenter: parent.verticalCenter
+                    width: intervalLabel.implicitWidth + 8
+                    height: 18
+
+                    StyledText {
+                        id: intervalLabel
+                        anchors.centerIn: parent
+                        text: WallpaperCycler.intervalText()
+                        color: intervalMa.containsMouse || !WallpaperCycler.enabled
+                            ? Theme.colors.primary : Theme.colors.fgLayer0
+                        opacity: WallpaperCycler.enabled ? 1 : 0.55
+                        font.pixelSize: Theme.frame.labelSize
+                        font.letterSpacing: Theme.frame.tracking
+                    }
+
+                    MouseArea {
+                        id: intervalMa
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: WallpaperCycler.nextIntervalPreset()
+                    }
+                }
+            }
+
+            // Shuffle chip, the Bluetooth tab's DISCOVERABLE treatment.
+            Rectangle {
+                id: shuffleChip
+
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                width: shuffleLabel.implicitWidth + 20
+                height: 20
+                color: WallpaperCycler.shuffle ? Theme.colors.primary
+                    : shuffleMa.containsMouse ? Theme.colors.stateHover : "transparent"
+                border.width: Theme.frame.line
+                border.color: WallpaperCycler.shuffle ? Theme.colors.primary : Theme.colors.outlineStrong
+
+                StyledText {
+                    id: shuffleLabel
+                    anchors.centerIn: parent
+                    text: "SHUFFLE"
+                    color: WallpaperCycler.shuffle ? Theme.colors.fgPrimary : Theme.colors.fgLayer0
+                    font.pixelSize: Theme.frame.labelSize
+                    font.letterSpacing: Theme.frame.tracking
+                }
+
+                MouseArea {
+                    id: shuffleMa
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    cursorShape: Qt.PointingHandCursor
+                    onClicked: WallpaperCycler.setShuffle(!WallpaperCycler.shuffle)
+                }
+            }
+        }
     }
 }
