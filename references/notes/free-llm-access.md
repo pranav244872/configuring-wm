@@ -61,7 +61,7 @@ have** — a failover router over one key fails exactly like the single key does
 
 | Provider | Why |
 |---|---|
-| **OpenCode Zen** | free roster locked to the OpenCode client since 2026-09 → 403 `FreeTierError`. Paid only — see [hermes.md](hermes.md) |
+| **OpenCode Zen** | free roster locked to the OpenCode client since 2026-09 → 403 `FreeTierError` on every free model (verified 2026-10-15 against six of them). Paid only |
 | **Reka** | no free tier for new accounts since 2026-09, prepaid required |
 | **SambaNova** | free tier permanently retired (402 after the trial credit) |
 | **Routeway** | requires a browser-style User-Agent (Cloudflare 1010) — i.e. UA spoofing; not something to build in |

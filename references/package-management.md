@@ -96,7 +96,6 @@ not as a `pacman -S` argument:
 | AUR package | Version | Why |
 |---|---|---|
 | `paru` | 2.1.0-2 | AUR helper; the user wanted one (2026-10-15). Built with makepkg from the AUR repo, owned by pacman afterwards (`paru v2.1.0 - libalpm v16.0.1`) |
-| `hermes-agent-bin` | 0.22.2-1 | Nous Research's locally-run AI agent (TUI + tool use), asked for by the user (2026-10-15). Installed as the **prebuilt `-bin` variant** — it bundles its own Python venv under `/opt`, so unlike `hermes-agent` it does **not** need the Rust toolchain or `agent-browser` at build time |
 | `ttf-rubik-vf` | 2.3.0-3 | GTK UI font `Rubik 11` (2026-10-20). Rubik has no official package; the variable build replaces the installer's old `otf-rubik` entry. Built with `makepkg -f` and installed with `sudo pacman -U`, no paru needed — see [notes/packages.md](notes/packages.md#gtk-font-rubik-aur) |
 
 ```bash
@@ -104,14 +103,7 @@ not as a `pacman -S` argument:
 git clone --depth 1 https://aur.archlinux.org/paru.git ~/del/paru
 cd ~/del/paru && makepkg -si --noconfirm
 cd ~ && rm -rf ~/del/paru
-
-# AI agent — no official package, so AUR via paru
-paru -S --skipreview --noconfirm hermes-agent-bin
 ```
-
-It also pulled `uv` and `npm` from the official repos. Python 3.14 and nodejs
-26 were already installed. Its model providers — including the verified
-opencode free-tier gate — are in [notes/hermes.md](notes/hermes.md).
 
 ### Building it (deviation from configuring-wm)
 

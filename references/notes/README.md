@@ -38,6 +38,5 @@ Back to [docs index](../README.md)
 | [opencode-mcp.md](opencode-mcp.md) | MCP wiring traps for opencode (restart the *service* not the TUI, npx first-connect timeout), plus the agentmemory experiment and why it was removed |
 | [opencode-websearch.md](opencode-websearch.md) | websearch provider selection: the Firecrawl keyless refusal that silently empties results (why `random` never fails over), which providers work keyless, the one-line provider pin |
 | [free-llm-access.md](free-llm-access.md) | getting free LLM access: which providers are genuinely free/keyless, which are dead, Groq's measured limits, and the freellmapi verdict |
-| [hermes.md](hermes.md) | hermes' native `opencode-go` provider, and the verified opencode free-tier `FreeTierError` gate |
 
 Last verified: 2026-10-20
