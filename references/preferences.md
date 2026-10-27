@@ -100,7 +100,7 @@ Last updated: 2026-10-16
 
 - **`fish` is the login shell** (`chsh -s /usr/bin/fish`), same as the old setup.
 - **`zoxide` drives `cd`**: `zoxide init fish --cmd cd | source` — fuzzy jumps,
-  falls back to real paths. `cdi` = interactive picker (needs fzf).
+  falls back to real paths. `cdi` = interactive picker (fzf).
 - `kitty` config ported verbatim from the old setup: JetBrainsMono Nerd Font
   Mono 12, 90 % opacity, teal palette, `ctrl+shift+t` new tab with cwd.
 - **GTK apps use Rubik 11** (AUR `ttf-rubik-vf`, installed 2026-10-20):
@@ -115,8 +115,12 @@ Last updated: 2026-10-16
   is a **function, not an alias**: eza 0.23 prints *nothing* for a bare
   `eza --tree`, so the old alias would have looked broken here; ours passes `.`
   unless a path is given. Icons ride on the Nerd Font kitty already uses.
-- Deliberately **not** ported yet (tools absent): starship prompt, mise, bat /
-  fzf aliases, vssh tunnel helpers.
+- **`fzf` drives the pickers** (0.74.5, installed 2026-10-19 for the editor;
+  shell bindings added 2026-10-27): `fzf --fish | source` in `config.fish` gives
+  Ctrl+R history, Ctrl+T files and Alt+C fuzzy cd, and it is what zoxide's `cdi`
+  opens. No aliases — the package's own bindings.
+- Deliberately **not** ported yet (tools absent): mise, bat, vssh tunnel
+  helpers.
 
 ## Workflow — how the user wants us to work
 

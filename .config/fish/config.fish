@@ -5,8 +5,12 @@ end
 
 # zoxide: smarter cd. --cmd cd replaces `cd` entirely:
 #   cd <name>  -> fuzzy jump to the best match (falls back to a real path cd)
-#   cdi <name> -> interactive picker (needs fzf, not installed yet)
+#   cdi <name> -> interactive picker (fzf, sourced just below)
 zoxide init fish --cmd cd | source
+
+# fzf: Ctrl+R history, Ctrl+T files, Alt+C fuzzy cd. `--fish` prints fzf's own
+# key bindings; the package's vendor function is never auto-called.
+fzf --fish | source
 
 # eza: ls shows hidden files too, dirs first, Nerd Font icons (kitty carries the
 # font). Flags are the old setup's. EZA_COLORS / EZA_ICON_SPACING are unset on
@@ -30,5 +34,5 @@ starship init fish | source
 
 # Not ported from the old config yet:
 #   mise activate fish | source      -> mise (not installed)
-#   bat/fzf aliases                  -> bat, fzf (rice step)
+#   bat aliases                      -> bat (not installed)
 #   vssh/vpush/vpull functions       -> need cloudflared setup

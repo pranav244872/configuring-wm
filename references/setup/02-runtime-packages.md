@@ -76,7 +76,7 @@ Details and the traps are in [notes/packages.md](../notes/packages.md#pushing-to
 | Package | Version | What it's for |
 |---|---|---|
 | `neovim` | 0.12.6-1 | The editor; the `configuring-wm` config uses `vim.pack` + `vim.lsp.*`, so it needs 0.12+ |
-| `fzf` | 0.74.5-1 | `fzf-lua`'s picker binary — all finder/LSP pickers run through it |
+| `fzf` | 0.74.5-1 | `fzf-lua`'s picker binary (all finder/LSP pickers) and the shell's fuzzy finder (`fzf --fish`: Ctrl+R/T, Alt+C, `cdi`) |
 | `tree-sitter-cli` | 0.26.9-1 | `nvim-treesitter` **main** compiles parsers with it (>= 0.26.1) |
 | `unzip` | 6.0-23 | mason requirement (clangd is a `.zip`) |
 | `fd` | 10.5.0-3 | the config's `fd_opts` file picker |

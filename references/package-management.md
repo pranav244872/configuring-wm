@@ -27,7 +27,7 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `jq` | JSON CLI for `hyprctl -j` one-liners (screenshot workspace-filter verification, future scripts) | 2026-10-16 |
 | `eza` | modern `ls` (fish `ls` / `lt`) — the last piece of the old repo's shell aliases | 2026-10-18 |
 | `neovim` | the editor, with the `configuring-wm` config deployed verbatim (`vim.pack`, mason LSP, compiled treesitter) — the config needs **0.12+** | 2026-10-19 |
-| `fzf` | `fzf-lua`'s picker binary (> 0.36); every finder keymap in the config goes through it | 2026-10-19 |
+| `fzf` | `fzf-lua`'s picker binary (> 0.36) **and** the shell's fuzzy finder: `fzf --fish` bindings in `config.fish` (Ctrl+R history, Ctrl+T files, Alt+C cd) and zoxide's `cdi` | 2026-10-19 (shell bindings 2026-10-27) |
 | `tree-sitter-cli` | `nvim-treesitter` **main** compiles parsers with it (>= 0.26.1, not the npm one) | 2026-10-19 |
 | `unzip` | mason requirement — clangd ships as a `.zip`, lua-language-server as `.tar.gz` | 2026-10-19 |
 | `fd` | the config passes `fd_opts` for the file picker; without it fzf-lua falls back to rg/find silently | 2026-10-19 |
@@ -57,8 +57,9 @@ sudo pacman -S --needed --noconfirm jq
 sudo pacman -S --needed --noconfirm eza
 
 # editor + the four packages its config needs (fzf-lua, nvim-treesitter main,
-# mason, fd pickers). Already present: ripgrep, gcc/make, git, curl, tar,
-# gzip, python3, nodejs, wl-clipboard, the Nerd font.
+# mason, fd pickers). fzf also serves the shell (Ctrl+R/T, Alt+C, `cdi`).
+# Already present: ripgrep, gcc/make, git, curl, tar, gzip, python3, nodejs,
+# wl-clipboard, the Nerd font.
 sudo pacman -S --needed --noconfirm neovim fzf tree-sitter-cli unzip fd
 ```
 
