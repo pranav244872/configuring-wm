@@ -4,9 +4,10 @@ Part 2 of [step 1](01-minimal-bare-install.md).
 
 **Why this part exists:** `pacman -S hyprland` would pull all of these
 automatically as declared dependencies. Building
-`pranav244872/Hyprland @ invisible-ss` from source has no such metadata, so they
-are installed explicitly. They are exactly the dependencies the official
-`hyprland` package declares. Versions as of 2026-10-15.
+`pranav244872/Hyprland @ feat/hotzones` (upstream 0.57.0 base) from source has
+no such metadata, so they are installed explicitly. They are exactly the
+dependencies the official `hyprland` package declares. Versions as of
+**2026-11-01** (0.57.0 rebuild).
 
 ## 2a. Build toolchain
 
@@ -34,11 +35,11 @@ sudo pacman -S --needed --noconfirm aquamarine hyprcursor hyprgraphics hyprlang 
 | `hyprcursor` | 0.1.13-7 | hyprcursor cursor-theme format library |
 | `hyprgraphics` | 0.5.1-4 | Graphics helpers (image loading, icons) |
 | `hyprlang` | 0.6.8-5 | hypr* config-language parser |
-| `hyprutils` | 0.14.2-1 | Core utility library (OS, math, IPC, signals, animations) |
+| `hyprutils` | 0.14.3-1 | Core utility library (OS, math, IPC, signals, animations) |
 | `hyprwire` | 0.3.1-3 | IPC wire-protocol library — **required by `hyprctl`** |
 | `hyprtoolkit` | 0.6.0-1 | GUI toolkit used by hypr* utility apps |
 | `hyprland-guiutils` | 0.2.2-4 | `hyprland-dialog`, `hyprland-run`, `hyprland-welcome` |
-| `hyprland-protocols` | 0.7.1-1 | hypr* Wayland protocol definitions |
+| `hyprland-protocols` | 0.8.0-1 | hypr* Wayland protocol definitions (0.57.0 needs >= 0.8.0) |
 | `hyprwayland-scanner` | 0.4.6-1 | Wayland protocol code generator (build-time tool) |
 
 ## 2c. System libraries (Wayland / X11 / graphics)
@@ -47,7 +48,7 @@ sudo pacman -S --needed --noconfirm aquamarine hyprcursor hyprgraphics hyprlang 
 sudo pacman -S --needed --noconfirm cairo pango libdrm libinput libxkbcommon pixman wayland \
   wayland-protocols libglvnd glslang lcms2 muparser re2 tomlplusplus util-linux-libs xcb-proto \
   xcb-util xcb-util-errors xcb-util-image xcb-util-keysyms xcb-util-renderutil xcb-util-wm \
-  libx11 libxcb libxcomposite libxcursor libxfixes libxrender xorg-xwayland lua
+  libx11 libxcb libxcomposite libxcursor libxfixes libxrender xorg-xwayland lua libcanberra
 ```
 
 | Package | Version | What it's for |
@@ -59,7 +60,7 @@ sudo pacman -S --needed --noconfirm cairo pango libdrm libinput libxkbcommon pix
 | `libxkbcommon` | 1.13.2-1 | Keyboard layout/mapping handling |
 | `pixman` | 0.46.4-1 | Pixel manipulation (software rendering paths) |
 | `wayland` | 1.26.0-1 | Wayland client/server libraries |
-| `wayland-protocols` | 1.49-1 | Standard Wayland protocol definitions |
+| `wayland-protocols` | 1.50-1 | Standard Wayland protocol definitions (0.57.0 needs >= 1.49) |
 | `libglvnd` | 1.7.0-3 | OpenGL/EGL vendor-neutral dispatch layer |
 | `glslang` | 1:1.4.363.0-1 | GLSL shader compiler (Hyprland's internal shaders) |
 | `lcms2` | 2.19.1-1 | Color management (ICC profiles) |
@@ -82,10 +83,11 @@ sudo pacman -S --needed --noconfirm cairo pango libdrm libinput libxkbcommon pix
 | `libxrender` | 0.9.12-1 | X render extension |
 | `xorg-xwayland` | 24.1.14-1 | XWayland — legacy X apps inside the session |
 | `lua` | 5.5.1-1 | Config engine (`hyprland.lua`); fork needs >=5.5, <5.6 |
+| `libcanberra` | 1:0.30+r2+gc0620e4-6 | Event sounds (notification/overlay hooks); **required since 0.57.0** |
 
 Packages with no reverse dependency that therefore **must stay explicit**
 because nothing else pulls them: `glslang`, `muparser`, `re2`,
-`xcb-util-errors`, `libxcomposite`, `xorg-xwayland`.
+`xcb-util-errors`, `libxcomposite`, `xorg-xwayland`, `libcanberra`.
 
 Two build inputs are not packaged at all and are fetched during the build:
 **glaze v7.2.0** (CMake FetchContent, needs network on first configure) and the

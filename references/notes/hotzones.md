@@ -1,7 +1,7 @@
 # Hot Zones (edge/corner)
 
 Edge/corner hot zones are **native to the fork** (not a plugin): resting the
-cursor against a bezel runs a dispatcher. Read before changing
+cursor against a bezel runs a command. Read before changing
 `~/.config/hypr/modules/hotzones.lua` or `src/managers/HotZoneManager.*`.
 
 Back to [notes index](README.md) - [docs index](../README.md)
@@ -18,11 +18,13 @@ Back to [notes index](README.md) - [docs index](../README.md)
 | `hotzone:slam` | `false` | corners fire instantly on the exact bezel pixel, bypassing the dwell |
 | `hotzone:suppress_on_fullscreen` | `true` | skip while a covering fullscreen window is on that monitor |
 | `<zone>:enabled` | `true` | per-zone switch |
-| `<zone>:action` | `""` | `"<dispatcher>, <args>"`; an **empty action makes the zone inert** (it still locks out after firing) |
+| `<zone>:action` | `""` | `"exec, <cmd>"` or `"execr, <cmd>"`; an **empty action makes the zone inert** (it still locks out after firing) |
 | `<zone>:dwell_ms` | `-1` | per-zone override (`-1` = use the global) |
 
 Zones (8): `topleft` `topright` `bottomleft` `bottomright` `top` `bottom` `left` `right`.
-Actions may use any registered dispatcher — `exec, <shell command>` is the usual one.
+Actions are **process spawns only** since the 0.57.0 dispatcher rewrite:
+`exec, <cmd>` is rules-aware (window rules apply), `execr, <cmd>` spawns raw.
+Anything else is logged as unsupported — put richer behaviour in a Lua keybind.
 
 ## Geometry
 
@@ -46,20 +48,22 @@ Actions may use any registered dispatcher — `exec, <shell command>` is the usu
 
 - Lua (for keybinds): `hl.hotzone.enable()` / `disable()` / `toggle_active()` /
   `is_enabled()`.
-- Dispatcher: `hotzone <enable|disable|toggle>`.
+- The old `hotzone <enable|disable|toggle>` string dispatcher is **gone** with
+  0.57.0's dispatcher map; use the Lua form above, also from the shell:
+  `hyprctl dispatch 'hl.hotzone.toggle_active()'`.
 - `isActive = hotzone:enabled AND runtime flag`, so the runtime API can only turn
   it *further off* — the config key is the master.
-- From the shell only the Lua form works: `hyprctl dispatch 'hl.dsp.exit()'`;
-  bare dispatcher names (`hyprctl dispatch exit`) are rejected by the fork.
 
 ## Where it lives (fork, branch `feat/hotzones`)
 
 - `src/managers/HotZoneManager.{hpp,cpp}` — zone detection, dwell timer, slam,
-  re-arm, suppression, action run through `KeybindManager::m_dispatchers`.
+  re-arm, suppression, action run through `Config::Supplementary::executor()`.
 - Hooked from `InputManager::mouseMoveUnified`, after the `PMONITOR` null-check,
   gated on real mouse motion (warp/refocus paths pass `overridePos`).
 - Created in `Compositor` at `STAGE_LATE`, reset in `cleanup()`.
-- Committed as `9f7a38c7`.
+- Rebased onto `v0.57.0` on 2026-11-01: `cce455e2d` (feature), `f8bf36e47`
+  (corner-only slam), `b629df6ed` (`hotzone:slam` key). The pre-rebase commits
+  on 0.56.2 are still reachable via `backup/hotzones-0.56.2`.
 
 ## Our use: right edge opens the session menu
 

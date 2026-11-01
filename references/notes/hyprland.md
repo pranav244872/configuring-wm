@@ -1,6 +1,6 @@
 # Hyprland Notes
 
-Animation units and the quirks of our 0.56.2-based fork. Read before touching `hyprland.lua` or the modules.
+Animation units and the quirks of our 0.57.0-based fork. Read before touching `hyprland.lua` or the modules.
 
 Back to [notes index](README.md) - [docs index](../README.md)
 
@@ -34,7 +34,7 @@ Related facts:
   `workspaces`, `border`, `zoomFactor`, `monitorAdded`, …).
 
 
-## Version quirks in this fork (0.56.2 base)
+## Version quirks in this fork (0.57.0 base)
 
 - **VFR moved**: `misc.vfr` is invalid → it is `debug.vfr` (bool, default `true`).
   `--verify-config` catches this class of mistake instantly.
@@ -43,9 +43,15 @@ Related facts:
   `hl.dsp.window.fullscreen_state({ internal = 0, client = 2 })` — app is told
   it's fullscreen, Hyprland keeps the window in the layout. Real fullscreen is
   `SUPER + W`.
-- **`no_screen_share`** (the fork's feature) is a bool effect on **window and
-  layer rules**; windows/layers carrying it are skipped during screenshare
-  capture. Layer rules match on `namespace`, window rules on `class`/`title`.
+- **`no_screen_share`** is a bool effect on **window and layer rules**; windows/
+  layers carrying it are skipped during screenshare capture. Layer rules match on
+  `namespace`, window rules on `class`/`title`. It is **upstream since 0.57.0**
+  (`CRenderContext::shouldRenderContent()`), not a fork patch any more.
+- **String dispatchers are gone (0.57.0).** Keybinds take Lua objects
+  (`hl.dsp.window.close()`); `hyprctl dispatch` wants the Lua form
+  (`hyprctl dispatch 'hl.dsp.exit()'`). Fork config that stored dispatcher names
+  as strings (hotzone actions) now supports `exec`/`execr` only — see
+  [hotzones.md](hotzones.md).
 - Lua config modules run in separate error scopes; a plain (non-`local`)
   assignment in `hyprland.lua` (e.g. `colors = require(...)`) is visible to
   the modules that `require` it afterwards.

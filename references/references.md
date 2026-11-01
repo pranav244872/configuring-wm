@@ -9,7 +9,7 @@ in [preferences.md](preferences.md) (bare minimum, speed first).
 | Source | Location | What it is | What we took / use it for |
 |---|---|---|---|
 | **configuring-wm** | `~/del/configuring-wm` (remote: `github.com/pranav244872/configuring-wm`) | the user's **previous** dotfiles + installer script — this rebuild replaces it; also now tracks this memory folder under `references/` | keybind style (SUPER-centric, scratchpad `magic`), `kitty.conf`, the old `mpv.conf`/`input.conf`, fish+zoxide setup, Material/teal palette, **and the package-management preferences** — `script.d/10-packages.sh` (paru bootstrap from AUR, the `CleanAfter`/`RemoveMake`/"don't accumulate" config) and `script.d/50-services.sh` (`systemctl enable paccache.timer`); see [package-management.md](package-management.md). Its old wallpaper picker (`~/.config/rofi/scripts/wallpaper_menu.sh`, awww + matugen) gave us the *deploy location* idea (`~/Pictures/Wallpapers`); the awww daemon and rofi picker were replaced by our own shell, and its matugen config + templates are now **adopted** (the generated palette is live — see [notes/matugen.md](notes/matugen.md)) |
-| **Hyprland fork** | `~/del/Hyprland` (`pranav244872/Hyprland @ invisible-ss`) | our compositor, built from source | the `no_screen_share` feature (step 2) |
+| **Hyprland fork** | `~/del/Hyprland` (`pranav244872/Hyprland @ feat/hotzones`, based on upstream `v0.57.0`) | our compositor, built from source | native edge/corner hot zones (step 2); `no_screen_share` went upstream in 0.57.0 |
 | **Legacy mpv config** | `~/del/mpv-legacy-config/mpv` | previous mpv setup: modernz v0.3.1 OSC, `select.lua`, thumbfast, autoload, playlistmanager, 381-line `modernz.conf` | replaced by uosc; kept purely as a rollback target |
 
 ## Ephemeral clones (in `/tmp/opencode`, wiped on reboot)
@@ -33,7 +33,7 @@ in [preferences.md](preferences.md) (bare minimum, speed first).
 ## How to use these references
 
 1. **Never copy blindly.** Adapt to the bare-minimum + speed-first rules, and to
-   the versions actually installed here (our fork is 0.56.2-based; mpv 0.41).
+   the versions actually installed here (our fork is 0.57.0-based; mpv 0.41).
 2. **Re-clone if missing** — `/tmp` is wiped on reboot; the commands are above.
 3. **Record what we adopted here**, so a future session knows why a setting
    looks the way it does.
