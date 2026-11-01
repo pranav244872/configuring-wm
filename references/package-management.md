@@ -102,7 +102,7 @@ not as a `pacman -S` argument:
 |---|---|---|
 | `paru` | 2.1.0-2 | AUR helper; the user wanted one (2026-10-15). Built with makepkg from the AUR repo, owned by pacman afterwards (`paru v2.1.0 - libalpm v16.0.1`) |
 | `ttf-rubik-vf` | 2.3.0-3 | GTK UI font `Rubik 11` (2026-10-20). Rubik has no official package; the variable build replaces the installer's old `otf-rubik` entry. Built with `makepkg -f` and installed with `sudo pacman -U`, no paru needed — see [notes/packages.md](notes/packages.md#gtk-font-rubik-aur) |
-| `sunshine-bin` | 2026.914.233613-1 | game stream host for Moonlight (installed 2026-10-18). User unit autostarts with `graphical-session.target`; forced to wlr capture so it doesn't open the portal picker — see [notes/sunshine.md](notes/sunshine.md) |
+| `sunshine-bin` | 2026.914.233613-1 | game stream host for Moonlight (installed 2026-10-18). User unit **autostart disabled** (0.57's `graphical-session.target` made it launch and flash the portal picker); `capture = wlr` kept for manual starts — see [notes/sunshine.md](notes/sunshine.md) |
 
 ```bash
 # AUR helper (see "Building it" below)

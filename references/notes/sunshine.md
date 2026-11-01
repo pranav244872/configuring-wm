@@ -10,7 +10,8 @@ Back to [notes index](README.md) - [docs index](../README.md)
 
 - AUR `sunshine-bin` **2026.914.233613-1** (installed 2026-10-18).
 - User unit `app-dev.lizardbyte.app.Sunshine.service` (alias `sunshine.service`),
-  `WantedBy=graphical-session.target`, `ExecStartPre=/bin/sleep 5`.
+  `ExecStartPre=/bin/sleep 5`. **Autostart disabled 2026-11-01** — start it
+  manually when streaming.
 - Web UI: `https://localhost:47990`.
 - Config: `~/.config/sunshine/sunshine.conf`, logs `~/.config/sunshine/sunshine.log`.
 
@@ -36,7 +37,19 @@ At login Sunshine immediately asks the portal for a screencast:
 
 ## Fix applied (2026-11-01)
 
-`capture = wlr` in `~/.config/sunshine/sunshine.conf`:
+**No autostart** — the user does not want it running at login:
+
+```bash
+systemctl --user disable app-dev.lizardbyte.app.Sunshine.service
+```
+
+This removed `~/.config/systemd/user/graphical-session.target.wants/…` and the
+`sunshine.service` alias, so `graphical-session.target` no longer pulls it in
+(`is-enabled` → `disabled`, `WantedBy=` empty). Start on demand with
+`systemctl --user start app-dev.lizardbyte.app.Sunshine.service` or `sunshine`.
+
+`capture = wlr` is kept in `~/.config/sunshine/sunshine.conf` so that a manual
+start still skips the portal and its picker window:
 
 ```ini
 capture = wlr
@@ -59,13 +72,12 @@ injection is already disabled in the conf, so nothing else needed the portal.
 
 ```bash
 systemctl --user status  app-dev.lizardbyte.app.Sunshine.service
-systemctl --user restart app-dev.lizardbyte.app.Sunshine.service
-systemctl --user disable --now app-dev.lizardbyte.app.Sunshine.service  # no login autostart
-systemctl --user start app-dev.lizardbyte.app.Sunshine.service          # manual start
+systemctl --user start   app-dev.lizardbyte.app.Sunshine.service   # after login
+systemctl --user stop    app-dev.lizardbyte.app.Sunshine.service
+systemctl --user enable  app-dev.lizardbyte.app.Sunshine.service   # restore autostart
 ```
 
-If it should **never** start on login, disable the unit; the package stays
-installed and `sunshine` (or the unit above) starts it on demand.
+The package stays installed; only the login autostart was removed.
 
 To opt out of the 0.57 session-target behaviour instead, export
 `HYPRLAND_NO_SD_VARS=1` before Hyprland starts (`modules/env.lua` is too late —
@@ -75,7 +87,8 @@ activated, so they don't depend on the target.
 ## Traps
 
 - Forcing `capture = wlr` is what removes the picker; leaving it on autodetect
-  re-enables the portal path and the popup on the next login.
+  re-enables the portal path, so the popup returns the next time Sunshine is
+  started manually.
 - The unit's `Restart=on-failure` plus `StartLimitBurst=5` means a crash loop
   stops after five tries — check `systemctl --user status` before assuming it is
   running.
