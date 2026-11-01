@@ -47,6 +47,12 @@ Related facts:
   layers carrying it are skipped during screenshare capture. Layer rules match on
   `namespace`, window rules on `class`/`title`. It is **upstream since 0.57.0**
   (`CRenderContext::shouldRenderContent()`), not a fork patch any more.
+- **0.57.0 starts a systemd session target.** Commit `34839b4f6` installs
+  `hyprland-session.target` (`BindsTo=graphical-session.target`) and starts it
+  unless `MANAGERPID` is set (UWSM) or `HYPRLAND_NO_SD_VARS` is enabled. Any
+  user unit with `WantedBy=graphical-session.target` now autostarts at login —
+  this is what made Sunshine start (and open a share picker) after the update;
+  see [sunshine.md](sunshine.md).
 - **String dispatchers are gone (0.57.0).** Keybinds take Lua objects
   (`hl.dsp.window.close()`); `hyprctl dispatch` wants the Lua form
   (`hyprctl dispatch 'hl.dsp.exit()'`). Fork config that stored dispatcher names
