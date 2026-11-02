@@ -45,8 +45,12 @@ Related facts:
   `SUPER + W`.
 - **`no_screen_share`** is a bool effect on **window and layer rules**; windows/
   layers carrying it are skipped during screenshare capture. Layer rules match on
-  `namespace`, window rules on `class`/`title`. It is **upstream since 0.57.0**
-  (`CRenderContext::shouldRenderContent()`), not a fork patch any more.
+  `namespace`, window rules on `class`/`title`. The rule and the
+  `SHARE_WORKSPACE` path are **upstream since 0.57.0**
+  (`CRenderContext::shouldRenderContent()`), but upstream still **black-boxes**
+  `SHARE_MONITOR`/`SHARE_REGION`; fork commit `82499fcb8` re-composites
+  `renderMonitor()` instead, so the area shows what is behind the window (hidden,
+  not black). See [setup/04](../setup/04-hyprland-fork-build.md).
 - **0.57.0 starts a systemd session target.** Commit `34839b4f6` installs
   `hyprland-session.target` (`BindsTo=graphical-session.target`) and starts it
   unless `MANAGERPID` is set (UWSM) or `HYPRLAND_NO_SD_VARS` is enabled. Any

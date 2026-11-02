@@ -7,22 +7,46 @@
 - Base: upstream **Hyprland 0.57.0** (`0aa6745f7`) + the native hot-zones feature.
   The pacman hypr* libs from step 1 are the ABI the build is compiled against.
 - Clone location: `~/del/Hyprland`
-- Installed binary: `Hyprland 0.57.0 … Tag: v0.57.0-3-gb629df6ed`
+- Installed binary: `Hyprland 0.57.0 … commit 82499fcb8` (v0.57.0 + 4 commits)
 
 ## What the fork still adds
 
-Three commits on top of `v0.57.0` (all `hotzone:*`, see
-[notes/hotzones.md](../notes/hotzones.md)):
+Four commits on top of `v0.57.0`:
 
 1. `cce455e2d hotzones: native edge/corner hot zones (dwell + re-arm + suppression)`
 2. `f8bf36e47 hotzones: instant slam is corner-only`
 3. `b629df6ed hotzones: make the instant slam a config key (hotzone:slam, default off)`
+4. `82499fcb8 screenshare: hide no_screen_share content instead of black boxes`
 
-**`no_screen_share` is no longer a fork patch.** Upstream 0.57.0 implements it
-(`CRenderContext::shouldRenderContent()` + the rule), so the five old
-screenshare commits were dropped. The config usage is unchanged —
+**`no_screen_share` — upstream covers half of it.** 0.57.0 implements the rule
+(`CRenderContext::shouldRenderContent()`) and re-composites for
+`SHARE_WORKSPACE`, but `SHARE_MONITOR` / `SHARE_REGION` still copy the mirror
+texture and **paint black rectangles** over the excluded windows/layers (and
+their popups). Fork commit `82499fcb8` ports the old `bb0ffc3e` behaviour onto
+the context renderer: `renderMonitor()` re-renders the scene with
+`m_renderingCapture = true`, so the excluded surfaces are dropped entirely and
+the capture shows whatever is behind them (wallpaper/other windows) — no black
+box. Config usage is unchanged:
 `hl.window_rule({ match = { class = "..." }, no_screen_share = true })` /
 `hl.layer_rule({ match = { namespace = "..." }, no_screen_share = true })`.
+If upstream later re-composites monitor shares too, drop that commit.
+
+Measured on 2026-11-02 with the **pre-patch** 0.57.0 binary and the cheatsheet
+overlay (its layer rule has `no_screen_share = true`):
+
+```bash
+# with the overlay visible, then after killing it
+grim -o eDP-1 /tmp/overlay.png; grim -o eDP-1 /tmp/plain.png
+# crop the 650x500 overlay box (15,565) and compare
+```
+
+| capture | mean luminance | pure-black pixels |
+|---|---|---|
+| overlay visible (black-box path) | 0.0 | 100% |
+| overlay killed (background) | 23.7 | 0% |
+
+After the patched binary is running, the "overlay visible" crop must match the
+background (≈23.7, 0% black) — that is the pass condition.
 
 ## 0.56.2 → 0.57.0 port notes
 
