@@ -33,6 +33,10 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `unzip` | mason requirement — clangd ships as a `.zip`, lua-language-server as `.tar.gz` | 2026-10-19 |
 | `fd` | the config passes `fd_opts` for the file picker; without it fzf-lua falls back to rg/find silently | 2026-10-19 |
 | `libcanberra` | Hyprland 0.57.0 made it a required CMake pkg-config dep; the fork rebuild fails without it | 2026-11-01 |
+| `gtk4-layer-shell` | Wayland layer surfaces for the cheatsheet overlay (GTK4) | 2026-11-02 |
+| `python-gobject` | `gi` bindings for GTK4 — must be the distro build, not a pip wheel | 2026-11-02 |
+| `python-httpx` | cheatsheet's client to antigravity-relay | 2026-11-02 |
+| `python-evdev` | cheatsheet grabs keyboards and forwards via `uinput` | 2026-11-02 |
 | `matugen` | wallpaper-derived Material 3 palette for the shell, Hyprland, kitty, nvim, GTK and qt6ct — see [notes/matugen.md](notes/matugen.md) | 2026-10-19 |
 | `adw-gtk-theme` | `adw-gtk3-dark`: the GTK3 theme that consumes the named colours matugen writes | 2026-10-19 |
 | `qt6ct` | Qt6 platform theme (`QT_QPA_PLATFORMTHEME=qt6ct`) applying the dark matugen palette | 2026-10-19 |
@@ -60,6 +64,9 @@ sudo pacman -S --needed --noconfirm jq
 
 # new required dependency of the 0.57.0 fork rebuild (event sounds)
 sudo pacman -S --needed --noconfirm libcanberra
+
+# cheatsheet overlay: GTK4 layer shell + distro GTK/pyGObject + evdev + httpx
+sudo pacman -S --needed --noconfirm gtk4 gtk4-layer-shell python-gobject python-httpx python-evdev
 
 # modern ls replacement (already in extra; --git needs libgit2, pulled as a dep)
 sudo pacman -S --needed --noconfirm eza

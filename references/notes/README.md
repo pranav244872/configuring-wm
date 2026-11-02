@@ -30,6 +30,7 @@ Back to [docs index](../README.md)
 | [matugen.md](matugen.md) | wallpaper → matugen → every consumer: the trigger chain, template→output map, Theme role mapping, the live shell binding, per-consumer reloads, and what GTK/Qt actually honour |
 | [sunshine.md](sunshine.md) | the Sunshine/Moonlight host: the user unit, why 0.57.0's session target made it autostart and flash `hyprland-share-picker`, and the `capture = wlr` fix |
 | [antigravity-relay.md](antigravity-relay.md) | the OpenAI-compatible Antigravity gateway on :8081: Docker setup, browser OAuth, the Flash-3.8-only model policy, the IDE-2.28.1 update runbook and its traps |
+| [cheatsheet.md](cheatsheet.md) | the Wayland screen-analysis overlay: GTK4 layer shell + grim + evdev grab, the udev `uaccess` rule for input devices, the three relay models, the live KP1 test, and the `force=True` logging fix |
 | [display.md](display.md) | `brightnessctl` 0.5 raw units, the `-e4` stepping trap, the 1 % floor script |
 | [mpv.md](mpv.md) | vendored uosc, uosc's `input.conf` menu, proving a script loaded |
 | [neovim.md](neovim.md) | editor bootstrap and traps: `vim.pack` lockfile vs `vim.pack.add` (installed-but-inert plugins), `pcall(require,…)` hiding a missing plugin, treesitter `main` needing the CLI + a compiler, mason pypi needing no `python-pip`, why the `matugen` binary isn't needed, and driving a live nvim over its socket to verify the UI |
