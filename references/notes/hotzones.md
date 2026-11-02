@@ -62,8 +62,8 @@ Anything else is logged as unsupported — put richer behaviour in a Lua keybind
   gated on real mouse motion (warp/refocus paths pass `overridePos`).
 - Created in `Compositor` at `STAGE_LATE`, reset in `cleanup()`.
 - Rebased onto `v0.57.0` on 2026-11-01: `cce455e2d` (feature), `f8bf36e47`
-  (corner-only slam), `b629df6ed` (`hotzone:slam` key). The pre-rebase commits
-  on 0.56.2 are still reachable via `backup/hotzones-0.56.2`.
+  (corner-only slam), `b629df6ed` (`hotzone:slam` key). No backup branches are
+  kept — rollback means checking out an earlier commit and rebuilding.
 
 ## Our use: right edge opens the session menu
 
@@ -158,5 +158,5 @@ while a session lock is up — so the hot zones are the only leak.
   watch *both* sheets — a fired zone can suppress the one you are testing for.
 - Getting to a corner: park just *outside* every zone first (e.g.
   `(1895, 1060)` for the bottom-right), then move straight in.
-- Disarm: `enabled = false` (reloads live). Roll the compositor back:
-  `sudo cp -a /usr/bin/Hyprland.bak /usr/bin/Hyprland` then restart Hyprland.
+- Disarm: `enabled = false` (reloads live). To roll the compositor back, check
+  out the previous commit, rebuild and reinstall (no binary copies are kept).

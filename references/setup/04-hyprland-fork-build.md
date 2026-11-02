@@ -109,7 +109,7 @@ Equivalent shorthand (repo's Makefile): `make release PREFIX=/usr && sudo make i
   ```bash
   cd ~/del/Hyprland
   git fetch upstream --tags
-  git branch -f backup/hotzones-<old> HEAD          # rollback point
+  git rev-parse HEAD                               # note it: the only rollback ref
   git rebase --onto v<new> v<old>                  # replay only our hotzone commits
   git submodule update --init --recursive
   cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release \
@@ -128,11 +128,10 @@ Equivalent shorthand (repo's Makefile): `make release PREFIX=/usr && sudo make i
   `/usr/share/wayland-sessions/hyprland.desktop`
 - Keep the pacman `hyprland` package uninstalled — it would conflict on
   `/usr/bin/Hyprland`, `/usr/bin/hyprctl` and the wayland-session files.
-- **Rollback**: a copy is taken before every install.
-  `/usr/bin/Hyprland.bak-0.56.2` is the 2026-10-17 0.56.2 build (the older
-  `/usr/bin/Hyprland.bak` is the original 2026-10-15 one). Restore with
-  `sudo cp -a /usr/bin/Hyprland.bak-0.56.2 /usr/bin/Hyprland` and restart the
-  compositor (log out / back in).
+- **Rollback**: **no binary copies are kept** (all backups were removed on
+  2026-11-03). To roll back, check out the previous commit (the SHA noted above),
+  rebuild and reinstall, then restart the compositor (log out / back in). The
+  source and build dir live in `~/del/Hyprland`, so this costs one build.
 - First configure needs network (glaze FetchContent).
 
 ## Verify after install

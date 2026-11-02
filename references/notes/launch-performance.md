@@ -50,8 +50,9 @@ user_pref("security.remote_settings.crlite_filters.enabled", false);
 Use **`user.js`, not `prefs.js`** — Firefox rewrites `prefs.js` on exit and
 would clobber live edits, but re-applies `user.js` at every start.
 
-**Rollback:** delete `user.js`; revert the one line in `keybinds.lua`. The
-original `prefs.js` backup is `prefs.js.bak-20261015`.
+**Rollback:** delete `user.js`; revert the one line in `keybinds.lua`. No
+`prefs.js` backup is kept (removed 2026-11-03) — deleting `user.js` restores the
+defaults that matter.
 
 ## Swap is already correct — do NOT "fix" it
 
