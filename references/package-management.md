@@ -22,6 +22,7 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `pacman-contrib` | provides `paccache` + `paccache.timer` for weekly cache trim | 2026-10-15 |
 | `docker` | container runtime (service disabled at boot; run with `sudo`) | 2026-10-15 |
 | `docker-compose` | v2 compose CLI, `docker compose …` | 2026-10-15 |
+| `docker-buildx` | BuildKit builder plugin — the antigravity-relay Dockerfile uses `RUN --mount=type=cache`; without it the build fails with *"the --mount option requires BuildKit"* | 2026-11-02 |
 | `steam` | game runtime (The Spike Cross); replaces the standalone Proton experiment | 2026-10-16 |
 | `vulkan-intel` | Vulkan driver for the UHD 620 — DXVK needs an ICD | 2026-10-16 |
 | `jq` | JSON CLI for `hyprctl -j` one-liners (screenshot workspace-filter verification, future scripts) | 2026-10-16 |
@@ -47,6 +48,9 @@ sudo pacman -S --needed --noconfirm pacman-contrib
 
 # containers (installed, deliberately not enabled at boot and not rootless)
 sudo pacman -S --needed --noconfirm docker docker-compose
+
+# BuildKit plugin (needed by antigravity-relay's Dockerfile cache mounts)
+sudo pacman -S --needed --noconfirm docker-buildx
 
 # games: Steam client (pulls the lib32-* chain)
 sudo pacman -S --needed --noconfirm steam
