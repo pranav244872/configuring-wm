@@ -61,9 +61,11 @@ Anything else is logged as unsupported — put richer behaviour in a Lua keybind
 - Hooked from `InputManager::mouseMoveUnified`, after the `PMONITOR` null-check,
   gated on real mouse motion (warp/refocus paths pass `overridePos`).
 - Created in `Compositor` at `STAGE_LATE`, reset in `cleanup()`.
-- Rebased onto `v0.57.0` on 2026-11-01: `cce455e2d` (feature), `f8bf36e47`
-  (corner-only slam), `b629df6ed` (`hotzone:slam` key). No backup branches are
-  kept — rollback means checking out an earlier commit and rebuilding.
+- Rebased onto `v0.57.0` on 2026-11-01, then `v0.57.2` on 2026-11-10
+  (aquamarine 0.16 soname bump): `6e07f7f89` (feature), `f22bc63f9`
+  (corner-only slam), `570c8d49f` (`hotzone:slam` key), `337298350`
+  (0.57 dispatcher port). No backup branches are kept — rollback means
+  checking out an earlier commit and rebuilding.
 
 ## Our use: right edge opens the session menu
 

@@ -1,6 +1,6 @@
 # Hyprland Notes
 
-Animation units and the quirks of our 0.57.0-based fork. Read before touching `hyprland.lua` or the modules.
+Animation units and the quirks of our 0.57.2-based fork. Read before touching `hyprland.lua` or the modules.
 
 Back to [notes index](README.md) - [docs index](../README.md)
 
@@ -34,7 +34,7 @@ Related facts:
   `workspaces`, `border`, `zoomFactor`, `monitorAdded`, …).
 
 
-## Version quirks in this fork (0.57.0 base)
+## Version quirks in this fork (0.57.2 base)
 
 - **VFR moved**: `misc.vfr` is invalid → it is `debug.vfr` (bool, default `true`).
   `--verify-config` catches this class of mistake instantly.
@@ -48,7 +48,7 @@ Related facts:
   `namespace`, window rules on `class`/`title`. The rule and the
   `SHARE_WORKSPACE` path are **upstream since 0.57.0**
   (`CRenderContext::shouldRenderContent()`), but upstream still **black-boxes**
-  `SHARE_MONITOR`/`SHARE_REGION`; fork commit `82499fcb8` re-composites
+  `SHARE_MONITOR`/`SHARE_REGION`; fork commit `930aed4fa` re-composites
   `renderMonitor()` instead, so the area shows what is behind the window (hidden,
   not black). See [setup/04](../setup/04-hyprland-fork-build.md).
 - **0.57.0 starts a systemd session target.** Commit `34839b4f6` installs

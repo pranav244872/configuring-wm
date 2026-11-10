@@ -4,10 +4,10 @@ Part 2 of [step 1](01-minimal-bare-install.md).
 
 **Why this part exists:** `pacman -S hyprland` would pull all of these
 automatically as declared dependencies. Building
-`pranav244872/Hyprland @ feat/hotzones` (upstream 0.57.0 base) from source has
+`pranav244872/Hyprland @ feat/hotzones` (upstream 0.57.2 base) from source has
 no such metadata, so they are installed explicitly. They are exactly the
 dependencies the official `hyprland` package declares. Versions as of
-**2026-11-01** (0.57.0 rebuild).
+**2026-11-10** (0.57.2 rebuild).
 
 ## 2a. Build toolchain
 

@@ -63,7 +63,7 @@ references/
 
 ## Current state at a glance
 
-- **Compositor**: own fork, built from source → `/usr/bin/Hyprland` 0.57.0
+- **Compositor**: own fork, built from source → `/usr/bin/Hyprland` 0.57.2
   (`pranav244872/Hyprland @ feat/hotzones`), no pacman package owns it.
   Source + incremental build dir: `~/del/Hyprland`.
 - **Config**: Lua, split into modules, live at `~/.config/hypr/`
