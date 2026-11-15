@@ -104,4 +104,6 @@ discovery — then use `localgo send --ip <phone>:53317` (HTTP only) or a PIN.
 The shell side (module layout, IPC/SSE traps, what is verified) is in
 [notes/localgo.md](../notes/localgo.md).
 
-Last verified: desktop service + IPC + drawer states 2026-11-15.
+Last verified: 2026-11-15 — phone → desktop and desktop → phone both complete,
+with the drawer's ACCEPT for the inbound file and the phone's own prompt for the
+outbound one.

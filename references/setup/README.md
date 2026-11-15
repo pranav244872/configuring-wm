@@ -13,7 +13,7 @@ Back to [docs index](../README.md)
 | 4 | Hyprland fork build (source) | [04-hyprland-fork-build.md](04-hyprland-fork-build.md) | ✅ done (2026-10-15) |
 | 5 | Hyprland config (speed-first, modular) | [05-hyprland-config.md](05-hyprland-config.md) | ✅ done (2026-10-15) |
 | 6 | Rice layer | [06-rice.md](06-rice.md) | ⬜ planned |
-| 7 | LocalSend file sharing (`localgo`) | [07-localsend.md](07-localsend.md) | 🔄 desktop done 2026-11-15, phone transfer pending |
+| 7 | LocalSend file sharing (`localgo`) | [07-localsend.md](07-localsend.md) | ✅ done (2026-11-15) |
 
 Package installs that happen *later* (icon font, cache tooling, AUR helper)
 live in [package-management.md](../package-management.md).

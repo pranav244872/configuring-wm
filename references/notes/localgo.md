@@ -121,10 +121,8 @@ Proven with the real phone:
 | floating chooser | portal dialog `938×503` at `491,304`, `float=true`, `activewindow` = `xdg-desktop-portal-gtk` |
 | chooser cancel | drawer unmaps for the chooser, comes back when it exits |
 | outbound start | row appears immediately as `WAITING`, then progresses to `DONE` |
-
-Still open: the actual byte transfer needs the phone's acceptance tap (the
-sender's 30 s timeout marks the row FAILED otherwise), and phone → desktop has
-only been proven against the mock.
+| outbound end to end | file accepted on the phone, row `DONE` (sender timeout raised to 120 s so a human can reach the phone) |
+| inbound end to end | phone → `arch`: INCOMING card, ACCEPT, file in `~/Downloads`, row moves to RECEIVED |
 
 ## Files
 
