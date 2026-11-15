@@ -35,7 +35,10 @@ Back to [notes index](README.md) - [docs index](../README.md)
 ## Where it is created
 
 `shell.qml` creates `WallpaperBackground` **before** the bar/calendar and
-`WallpaperHost` last: on one layer, creation order decides stacking.
+`WallpaperHost` last, so the picker draws above the calendar. Do not build input
+handling on that ordering: it is only an observation about painting, and
+same-layer surfaces did **not** stack in creation order for pointer
+hit-testing (see [hotcorners.md](hotcorners.md)).
 
 ## Verified live (2026-10-19)
 
