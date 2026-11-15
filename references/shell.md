@@ -85,11 +85,14 @@ Run: autostarted at login (`qs -n`) · stop: `qs kill` · restart: `SUPER + SHIF
 `SUPER + F` toggles launcher, `PRINT` toggles screenshots.
 
 **Keep-awake (caffeine)** — the coffee button at the right of the bar toggles a
-wayland idle inhibitor held by the bar window (`TopBar.qml`). `IdleService` uses
-`respectInhibitors: true`, so lock / screen-off / suspend all stop while it is
-on. Not persisted: it resets to off on a shell restart. IPC: `qs ipc call
-caffeine <toggle|enable|disable|isEnabled>`. Mechanism and the layer-surface
-proof are in [notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-10-17.
+session-wide override. `IdleService` reads `Caffeine.enabled` directly and
+disables all three monitors, so lock / screen-off / suspend stop **regardless of
+what is on screen**; the bar window also holds a wayland idle inhibitor for
+clients outside this shell. Not persisted: it resets to off on a shell restart.
+IPC: `qs ipc call caffeine <toggle|enable|disable|isEnabled>`, and
+`qs ipc call idle state` prints which flags hold what. Why the inhibitor alone
+was not enough (a fullscreen window makes the bar invisible and drops it):
+[notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-11-15.
 
 **Session menu** — the right screen edge is a shell hover zone
 ([notes/hotcorners.md](notes/hotcorners.md)) or `SUPER + ESCAPE`
