@@ -15,6 +15,17 @@ Removed after the fact: `mingw-w64-gcc` (2026-10-16 — built once for the
 abandoned Steam-emulator shim, removed with `pacman -Rns mingw-w64-gcc`
 together with the whole `~/Games` experiment, transitive chain included).
 
+Also removed: **`kdenlive` + `shotcut`** (2026-11-15). `pacman -Rns` swept the
+whole video-editing tree — 91 packages, including `mlt`, `frei0r-plugins`,
+`movit`, `opencv`, `qt6-webengine`, `qt6-multimedia`, `poppler`,
+`gst-plugins-base` and the KDE Frameworks stack (`kio`, `kwallet`, `kxmlgui`,
+`kirigami`, `purpose`, `signond`, …). User data deleted with them:
+`~/.config/kdenliverc`, `~/.config/Meltytech/` (Shotcut's config),
+`~/.local/share/{kdenlive,Meltytech}/`, `~/.cache/{kdenlive,Meltytech}/`,
+`~/.local/state/kdenlivestaterc`, `~/.local/share/stalefiles/kdenlive`, and the
+one saved project `~/Videos/lol/lol.mlt`. `~/Videos/untitled.mp4` and
+`~/Videos/titles/` were left alone (media/empty dir, not app data).
+
 | Package | Why | When |
 |---|---|---|
 | `ttf-material-symbols-variable` | icon font for quickshell UI glyphs | 2026-10-15 |
@@ -38,6 +49,8 @@ together with the whole `~/Games` experiment, transitive chain included).
 | `python-httpx` | cheatsheet's client to antigravity-relay | 2026-11-02 |
 | `python-evdev` | cheatsheet grabs keyboards and forwards via `uinput` | 2026-11-02 |
 | `matugen` | wallpaper-derived Material 3 palette for the shell, Hyprland, kitty, nvim, GTK and qt6ct — see [notes/matugen.md](notes/matugen.md) | 2026-10-19 |
+| `ttf-ms-fonts` | AUR: core Microsoft web fonts (Arial, Times New Roman, Courier New, Georgia, Verdana…) — WordCraft has no fontconfig, so the real families must exist | 2026-11-15 |
+| `ttf-vista-fonts` | AUR: Calibri/Cambria/Candara/Consolas/Constantia/Corbel from the PowerPoint Viewer 2007 cab (built with `fontforge`) — Word's default families | 2026-11-15 |
 | `adw-gtk-theme` | `adw-gtk3-dark`: the GTK3 theme that consumes the named colours matugen writes | 2026-10-19 |
 | `qt6ct` | Qt6 platform theme (`QT_QPA_PLATFORMTHEME=qt6ct`) applying the dark matugen palette | 2026-10-19 |
 | `btop` | system monitor, `color_theme = "matugen"` | 2026-10-19 |

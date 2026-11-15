@@ -108,6 +108,27 @@ The pipeline, role mapping, per-consumer reloads and what GTK/Qt actually honour
 [notes/matugen.md](../notes/matugen.md). The environment side is
 [notes/environment.md](../notes/environment.md).
 
+## Added for Microsoft document fonts (2026-11-15)
+
+WordCraft (`wordcraft-bin`, AUR) renders Word files with the system's fonts and
+does **not** use fontconfig — it scans `/usr/share/fonts` itself, so fontconfig
+substitutions (Carlito/Caladea) are not enough. These two AUR packages provide
+the real families Word documents reference:
+
+| Package | Download | What it's for |
+|---|---|---|
+| `ttf-ms-fonts` (AUR) | ~6 MB | core web fonts: Arial (+ Black), Times New Roman, Courier New, Georgia, Verdana, Trebuchet MS, Comic Sans MS, Impact, Andale Mono, Webdings |
+| `ttf-vista-fonts` (AUR) | 60 MB | Calibri, Cambria + Cambria Math, Candara, Consolas, Constantia, Corbel, Meiryo — the Word 2007+ defaults, extracted from the PowerPoint Viewer cab and converted with `fontforge` |
+
+```bash
+paru -S ttf-ms-fonts ttf-vista-fonts
+```
+
+Do **not** use `ttf-ms-win11-auto`: when its direct font fetch fails it pulls
+the entire **5.01 GB** Windows 11 ISO and extracts `install.wim` (observed
+2026-11-15). `ttf-liberation` stays — chromium, firefox and steam require it.
+Details and the verification probe: [notes/wordcraft.md](../notes/wordcraft.md).
+
 ## Notes for a fresh install
 
 - Audio (pipewire + wireplumber), polkit, mesa (GL/Vulkan), glib2 and fontconfig
