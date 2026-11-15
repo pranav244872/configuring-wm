@@ -26,10 +26,20 @@ occludes the bar.
 |---|---|---|---|
 | Fullscreen window on the focused workspace | held | held | held |
 | Any MPRIS player reporting `isPlaying` | — | held | held |
-| Caffeine toggle (manual, Wayland inhibitor) | held | held | held |
+| Caffeine toggle (manual, local flag) | held | held | held |
 
 Music therefore still lets the session lock (the lock sits over the player) while
 a fullscreen video/game holds everything.
+
+Caffeine used to work only through the bar's Wayland inhibitor, and that is
+what made it look inconsistent: Hyprland sets `idle->setInhibit(true)` only
+while the inhibiting view is `aliveAndVisible()`, so a **fullscreen window
+(YouTube, a video player) occludes the bar and silently drops the inhibitor** —
+the session then locked at 3 m with the coffee button lit. `IdleService` now
+reads `Caffeine.enabled` directly and disables the monitors, exactly like the
+fullscreen flag; the inhibitor in `TopBar.qml` is kept only for clients outside
+this shell. Measured 2026-11-15 (10 s lock timer): caffeine on → no lock; off →
+lock; fullscreen → no lock; leaving fullscreen → lock again on the next timer.
 
 - Media is **native MPRIS** (`Quickshell.Services.Mpris`):
   `Mpris.players.values.some(p => p.isPlaying)` — no `playerctl` spawning.
@@ -65,17 +75,25 @@ singleton trap in [quickshell.md](quickshell.md)).
 `modules/bar/TopBar.qml` holds `IdleInhibitor { enabled: Caffeine.enabled;
 window: bar }` and the `IpcHandler` (`target: "caffeine"`);
 `modules/bar/BarCaffeine.qml` is the coffee button (lit `primary` when active).
-It is advisory: Hyprland honours an inhibitor on a **layer surface** because
-`LayerSurface.cpp` assigns the `CLayerSurface` as the surface's view and
-`recheckIdleInhibitorStatus()` sets `PROTO::idle->setInhibit(true)` when
-`view()->aliveAndVisible()` (source read + live A/B probe). State is
-intentionally not persisted: it resets to off on a shell restart.
+
+The **flag** is what holds our timers (`IdleService.lockHeld/blankHeld/
+suspendHeld`). The inhibitor is for other consumers: Hyprland honours an
+inhibitor on a **layer surface** only while that surface's view is
+`aliveAndVisible()` (`LayerSurface.cpp` → `recheckIdleInhibitorStatus()`), and a
+fullscreen window makes the bar's surface not visible. So never make caffeine
+depend on it.
+
+State is intentionally not persisted: it resets to off on a shell restart.
 
 ## Verifying it (don't guess)
 
-- **Caffeine**: a second `qs -p` process shares the compositor's idle state, so an
-  `IdleMonitor { timeout: 3; respectInhibitors: true }` probe prints idle after
-  ~3 s with caffeine off and stays quiet with it on.
+- **State first**: `qs ipc call idle state` prints the flags
+  (`fullscreen`, `media`, `caffeine`, the three `*Held`s, `lockSecs`) in one
+  line. It is the fastest way to tell which rule is holding a stage.
+- **Caffeine A/B**: temporarily set `lockSecs: 10`, restart, then `caffeine
+  enable` → `qs ipc call lock isLocked` stays false after 15 s; `caffeine
+  disable` → it locks. `qs ipc call lock unlock` disengages without a password,
+  so the test is safe. Restore `lockSecs: 180` when done.
 - **Suppression**: add temporary `console.log`s on the held flags, then toggle a
   window fullscreen without stealing focus
   (`hyprctl dispatch 'hl.dsp.window.fullscreen({ action = "toggle", window =
@@ -88,6 +106,6 @@ intentionally not persisted: it resets to off on a shell restart.
 
 `hypridle` is the same idea as a session daemon (one `listener` per timeout,
 `ext-idle-notify-v1` + dbus/logind inhibit). We don't need it: `IdleService`
-already owns the timers, so the inhibitor only has to be honoured by the
-compositor for *our* monitors — and it is. For reference, end-4 ships a plain
+already owns the timers *and* the suppression flags, so no compositor inhibitor
+is required for our own monitors (the one we do hold is for external clients). For reference, end-4 ships a plain
 `hypridle.conf` (5 m lock / 10 m dpms / 15 m suspend, `inhibit_sleep = 3`).
