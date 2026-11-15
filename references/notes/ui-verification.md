@@ -112,7 +112,7 @@ probe was live.
 | hover a toast | countdown pauses | parked 12 s past an 8 s expiry: still 1 |
 | leave the toast | countdown resumes | expired within 9 s: 0 |
 | `--combo meta+shift+w` | the picker opens | `wallpaper isOpen` true |
-| `--move 1916 1076` + 300 ms | bottom-right zone fires | `hyprctl layers` shows the 8×8 zone; `wallpaper isOpen` true |
+| park (1700,860) then `--move 1916 1076` + 300 ms | bottom-right zone fires | `hyprctl layers` shows the 8×8 zone; `wallpaper isOpen` true. Approach from the corner's diagonal: `uclick.py` steps 24 px, so a centre-to-corner diagonal crawls along the bottom strip and fires the dashboard first |
 
 The ✕ needed two fixes to get there (sibling order, then model identity) — see
 [dashboard.md](dashboard.md) and [notifications.md](notifications.md).
