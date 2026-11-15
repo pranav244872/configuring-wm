@@ -11,7 +11,7 @@ Verified live 2026-10-19 (shell restart, wallpaper switch, per-consumer checks).
 ## Pipeline
 
 ```
-wallpaper chosen (picker / bottom-right hot zone / SUPER+SHIFT+W / IPC)
+wallpaper chosen (picker / SUPER+SHIFT+W / IPC)
   -> WallpaperService.current changes
      -> WallpaperHost.followWallpaper()      (skipped while WallpaperService.mock)
         -> Scheme.sync(path)                 modules/Scheme.qml

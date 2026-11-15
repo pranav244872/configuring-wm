@@ -2,28 +2,24 @@
 
 **Status: ✅ complete — rebuilt on upstream 0.57.2, installed 2026-11-10**
 
-- Source: `https://github.com/pranav244872/Hyprland`, branch **`feat/hotzones`**
+- Source: `https://github.com/pranav244872/Hyprland`, branch **`feat/screenshare`**
   (the old `invisible-ss` branch is obsolete — its patches are upstream now)
-- Base: upstream **Hyprland 0.57.2** (`11cbc6c57`) + the native hot-zones feature.
+- Base: upstream **Hyprland 0.57.2** (`11cbc6c57`) + one screenshare patch.
   The pacman hypr* libs from step 1 are the ABI the build is compiled against.
 - Clone location: `~/del/Hyprland`
-- Installed binary: `Hyprland 0.57.2 … commit 930aed4fa` (v0.57.2 + 5 commits)
+- Installed binary: `Hyprland 0.57.2 … commit 2ea169764` (v0.57.2 + 1 commit)
 
 ## What the fork still adds
 
-Five commits on top of `v0.57.2`:
+One commit on top of `v0.57.2`:
 
-1. `6e07f7f89 hotzones: native edge/corner hot zones (dwell + re-arm + suppression)`
-2. `f22bc63f9 hotzones: instant slam is corner-only`
-3. `570c8d49f hotzones: make the instant slam a config key (hotzone:slam, default off)`
-4. `337298350 hotzones: port to the 0.57.0 dispatcher API`
-5. `930aed4fa screenshare: hide no_screen_share content instead of black boxes`
+1. `2ea169764 screenshare: hide no_screen_share content instead of black boxes`
 
 **`no_screen_share` — upstream covers half of it.** 0.57.0 implements the rule
 (`CRenderContext::shouldRenderContent()`) and re-composites for
 `SHARE_WORKSPACE`, but `SHARE_MONITOR` / `SHARE_REGION` still copy the mirror
 texture and **paint black rectangles** over the excluded windows/layers (and
-their popups). Fork commit `930aed4fa` ports the old `bb0ffc3e` behaviour onto
+their popups). Fork commit `2ea169764` ports the old `bb0ffc3e` behaviour onto
 the context renderer: `renderMonitor()` re-renders the scene with
 `m_renderingCapture = true`, so the excluded surfaces are dropped entirely and
 the capture shows whatever is behind them (wallpaper/other windows) — no black
@@ -59,11 +55,11 @@ linked against the old sonames and **stopped loading**:
 /usr/bin/Hyprland: error while loading shared libraries: libaquamarine.so.14
 ```
 
-Rebased `feat/hotzones` onto upstream **`v0.57.2`** (Arch's `hyprland 0.57.2-1`
+Rebased `feat/screenshare` onto upstream **`v0.57.2`** (Arch's `hyprland 0.57.2-1`
 depends on exactly these libs) and rebuilt — the running compositor kept
 working because it already had the old libs mapped. The only rebase conflict
 was `quirks:skip_non_kms_dmabuf_formats`, which upstream flipped to `false`;
-keep upstream's value and append the hotzone block.
+keep upstream's value.
 
 **Install-prefix trap.** Configuring without `-DCMAKE_INSTALL_PREFIX=/usr` puts
 a second binary in `/usr/local/bin/Hyprland`, which shadows `/usr/bin` in
@@ -73,12 +69,7 @@ confirm with `command -v Hyprland` → `/usr/bin/Hyprland`.
 ## 0.56.2 → 0.57.0 port notes
 
 - **String dispatchers are gone.** 0.57 replaced `KeybindManager::m_dispatchers`
-  with typed action functions and Lua dispatcher objects (`hl.dsp.*`). Hotzone
-  `action` strings therefore accept **`exec, <cmd>`** (rules-aware) and
-  **`execr, <cmd>`** only; anything richer must be a Lua keybind.
-- **`hotzone <enable|disable|toggle>` dispatcher removed** with that map. Use
-  `hl.hotzone.enable()` / `disable()` / `toggle_active()` (also from the shell:
-  `hyprctl dispatch 'hl.hotzone.toggle_active()'`).
+  with typed action functions and Lua dispatcher objects (`hl.dsp.*`).
 - Internal renames touched the port: `Log::logger->log(...)` → `LOG(...)`,
   `m_exclusiveLSes` → `m_exclusiveKeyboardLSes`, keybinds moved to
   `src/keybinds/` behind `Keybinds::mgr()`.
@@ -102,7 +93,7 @@ confirm with `command -v Hyprland` → `/usr/bin/Hyprland`.
 ## Commands (what was done)
 
 ```bash
-git clone --branch feat/hotzones https://github.com/pranav244872/Hyprland ~/del/Hyprland
+git clone --branch feat/screenshare https://github.com/pranav244872/Hyprland ~/del/Hyprland
 # tracking upstream for rebases:
 git remote add upstream https://github.com/hyprwm/Hyprland
 cd ~/del/Hyprland
@@ -132,7 +123,7 @@ Equivalent shorthand (repo's Makefile): `make release PREFIX=/usr && sudo make i
   cd ~/del/Hyprland
   git fetch upstream --tags
   git rev-parse HEAD                               # note it: the only rollback ref
-  git rebase --onto v<new> v<old>                  # replay only our hotzone commits
+  git rebase --onto v<new> v<old>                  # replay only our patch
   git submodule update --init --recursive
   cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release \
     -DCMAKE_INSTALL_PREFIX:STRING=/usr -S . -B ./build

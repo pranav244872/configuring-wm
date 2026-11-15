@@ -59,9 +59,7 @@ Related facts:
   see [sunshine.md](sunshine.md).
 - **String dispatchers are gone (0.57.0).** Keybinds take Lua objects
   (`hl.dsp.window.close()`); `hyprctl dispatch` wants the Lua form
-  (`hyprctl dispatch 'hl.dsp.exit()'`). Fork config that stored dispatcher names
-  as strings (hotzone actions) now supports `exec`/`execr` only — see
-  [hotzones.md](hotzones.md).
+  (`hyprctl dispatch 'hl.dsp.exit()'`).
 - Lua config modules run in separate error scopes; a plain (non-`local`)
   assignment in `hyprland.lua` (e.g. `colors = require(...)`) is visible to
   the modules that `require` it afterwards.

@@ -111,14 +111,10 @@ colour. Geometry, the `exclusionMode` trap and the measured decode are in
 
 | Route | How |
 |---|---|
-| bottom-right corner hot zone | `bottomright` in `~/.config/hypr/modules/hotzones.lua`; closes the dashboard first |
+| bottom-right corner | shell hover zone, [hotcorners.md](hotcorners.md); closes the dashboard first |
 | keyboard | `SUPER + SHIFT + W` (`keybinds.lua`) |
 | IPC | `qs ipc call wallpaper <toggle\|open\|close\|isOpen\|current\|index\|next\|prev\|apply>` |
 | cycling | footer toggle, `SUPER + ALT + W`, `qs ipc call wallpaper cycleNext\|cyclePrev` — see [wallpaper-cycling.md](wallpaper-cycling.md) |
-
-Read [hotzones.md](hotzones.md) before touching the corner: the dwell counts
-*residence*, so a slow slide along the bottom edge opens the dashboard first —
-approach the corner directly.
 
 ## Verified live
 

@@ -111,8 +111,8 @@ probe was live.
 | dashboard history ✕ | row gone, sheet open, same tab | `historyCount` 1→0, `isOpen` true, `tabName` notifications |
 | hover a toast | countdown pauses | parked 12 s past an 8 s expiry: still 1 |
 | leave the toast | countdown resumes | expired within 9 s: 0 |
-| hot zones (`--move` only) | each zone fires its own surface | bottom→dashboard, right→session menu, bottom-right→wallpaper |
 | `--combo meta+shift+w` | the picker opens | `wallpaper isOpen` true |
+| `--move 1916 1076` + 300 ms | bottom-right zone fires | `hyprctl layers` shows the 8×8 zone; `wallpaper isOpen` true |
 
 The ✕ needed two fixes to get there (sibling order, then model identity) — see
 [dashboard.md](dashboard.md) and [notifications.md](notifications.md).

@@ -64,7 +64,7 @@ references/
 ## Current state at a glance
 
 - **Compositor**: own fork, built from source → `/usr/bin/Hyprland` 0.57.2
-  (`pranav244872/Hyprland @ feat/hotzones`), no pacman package owns it.
+  (`pranav244872/Hyprland @ feat/screenshare`), no pacman package owns it.
   Source + incremental build dir: `~/del/Hyprland`.
 - **Config**: Lua, split into modules, live at `~/.config/hypr/`
   (`hyprland.lua` + `modules/*.lua`) plus `scripts/brightness.sh`.
@@ -104,8 +104,8 @@ references/
 - **Never invent architecture** — take it from well-known, actively maintained
   repos (cloned to `/tmp/opencode`), see [references.md](references.md).
 - **No display manager, no uwsm** — TTY launch.
-- **Compositor built from source** (fork feature: edge/corner hot zones); everything
-  else from official repos where possible.
+- **Compositor built from source** (one screenshare patch); everything else from
+  official repos where possible.
 - **AUR on demand** — no AUR by default. `paru` is available for the rare
   package that isn't in `extra`, but ask first. See
   [package-management.md](package-management.md).

@@ -30,7 +30,7 @@
 | `modules/lock/LockHost.qml` | real WlSessionLock + IPC (`lock`/`unlock`/`isLocked`); password-only PAM; locks on idle (3m) or `Fn+F9`; keeps `LockState` in step |
 | `modules/lock/LockSurface.qml` | per-output lock surface: the wallpaper (blurred, scrimmed) with the centred formation card over it |
 | `modules/lock/LockBackdrop.qml` | the lock's background: current wallpaper, blurred under a 40% scrim (shared with the bench) |
-| `modules/lock/LockState.qml` | singleton: is the session locked? Surfaces refuse to open (and close) while it is — the compositor does not suppress our hot zones for a session lock |
+| `modules/lock/LockState.qml` | singleton: is the session locked? Surfaces refuse to open (and close) while it is — a shell hover zone is not suppressed by the compositor while locked |
 | `modules/lock/LockCard.qml` | formation card: user chip, big clock+date, password field + submit |
 | `modules/lock/LockAuth.qml` | password-only PAM machine (`login` stack); buffer cleared every path |
 | `modules/lock/IdleService.qml` | staged IdleMonitors: lock 3m, screen-off 5m (floor 1%), suspend 10m; fullscreen holds all three, MPRIS playback holds blank+suspend |
@@ -50,10 +50,11 @@
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
 | `modules/bar/BarNetwork.qml` | signal meter at rest; tooltip on 300ms hover (SSID · strength · security · IP) 6px under the bar; click opens the dashboard. Native `Quickshell.Networking`, IP from a one-shot `ip` |
 | `modules/bar/NetworkTooltip.qml` | tooltip frame content (layer0 fill, hairline + corner ticks); shared with the bench |
-| `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hot zone or `qs ipc call powermenu toggle`; Escape / click-away closes |
+| `modules/hotcorners/HotCorners.qml` | edge/corner hover zones: 4 px strips + an 8 px corner, top layer so fullscreen windows cover them, hover + 300 ms dwell ([notes/hotcorners.md](notes/hotcorners.md)) |
+| `modules/powermenu/PowerMenuHost.qml` | session menu: content-sized panel on the right, vertically centred, slides in from the bezel; opened by the right-edge hover zone or `SUPER + ESCAPE` (`qs ipc call powermenu toggle`); Escape / click-away closes |
 | `modules/powermenu/PowerMenuContent.qml` + `PowerMenuItem.qml` | entries Lock / Log out / Suspend / Reboot / Shut down; Chaldea rows with the accent fill sliding in on hover (shared with the bench) |
 | `modules/powermenu/PowerMenuSurface.qml` | floating framed panel: layer0 fill, 1px hairline + corner ticks (shared) |
-| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height (52% on the audio tab, animated), centred; bottom-edge hot zone / `qs ipc call dashboard toggle`; Escape / click-away closes; `←`/`→` change tab |
+| `modules/dashboard/DashboardHost.qml` | bottom sheet: `Theme.sizes.dashboardWidth` wide (720), 40% of the monitor height (52% on the audio tab, animated), centred; bottom-edge hover zone, `SUPER + D`, a click on the bar's network readout, or `qs ipc call dashboard toggle`; Escape / click-away closes; `←`/`→` change tab |
 | `modules/dashboard/DashboardTabs.qml` | the tab row: equal-width numbered cells, solid accent block on the active one (slides on the move curve), wheel to step; each section is one tab |
 | `modules/dashboard/DashboardContent.qml` | tab host: the tab row over a `StackLayout` of the sections, and the one place that decides which section is allowed to work (`syncActive()`: the network list scans, the bluetooth list discovers, the audio tab tracks nodes and runs its meter — each only while its own tab is visible) |
 | `modules/dashboard/NetworkSection.qml` | wifi switch, scanning list, inline passphrase, connect / disconnect / forget, portal + off states; scans only while the sheet is open |
@@ -88,15 +89,13 @@ on. Not persisted: it resets to off on a shell restart. IPC: `qs ipc call
 caffeine <toggle|enable|disable|isEnabled>`. Mechanism and the layer-surface
 proof are in [notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-10-17.
 
-**Session menu** — the right screen edge is a native hot zone
-(`right = { action = "exec, qs ipc call powermenu toggle" }` in
-`~/.config/hypr/modules/hotzones.lua`) that slides the session menu in. Hot zones
-are a fork feature: config keys, geometry and the runtime API are in
-[notes/hotzones.md](notes/hotzones.md).
+**Session menu** — the right screen edge is a shell hover zone
+([notes/hotcorners.md](notes/hotcorners.md)) or `SUPER + ESCAPE`
+(`qs ipc call powermenu toggle`); Escape or a click away closes it.
 
-**Dashboard** — the bottom screen edge is a hot zone
-(`bottom = "exec, qs ipc call dashboard toggle"`) that slides a 720×40 % sheet
-up. It is **tabbed** (`modules/dashboard/DashboardTabs.qml`): numbered
+**Dashboard** — the bottom screen edge is a shell hover zone, `SUPER + D`, a
+click on the bar's network readout, or `qs ipc call dashboard toggle` slides a
+720×40 % sheet up. It is **tabbed** (`modules/dashboard/DashboardTabs.qml`): numbered
 equal-width slots with a solid accent block on the active one, sliding like the
 workspace pill. Four tabs: **network** (wifi switch, a scanning list, and an
 inline passphrase prompt whose Connect stays disabled until the input validates
@@ -165,12 +164,13 @@ fires it, the dashboard ✕ removes exactly its row, and hovering a toast pauses
 countdown. Policy rationale and the `ListModel` traps we hit are in
 [notes/notifications.md](notes/notifications.md).
 
-**Wallpaper** — the shell **draws the wallpaper itself** (`WallpaperBackground.qml`, a background-layer surface) instead of running swww/hyprpaper/awww: one toolkit, no daemon. The picker is a bottom sheet with a **filmstrip** — `ListView` + `StrictlyEnforceRange`, so the index drives the strip and the pointer never drags it. The centred slide carries a 2px accent border and grows 8%, neighbours dim to 50%, a **click applies** it (the sheet stays open so you watch it land behind the sheet) and the applied slide wears an accent check; wheel and `←`/`→` step and **wrap** both ways, `Enter` applies, Escape / click-away closes. The slides read a 448×252 **ffmpeg thumbnail cache** (the full PNG costs 142–308 ms to decode; a thumb is a few ms), falling back to the source until it exists. The library is `~/Pictures/Wallpapers` listed with `FolderListModel` (0.3.2 has no `FileSystemModel`), and the choice persists to `~/.cache/quickshell/wallpaper.json`. Under the strip a **cycling footer** holds an `AUTO` switch, the interval (click to step 5/10/15/30/60/120 min) and a `SHUFFLE` chip; the sheet grew 240 → 272 px for it, the cycle pauses while the sheet is open or the session locked, and `SUPER + ALT + W` steps to the next image without the sheet (`qs ipc call wallpaper cycleNext`). Settings live in `~/.cache/quickshell/wallpaper-cycling.json`. Opened by the **bottom-right corner hot zone**, `SUPER + SHIFT + W`, or `qs ipc call wallpaper toggle`. A change is a crossfade between two fixed image slots, and the incoming PNG is decoded *before* the slots flip — a 4 MB PNG takes 142–308 ms and flipping early showed the bare compositor colour. Design rules, the `contentX` dimming bug and the corner trap are in [notes/wallpaper.md](notes/wallpaper.md), the surface in [notes/wallpaper-drawing.md](notes/wallpaper-drawing.md); verified live 2026-10-19 and 2026-10-20. Choosing a wallpaper also regenerates the whole desktop palette through matugen — the shell recolours live (see [notes/matugen.md](notes/matugen.md)).
+**Wallpaper** — the shell **draws the wallpaper itself** (`WallpaperBackground.qml`, a background-layer surface) instead of running swww/hyprpaper/awww: one toolkit, no daemon. The picker is a bottom sheet with a **filmstrip** — `ListView` + `StrictlyEnforceRange`, so the index drives the strip and the pointer never drags it. The centred slide carries a 2px accent border and grows 8%, neighbours dim to 50%, a **click applies** it (the sheet stays open so you watch it land behind the sheet) and the applied slide wears an accent check; wheel and `←`/`→` step and **wrap** both ways, `Enter` applies, Escape / click-away closes. The slides read a 448×252 **ffmpeg thumbnail cache** (the full PNG costs 142–308 ms to decode; a thumb is a few ms), falling back to the source until it exists. The library is `~/Pictures/Wallpapers` listed with `FolderListModel` (0.3.2 has no `FileSystemModel`), and the choice persists to `~/.cache/quickshell/wallpaper.json`. Under the strip a **cycling footer** holds an `AUTO` switch, the interval (click to step 5/10/15/30/60/120 min) and a `SHUFFLE` chip; the sheet grew 240 → 272 px for it, the cycle pauses while the sheet is open or the session locked, and `SUPER + ALT + W` steps to the next image without the sheet (`qs ipc call wallpaper cycleNext`). Settings live in `~/.cache/quickshell/wallpaper-cycling.json`. Opened by the **bottom-right shell hover zone**, `SUPER + SHIFT + W` or
+`qs ipc call wallpaper toggle`. A change is a crossfade between two fixed image slots, and the incoming PNG is decoded *before* the slots flip — a 4 MB PNG takes 142–308 ms and flipping early showed the bare compositor colour. Design rules, the `contentX` dimming bug and the corner trap are in [notes/wallpaper.md](notes/wallpaper.md), the surface in [notes/wallpaper-drawing.md](notes/wallpaper-drawing.md); verified live 2026-10-19 and 2026-10-20. Choosing a wallpaper also regenerates the whole desktop palette through matugen — the shell recolours live (see [notes/matugen.md](notes/matugen.md)).
 
 **Lock** — a real `WlSessionLock`, not a fake overlay, and it draws the **wallpaper** itself: the compositor hides every other surface while locked, so the background-layer `WallpaperBackground` is not on screen there (proved 2026-10-19 — with the lock surface transparent the locked screen is black, not the desktop). `LockBackdrop` paints the current wallpaper blurred under a 40% black scrim (the treatment caelestia's lock and DMS's `LockScreenBackground` use; values follow DMS, since the GPU here is an Intel UHD 620) and follows a wallpaper change. It is a shared component, so `preview_lock.qml` reviews that look without locking the session.
 
-Two lock traps, both proved live and both logged in [notes/hotzones.md](notes/hotzones.md) and [notes/quickshell.md](notes/quickshell.md):
-- the compositor's hot zones keep firing **while locked** (Hyprland's `InputManager::isLocked()` means "a pointer constraint is active", not "the session is locked"), so the corner opened the picker behind the lock — the hosts now consult `LockState` and refuse, and close when a lock starts;
+Two lock traps, both proved live and both in [notes/quickshell.md](notes/quickshell.md):
+- a shell hover zone is **not** suppressed while the session is locked (the compositor's `InputManager::isLocked()` means "a pointer constraint is active", not "the session is locked"), so a corner could open a surface behind the lock — every host consults `LockState` and refuses, and closes when a lock starts;
 - 0.3.2's `WlSessionLock` does not notify `locked` on the way back to `false`, so `LockState` is driven from the shell's own `engage()`/`disengage()` — and the **password** unlock path (`LockAuth.unlocked`) has to be routed through `disengage()` as well: it unlocks directly, and on 2026-10-19 missing that left the flag set, so every guarded surface refused to open until the shell was restarted. A 1-second timer re-syncs it from `sessionLock.locked` (which always *reads* correctly) as a backstop.
 
 ## Preview benches (use them, don't guess)
@@ -217,7 +217,7 @@ coordinate (`python3 ~/.config/quickshell/tools/uclick.py X Y`, add `--move` for
 hover only, `--wheel`/`--key`/`--combo` to step a carousel or fire a keybind, and
 it refuses to click unless it is on target). Coordinate maths, the
 state assertions to read back, and the proofs it recorded (the notification ✕ paths,
-the hover pause, all three hot zones, `SUPER + SHIFT + W`) are in
+the hover pause, `SUPER + D`, `SUPER + ESCAPE`, `SUPER + SHIFT + W`) are in
 [notes/ui-verification.md](notes/ui-verification.md) — including the uinput trap
 that silently degraded every combo to a bare key.
 

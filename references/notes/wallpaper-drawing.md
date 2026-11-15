@@ -15,7 +15,7 @@ Back to [notes index](README.md) - [docs index](../README.md)
   `Ignore` spans the whole output and the bar (level `top`) merely draws over
   it.
 - An empty `Region` mask: a full-screen layer surface that accepted input would
-  eat the hot zones and the desktop calendar.
+  eat clicks meant for the desktop calendar.
 - `color: "transparent"`: the surface only shows its image slots.
 
 ## No black flash: decode first, then flip
@@ -41,7 +41,6 @@ Back to [notes index](README.md) - [docs index](../README.md)
 
 Full-screen coverage (the bar sits on the wallpaper, no black sides) · no black
 flash on change (the decode happens behind the old wallpaper) · the lock
-backdrop hits the same decoded size · transparent surface passes clicks to the
-hot zones.
+backdrop hits the same decoded size · transparent surface passes clicks through.
 
 Last verified: 2026-10-19

@@ -8,9 +8,10 @@ Back to [notes index](README.md) - [docs index](../README.md)
 ## Shape
 
 `TopBar`-style frame: `Theme.sizes.dashboardWidth` (720) wide, 40 % of the
-monitor height, centred on the bottom edge, opened by a bottom-edge hot zone
-(`bottom = "exec, qs ipc call dashboard toggle"`) or IPC, closed by Escape or a
-click away. It slides up (the sheet's `y` stays unanchored, so the binding
+monitor height, centred on the bottom edge, opened by the bottom-edge hover
+zone ([hotcorners.md](hotcorners.md)), `SUPER + D`, a click on the bar's network
+readout, or IPC (`qs ipc call dashboard toggle`); closed by Escape or a click
+away. It slides up (the sheet's `y` stays unanchored, so the binding
 survives), and the whole surface is a `WlrLayer.Overlay` with
 `exclusiveMode: Ignore`.
 
