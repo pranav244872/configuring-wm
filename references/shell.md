@@ -48,6 +48,8 @@
 | `modules/cp_tracker/` (`CpTrackerWidget`, `CpTrackerCard`) | desktop CP tracker card (Codeforces/AtCoder ratings + contest schedule) on the background layer, draggable, 15-minute polls — **built by another agent**, see [notes/cp-tracker.md](notes/cp-tracker.md) |
 | `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
+| `modules/localgo/` (`LocalgoService`, `LocalgoHost`, `LocalgoContent`, `LocalgoPending`, `LocalgoDevices`, `LocalgoTransfers`, `LocalgoRecent`) | LocalSend drawer: bottom-left corner card driven by `localgo`'s control socket — peer list, ACCEPT / REJECT for incoming files, per-file outbound progress, received list; bottom-left hover zone, `SUPER + ALT + P`, `qs ipc call localgo <toggle|sendFile>` ([notes/localgo.md](notes/localgo.md)) |
+| `modules/bar/BarLocalgo.qml` | LocalSend mark: accent while a device is online, warning while a transfer waits, 2px progress rule while sending |
 | `modules/bar/BarNetwork.qml` | signal meter at rest; tooltip on 300ms hover (SSID · strength · security · IP) 6px under the bar; click opens the dashboard. Native `Quickshell.Networking`, IP from a one-shot `ip` |
 | `modules/bar/NetworkTooltip.qml` | tooltip frame content (layer0 fill, hairline + corner ticks); shared with the bench |
 | `modules/hotcorners/HotCorners.qml` | edge/corner hover zones: 4 px strips + an 8 px corner, top layer so fullscreen windows cover them, hover + 300 ms dwell ([notes/hotcorners.md](notes/hotcorners.md)) |
@@ -164,6 +166,22 @@ fires it, the dashboard ✕ removes exactly its row, and hovering a toast pauses
 countdown. Policy rationale and the `ListModel` traps we hit are in
 [notes/notifications.md](notes/notifications.md).
 
+**LocalSend** — phone file transfer with no KDE stack: the phone runs the
+LocalSend app and `localgo serve --ipc` runs as a user service, while
+`modules/localgo/` drives its control socket. The drawer slides in from the
+right (content-sized up to the screen), lists discovered peers, and turns an
+incoming transfer into an **ACCEPT / REJECT** card instead of a terminal prompt;
+outbound sends show a square 2px rule per file. Opened by the **bottom-left
+hover zone**, the bar's LocalSend mark or `SUPER + ALT + P`
+(`qs ipc call localgo toggle`);
+`qs ipc call localgo sendFile <path>` sends one file to the first online device.
+The card sits in the screen's bottom-left corner and grows upward; SEND FILES
+opens a floating GTK chooser (a window rule floats the portal dialog, and the
+layer surface hides while the chooser is up so the dialog can take the
+keyboard). Why localgo, the IPC/SSE contract and the traps are in
+[notes/localgo.md](notes/localgo.md); install in
+[setup/07-localsend.md](setup/07-localsend.md).
+
 **Wallpaper** — the shell **draws the wallpaper itself** (`WallpaperBackground.qml`, a background-layer surface) instead of running swww/hyprpaper/awww: one toolkit, no daemon. The picker is a bottom sheet with a **filmstrip** — `ListView` + `StrictlyEnforceRange`, so the index drives the strip and the pointer never drags it. The centred slide carries a 2px accent border and grows 8%, neighbours dim to 50%, a **click applies** it (the sheet stays open so you watch it land behind the sheet) and the applied slide wears an accent check; wheel and `←`/`→` step and **wrap** both ways, `Enter` applies, Escape / click-away closes. The slides read a 448×252 **ffmpeg thumbnail cache** (the full PNG costs 142–308 ms to decode; a thumb is a few ms), falling back to the source until it exists. The library is `~/Pictures/Wallpapers` listed with `FolderListModel` (0.3.2 has no `FileSystemModel`), and the choice persists to `~/.cache/quickshell/wallpaper.json`. Under the strip a **cycling footer** holds an `AUTO` switch, the interval (click to step 5/10/15/30/60/120 min) and a `SHUFFLE` chip; the sheet grew 240 → 272 px for it, the cycle pauses while the sheet is open or the session locked, and `SUPER + ALT + W` steps to the next image without the sheet (`qs ipc call wallpaper cycleNext`). Settings live in `~/.cache/quickshell/wallpaper-cycling.json`. Opened by the **bottom-right shell hover zone**, `SUPER + SHIFT + W` or
 `qs ipc call wallpaper toggle`. A change is a crossfade between two fixed image slots, and the incoming PNG is decoded *before* the slots flip — a 4 MB PNG takes 142–308 ms and flipping early showed the bare compositor colour. Design rules, the `contentX` dimming bug and the corner trap are in [notes/wallpaper.md](notes/wallpaper.md), the surface in [notes/wallpaper-drawing.md](notes/wallpaper-drawing.md); verified live 2026-10-19 and 2026-10-20. Choosing a wallpaper also regenerates the whole desktop palette through matugen — the shell recolours live (see [notes/matugen.md](notes/matugen.md)).
 
@@ -268,6 +286,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 | `mako` | notification daemon + toasts | built 2026-10-19: our `NotificationServer` owns the bus name; top-right toast stack, DND + history in the dashboard, plain-text bodies | ✅ done |
 | `rofi` (launcher) | app launcher drawer | built 2026-10-15, restyled 2026-10-16: Papirus icons, frequency ranking, flare drawer, ripple rows, SUPER+F | ✅ done |
 | `rofi` (powermenu, keybinds) | power menu, clipboard history | powermenu & cliphist next | ⬜ |
+| `kdeconnect` (considered) | LocalSend drawer + `localgo` | files only; KDE Connect is 386 packages / 1.56 GiB and pulls `kwallet` | ✅ done 2026-11-15 |
 | `hyprsunset` | night-light overlay (ramped tint) | colour overlay via `WlrLayerShell` | ⬜ |
 | `hypridle` | idle service (dim, lock, suspend) | `IdleNotify` + our own timer logic | ⬜ |
 | `hyprlock` | lock screen (clock, input, PAM auth) | **security-sensitive**: UI ours, auth must stay in PAM (`Services.Pam`) | ⬜ |
@@ -279,7 +298,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 | `gpu-screen-recorder`, `awww`/wallpaper daemons | keep external | encoding/wallpaper plumbing, not UI | ⏸ keep |
 
 ### Staying external (not UI — no point rewriting)
-`ffmpeg`, `grim`, `slurp`, `jq`, `pipewire`, `wl-clipboard`, `kitty`, `mpv`,
+`ffmpeg`, `grim`, `slurp`, `jq`, `pipewire`, `wl-clipboard`, `localgo`, `kitty`, `mpv`,
 `fish`, `zoxide`, `power-profiles-daemon`, browsers, build tools.
 
 ## Suggested build order

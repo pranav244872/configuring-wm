@@ -14,11 +14,13 @@ zone per screen:
 | Zone | Size | Action |
 |---|---|---|
 | right edge | 4 × (height − 8) | `qs ipc call powermenu toggle` |
-| bottom edge | (width − 8) × 4 | `qs ipc call dashboard toggle` |
+| bottom edge | (width − 16) × 4 | `qs ipc call dashboard toggle` |
+| bottom-left corner | 8 × 8 | `qs ipc call localgo toggle` (LocalSend drawer) |
 | bottom-right corner | 8 × 8 | `dashboard close`, then `wallpaper toggle` |
 
-The strips are trimmed by `cornerPx` so they stop where the corner square
-begins — they must never overlap (see the stacking trap below).
+The strips are trimmed by `cornerPx` at every end that touches a corner square
+— they must never overlap (see the stacking trap below). The bottom edge is
+trimmed on both ends because both of its corners are assigned.
 
 A layer surface only sees the pointer while the pointer is over it, so a zone
 must be its own surface at the screen edge — there is no global pointer

@@ -1,7 +1,7 @@
 # Hyprland Setup — Reference & Memory
 
 Machine: pranav @ Arch Linux — Intel i3-10110U, Intel UHD 620, 7.5 GiB RAM, 60 Hz panel
-Started: 2026-10-15 · Last updated: 2026-10-19
+Started: 2026-10-15 · Last updated: 2026-11-15
 
 **This directory is the persistent memory of this setup** — for future sessions
 and for other models. A reference to rebuild the machine from scratch, not a
@@ -26,11 +26,13 @@ references/
 │   ├── 03-fork-build-deps.md
 │   ├── 04-hyprland-fork-build.md
 │   ├── 05-hyprland-config.md
-│   └── 06-rice.md
+│   ├── 06-rice.md
+│   └── 07-localsend.md
 │
 ├── notes/                  # verified traps, one topic per file
 │   ├── README.md           #   index
 │   ├── hyprland.md         #   animation units, fork quirks
+│   ├── localgo.md          #   LocalSend drawer: IPC/SSE, discovery traps
 │   ├── validation.md       #   how to validate each config
 │   ├── quickshell.md       #   QML 0.3.2 traps, the input trap, dragging values
 │   ├── shell-ui.md         #   building our own UI, verifying it

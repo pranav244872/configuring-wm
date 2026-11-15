@@ -36,6 +36,7 @@ one saved project `~/Videos/lol/lol.mlt`. `~/Videos/untitled.mp4` and
 | `docker-buildx` | BuildKit builder plugin — the antigravity-relay Dockerfile uses `RUN --mount=type=cache`; without it the build fails with *"the --mount option requires BuildKit"* | 2026-11-02 |
 | `steam` | game runtime (The Spike Cross); replaces the standalone Proton experiment | 2026-10-16 |
 | `vulkan-intel` | Vulkan driver for the UHD 620 — DXVK needs an ICD | 2026-10-16 |
+| `localgo-bin` | LocalSend v2 receiver for phone file transfer — one binary, no runtime deps, Unix-socket control API for the shell drawer ([setup/07-localsend.md](setup/07-localsend.md)) | 2026-11-15 |
 | `jq` | JSON CLI for `hyprctl -j` one-liners (screenshot workspace-filter verification, future scripts) | 2026-10-16 |
 | `eza` | modern `ls` (fish `ls` / `lt`) — the last piece of the old repo's shell aliases | 2026-10-18 |
 | `neovim` | the editor, with the `configuring-wm` config deployed verbatim (`vim.pack`, mason LSP, compiled treesitter) — the config needs **0.12+** | 2026-10-19 |
