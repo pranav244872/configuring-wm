@@ -17,8 +17,9 @@ approvals and the download directory. The shell never parses the TLS link; it
 only reads state and posts decisions.
 
 **Trigger:** the bottom-left 8×8 hover zone (300 ms dwell), the bar's LocalSend
-mark, or `SUPER + ALT + P`. The card is anchored to the bottom-left corner and
-grows upward, so it appears where the pointer already is.
+mark, or `SUPER + ALT + P`. The drawer is full height, flush with the left bezel
+(no gap, no bezel-side border — same body as the launcher) and slides in from
+the edge, so it comes to the pointer instead of covering the right side.
 
 ## Measured alternatives (why not the usual suspects)
 
@@ -115,6 +116,7 @@ Proven with the real phone:
 | Check | Result |
 |---|---|
 | bottom-left hover zone | `--move 4 1076` → `localgo isOpen` true, dashboard and wallpaper stay closed |
+| drawer geometry | left-anchored, `width 380`, full height at `x=0` (flush, slides from `-width`) |
 | peer discovery | `SMART STRAWBERRY 192.168.1.3` in the card, `available: true` |
 | floating chooser | portal dialog `938×503` at `491,304`, `float=true`, `activewindow` = `xdg-desktop-portal-gtk` |
 | chooser cancel | drawer unmaps for the chooser, comes back when it exits |

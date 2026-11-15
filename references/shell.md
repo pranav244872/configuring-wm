@@ -48,7 +48,7 @@
 | `modules/cp_tracker/` (`CpTrackerWidget`, `CpTrackerCard`) | desktop CP tracker card (Codeforces/AtCoder ratings + contest schedule) on the background layer, draggable, 15-minute polls — **built by another agent**, see [notes/cp-tracker.md](notes/cp-tracker.md) |
 | `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
-| `modules/localgo/` (`LocalgoService`, `LocalgoHost`, `LocalgoContent`, `LocalgoPending`, `LocalgoDevices`, `LocalgoTransfers`, `LocalgoRecent`) | LocalSend drawer: bottom-left corner card driven by `localgo`'s control socket — peer list, ACCEPT / REJECT for incoming files, per-file outbound progress, received list; bottom-left hover zone, `SUPER + ALT + P`, `qs ipc call localgo <toggle|sendFile>` ([notes/localgo.md](notes/localgo.md)) |
+| `modules/localgo/` (`LocalgoService`, `LocalgoHost`, `LocalgoContent`, `LocalgoPending`, `LocalgoDevices`, `LocalgoTransfers`, `LocalgoRecent`) | LocalSend drawer: full-height left drawer driven by `localgo`'s control socket — peer list, ACCEPT / REJECT for incoming files, per-file outbound progress, received list; bottom-left hover zone, `SUPER + ALT + P`, `qs ipc call localgo <toggle|sendFile>` ([notes/localgo.md](notes/localgo.md)) |
 | `modules/bar/BarLocalgo.qml` | LocalSend mark: accent while a device is online, warning while a transfer waits, 2px progress rule while sending |
 | `modules/bar/BarNetwork.qml` | signal meter at rest; tooltip on 300ms hover (SSID · strength · security · IP) 6px under the bar; click opens the dashboard. Native `Quickshell.Networking`, IP from a one-shot `ip` |
 | `modules/bar/NetworkTooltip.qml` | tooltip frame content (layer0 fill, hairline + corner ticks); shared with the bench |
@@ -175,8 +175,9 @@ outbound sends show a square 2px rule per file. Opened by the **bottom-left
 hover zone**, the bar's LocalSend mark or `SUPER + ALT + P`
 (`qs ipc call localgo toggle`);
 `qs ipc call localgo sendFile <path>` sends one file to the first online device.
-The card sits in the screen's bottom-left corner and grows upward; SEND FILES
-opens a floating GTK chooser (a window rule floats the portal dialog, and the
+The drawer is a full-height panel flush with the left bezel (no gap, no
+bezel-side border) and slides in from the edge — the bottom-left hover zone
+opens it where the pointer is. SEND FILES opens a floating GTK chooser (a window rule floats the portal dialog, and the
 layer surface hides while the chooser is up so the dialog can take the
 keyboard). Why localgo, the IPC/SSE contract and the traps are in
 [notes/localgo.md](notes/localgo.md); install in
