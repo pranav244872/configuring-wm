@@ -48,6 +48,9 @@
 | `modules/cp_tracker/` (`CpTrackerWidget`, `CpTrackerCard`) | desktop CP tracker card (Codeforces/AtCoder ratings + contest schedule) on the background layer, draggable, 15-minute polls — **built by another agent**, see [notes/cp-tracker.md](notes/cp-tracker.md) |
 | `modules/Caffeine.qml` | keep-awake singleton (`enabled`); the bar holds the wayland idle inhibitor |
 | `modules/bar/BarCaffeine.qml` | coffee toggle at the right end of the bar (`qs ipc call caffeine toggle`) |
+| `modules/polkit/PolkitService.qml` | the session's polkit agent: one `PolkitAgent`, its flow, the shell user's identity preselection |
+| `modules/polkit/PolkitHost.qml` | auth dialog surface: one full-screen overlay per output, focused monitor only, modal mask, `qs ipc call polkit <state\|registered\|cancel>` |
+| `modules/polkit/PolkitContent.qml` | the Chaldea auth card (action sentence, identity chips, password, error line) — traps in [notes/polkit.md](notes/polkit.md) |
 | `modules/localgo/` (`LocalgoService`, `LocalgoHost`, `LocalgoContent`, `LocalgoPending`, `LocalgoDevices`, `LocalgoTransfers`, `LocalgoRecent`) | LocalSend drawer: full-height left drawer driven by `localgo`'s control socket — peer list, ACCEPT / REJECT for incoming files, per-file outbound progress, received list; bottom-left hover zone, `SUPER + ALT + P`, `qs ipc call localgo <toggle|sendFile>` ([notes/localgo.md](notes/localgo.md)) |
 | `modules/bar/BarLocalgo.qml` | LocalSend mark: accent while a device is online, warning while a transfer waits, 2px progress rule while sending |
 | `modules/bar/BarNetwork.qml` | signal meter at rest; tooltip on 300ms hover (SSID · strength · security · IP) 6px under the bar; click opens the dashboard. Native `Quickshell.Networking`, IP from a one-shot `ip` |
@@ -93,6 +96,14 @@ IPC: `qs ipc call caffeine <toggle|enable|disable|isEnabled>`, and
 `qs ipc call idle state` prints which flags hold what. Why the inhibitor alone
 was not enough (a fullscreen window makes the bar invisible and drops it):
 [notes/idle-inhibit.md](notes/idle-inhibit.md). Verified 2026-11-15.
+
+**Polkit** — the shell is the session's authentication agent (`modules/polkit/`),
+so `pkexec` gets our card instead of `hyprpolkitagent` (removed 2026-11-19). It is
+modal on the focused output, never drawn over the lock screen, and hidden from
+**every** capture by the `no_screen_share` layer rule. `qs ipc call polkit state`
+explains a missing prompt; the three-failures / ten-minute `pam_faillock` lockout
+(shared with `sudo` and the lock screen) is in
+[notes/polkit.md](notes/polkit.md).
 
 **Session menu** — the right screen edge is a shell hover zone
 ([notes/hotcorners.md](notes/hotcorners.md)) or `SUPER + ESCAPE`
@@ -273,7 +284,7 @@ Verified module inventory (`/usr/lib/qt6/qml/Quickshell/`):
 | `Quickshell.Services.Pipewire` | audio/pw-volume → volume control |
 | `Quickshell.Services.Bluetooth` | BT devices |
 | **`Quickshell.Services.Pam`** | **PAM authentication → a real lock screen is possible** |
-| `Quickshell.Services.Polkit` | polkit prompts |
+| `Quickshell.Services.Polkit` | **the session's polkit agent** — our own auth dialog ([notes/polkit.md](notes/polkit.md)) |
 | `Quickshell.Hyprland` | compositor IPC: windows, workspaces, focus grab |
 | `Quickshell.Wayland.WlrLayerShell` | panels/overlays anchored to screen edges |
 | `Quickshell.Wayland.IdleNotify` / `IdleInhibitor` | idle detection & inhibition |

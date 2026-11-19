@@ -25,7 +25,7 @@ Install them first if missing.
 # Part 1 — runtime packages
 sudo pacman -S --needed --noconfirm \
   kitty wl-clipboard qt6-wayland ttf-jetbrains-mono-nerd intel-media-driver brightnessctl \
-  xdg-desktop-portal-hyprland hyprpolkitagent
+  xdg-desktop-portal-hyprland
 
 # Part 2a — build toolchain
 sudo pacman -S --needed --noconfirm base-devel cmake python git
@@ -54,7 +54,7 @@ sudo pacman -S --needed --noconfirm cairo pango libdrm libinput libxkbcommon pix
 ```bash
 # every explicit package present
 pacman -Q kitty wl-clipboard qt6-wayland ttf-jetbrains-mono-nerd intel-media-driver \
-  brightnessctl xdg-desktop-portal-hyprland hyprpolkitagent hyprwire lua
+  brightnessctl xdg-desktop-portal-hyprland hyprwire lua
 
 # compositor is installed and is ours (no pacman package owns it)
 pacman -Qo /usr/bin/Hyprland   # expect: no package owns ...

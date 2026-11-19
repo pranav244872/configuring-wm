@@ -44,5 +44,5 @@ system-sleep/{force-igpu,fprintd-resume,keyboard-backlight,unmount-fuse}
 ## Note
 
 Omarchy's model is "one command per component + a refresh command". Our setup has
-two moving parts (polkit agent + quickshell), so most of this becomes relevant
-only after the rice phase.
+one moving part (quickshell, which is also the polkit agent), so most of this
+becomes relevant only after the rice phase.

@@ -96,7 +96,7 @@ references/
   **removed on 2026-10-15**; the lessons are in
   [notes/opencode-mcp.md](notes/opencode-mcp.md).
 - **Launch**: no display manager — `start-hyprland` from TTY, `SUPER + M` to exit.
-- **Autostart inside Hyprland**: `hyprpolkitagent` + our quickshell (`qs -n`, warm at login).
+- **Autostart inside Hyprland**: our quickshell only (`qs -n`, warm at login) — it also owns the polkit agent ([notes/polkit.md](notes/polkit.md)).
 
 ## Ground rules
 

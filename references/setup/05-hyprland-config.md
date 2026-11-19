@@ -20,7 +20,7 @@ See also: [../preferences.md](../preferences.md) (why these values) and
 │   ├── env.lua               # cursor, toolkit, XDG, Qt env vars
 │   ├── input.lua             # us layout, natural scroll, 3-finger gesture
 │   ├── keybinds.lua          # all keybindings (table below)
-│   ├── autostart.lua         # hyprpolkitagent + quickshell (`qs -n`)
+│   ├── autostart.lua         # quickshell (`qs -n`) — it owns the polkit agent too
 │   ├── decorations.lua       # speed-first look + quick animations
 │   ├── layouts.lua           # dwindle (+ master/scrolling defaults)
 │   ├── misc.lua              # VFR, no logo/wallpaper

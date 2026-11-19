@@ -7,7 +7,7 @@ argument (versions as of 2026-10-15, repo `extra`).
 ```bash
 sudo pacman -S --needed --noconfirm \
   kitty wl-clipboard qt6-wayland ttf-jetbrains-mono-nerd intel-media-driver brightnessctl \
-  xdg-desktop-portal-hyprland hyprpolkitagent
+  xdg-desktop-portal-hyprland
 ```
 
 | Package | Version | What it's for |
@@ -19,7 +19,10 @@ sudo pacman -S --needed --noconfirm \
 | `intel-media-driver` | 26.3.5-1 | VA-API video decode for UHD 620 — battery + smoothness |
 | `brightnessctl` | 0.5.1-3 | Backlight control for the `XF86MonBrightness*` keys |
 | `xdg-desktop-portal-hyprland` | 1.4.1-2 | Portals: screen share (uses the fork's hiding feature), screenshots, global shortcuts, file dialogs |
-| `hyprpolkitagent` | 0.2.0-1 | Polkit agent — GUI password prompts; the only thing autostarted |
+
+Polkit prompts are handled by our shell's own agent (`modules/polkit/`), so
+`hyprpolkitagent` is deliberately **not** installed; the `polkit` daemon itself
+comes in as a dependency ([notes/polkit.md](../notes/polkit.md)).
 
 ## Added after the initial install (same day)
 
