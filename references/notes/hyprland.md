@@ -65,3 +65,29 @@ Related facts:
   the modules that `require` it afterwards.
 - `require` of a *missing* module is a hard error that kills the main config —
   use `pcall(require, ...)` if something is optional.
+
+## System upgrades under the source build
+
+The fork links the system `hyprutils`/`aquamarine`, so check them after a
+`pacman -Syu`:
+
+```bash
+hyprctl systeminfo | grep -E "Hyprutils|Aquamarine"
+# Hyprutils: built against 0.14.3, system has 0.14.4
+```
+
+That line is informational, not fatal. What matters is the **major/minor ABI**
+in the version string (`..._aq_0.16_hu_0.14_...`) and the soname: a patch bump
+(`0.14.3 → 0.14.4`) keeps `libhyprutils.so.13` and the fork runs untouched; a
+`0.15`/soname bump needs a rebuild (`setup/04`). Same for aquamarine.
+
+Verified 2026-11-19 (hyprutils 0.14.4 under the 0.14.3 build): `--verify-config`
+→ `config ok`, the running compositor log had `0` `[ ERROR ]` lines, and a
+throwaway nested instance (`Hyprland -c min.lua`, no autostart) came up on
+`wayland-2` with a monitor and clean startup — so a restart is safe. The running
+compositor keeps the pre-upgrade library mapped until it restarts; that is
+normal and not a reason to reboot.
+
+Quick health probe after any upgrade: `hyprctl version`, `hyprctl monitors -j`,
+`hyprctl dispatch 'hl.dsp.focus({ workspace = 3 })'` (string dispatchers do not
+exist, see above), and `hyprctl reload`.
